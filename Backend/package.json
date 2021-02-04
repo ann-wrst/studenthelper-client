@@ -1,0 +1,29 @@
+{
+  "name": "backend_studenthelper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo test",
+    "start": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "bcrypt": "*",
+    "body-parser": "*",
+    "connect-redis": "*",
+    "cookie-parser": "*",
+    "cors": "*",
+    "express": "*",
+    "express-session": "*",
+    "mysql2": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "redis": "*",
+    "sequelize": "*",
+    "sequelize-auto-import": "^1.1.1",
+    "uuid": "*2"
+  }
+}
