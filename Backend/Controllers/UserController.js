@@ -10,7 +10,7 @@ export async function findOne(req, res) {
 
     try {
         let user = await User.findByPk(idUser);
-        if (user != null) {
+        if (user) {
             res.send(user);
         } else {
             res.status(500).send({message: "User not found."})

@@ -5,21 +5,24 @@ import {models} from '../config/dbConnect.js';
 const User = models.user;
 const saltRounds = 6;
 
-const emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+const emailPattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 
 function Verify({email, password}) {
     if (!email) {
         return {
             success: false,
             status: 200,
-            message: `Field email can not be empty!`
-
+            error: {
+                message: `Field email can not be empty!`
+            }
         };
     } else if (!password) {
         return {
             success: false,
             status: 200,
-            message: `Field password can not be empty!`
+            error: {
+                message: `Field password can not be empty!`
+            }
 
         };
     }
@@ -27,13 +30,17 @@ function Verify({email, password}) {
         return {
             success: false,
             status: 200,
-            message: `Invalid email.`
+            error: {
+                message: `Invalid email.`
+            }
         };
     }
     return {
         success: true,
         status: 200,
-        message: `validation confirm`
+        error: {
+            message: `validation confirm`
+        }
     }
 }
 
@@ -43,9 +50,9 @@ export async function login(req, res) {
     let verify = Verify(req.body);
 
     if (!verify.success) {
-        res.status(verify.status).send({
+        res.status(verify.status).json({
             success: verify.success,
-            message: verify.message
+            error: verify.error
         })
         return;
     }
@@ -53,33 +60,54 @@ export async function login(req, res) {
     try {
         let FoundUser = await User.findOne({where: {email: email}});
         if (FoundUser) {
-            bcrypt.compare(password, FoundUser.password, (error, result) => {
+            await bcrypt.compare(password, FoundUser.password, (error, result) => {
                 if (error) {
-                    res.status(500).send({
+                    res.status(500).json({
                         success: false,
-                        message: error.message
+                        error: {
+                            message: error.message
+                        }
                     });
                 }
                 if (result) {
-                    res.status(200).send({
-                        success: true,
-                        message: `Password is correct.`
-                    });
+                    req.logIn({
+                        id: FoundUser.idUser,
+                        email: FoundUser.email,
+                        password: FoundUser.password
+                    }, (err) => {
+                        if (err) {
+                            res.status(500).json({
+                                success: false,
+                                error: {
+                                    message: err.message
+                                }
+                            });
+                        } else {
+                            res.status(200).json({
+                                success: true,
+                                message: `Password is correct.`
+                            });
+                        }
+                    })
                 } else {
-                    res.status(200).send({
+                    res.status(200).json({
                         success: false,
-                        message: `Password isn't correct.`
+                        error: {
+                            message: `Password isn't correct.`
+                        }
                     });
                 }
             });
         } else {
-            res.status(200).send({
+            res.status(200).json({
                 success: false,
-                message: `User not found.`
+                error: {
+                    message: `User not found.`
+                }
             });
         }
     } catch (err) {
-        res.status(500).send({
+        res.status(500).json({
             success: false,
             message: err
         });
@@ -92,9 +120,9 @@ export async function register(req, res) {
     let verify = Verify(req.body);
 
     if (!verify.success) {
-        res.status(verify.status).send({
+        res.status(verify.status).json({
             success: verify.success,
-            message: verify.message
+            error: verify.error
         })
         return;
     }
@@ -109,24 +137,43 @@ export async function register(req, res) {
                 password: await bcrypt.hash(password, saltRounds)
             });
             if (CreateUser) {
-                res.status(200).send({
-                    success: true,
-                    message: "User is created."
-                });
+                req.logIn({
+                    id: CreateUser.idUser,
+                    email: CreateUser.email,
+                    password: CreateUser.password
+                }, (err) => {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            error: {
+                                message: err.message
+                            }
+                        });
+                    } else {
+                        res.status(200).json({
+                            success: true,
+                            message: "User is created."
+                        });
+                    }
+                })
             } else {
-                res.status(200).send({
+                res.status(200).json({
                     success: false,
-                    message: "idk"
+                    error: {
+                        message: "idk"
+                    }
                 });
             }
         } else {
-            res.status(200).send({
+            res.status(200).json({
                 success: false,
-                message: "Email is taken."
+                error: {
+                    message: "Email is taken."
+                }
             });
         }
     } catch (err) {
-        res.status(500).send({
+        res.status(500).json({
             success: false,
             message: err
         });

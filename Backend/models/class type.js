@@ -1,4 +1,3 @@
-import Sequelize from "sequelize";
 export default (sequelize, DataTypes) => sequelize.define('class type', {
   'idClass type': {
     type: DataTypes.STRING(45),

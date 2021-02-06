@@ -1,4 +1,3 @@
-import Sequelize from "sequelize";
 export default (sequelize, DataTypes) => sequelize.define('deadline', {
   idDeadline: {
     type: DataTypes.STRING(45),

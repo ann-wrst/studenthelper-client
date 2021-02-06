@@ -1,12 +1,15 @@
 import {Router} from "express";
-import passport from "passport";
+import {checkAuthenticated} from "../config/passport.js";
+
+import usersRoutes from "./users.routes.js";
+import authorizationRoutes from "./authorization.routes.js";
+
 
 const router = Router();
 
-export default app => {
-    router.get("/", (req, res) => {
-        res.send(JSON.stringify({ message: "Pong!" }))
-    });
+router.use('/', authorizationRoutes);
+router.use(checkAuthenticated);
 
-    app.use('/api', router);
-}
+router.use('/users', usersRoutes);
+
+export default router;
