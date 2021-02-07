@@ -4,53 +4,55 @@ import Register from './Register';
 import Button from '@material-ui/core/Button';
 
 class Loginscreen extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={
-            username:'',
-            password:'',
-            loginscreen:[],
-            loginmessage:'',
-            buttonLabel:'Register',
-            isLogin:true
+        this.state = {
+            username: '',
+            password: '',
+            loginscreen: [],
+            loginmessage: '',
+            buttonLabel: 'Register',
+            isLogin: true
         }
 
     }
-    componentWillMount(){
+
+    componentWillMount() {
         const loginscreen = [];
         loginscreen.push(<Login parentContext={this} appContext={this.props.parentContext}/>);
         const loginmessage = "Not registered yet?";
         this.setState({
-            loginscreen:loginscreen,
-            loginmessage:loginmessage
+            loginscreen: loginscreen,
+            loginmessage: loginmessage
         })
     }
-    handleClick(){
+
+    handleClick() {
         let loginscreen;
         let loginmessage;
-        if(this.state.isLogin){
+        if (this.state.isLogin) {
             loginscreen = [];
             loginscreen.push(<Register parentContext={this}/>);
             loginmessage = "Already registered?";
             this.setState({
-                loginscreen:loginscreen,
-                loginmessage:loginmessage,
-                buttonLabel:"Login",
-                isLogin:false
+                loginscreen: loginscreen,
+                loginmessage: loginmessage,
+                buttonLabel: "Login",
+                isLogin: false
             })
-        }
-        else{
+        } else {
             loginscreen = [];
             loginscreen.push(<Login parentContext={this}/>);
             loginmessage = "Not Registered yet?";
             this.setState({
-                loginscreen:loginscreen,
-                loginmessage:loginmessage,
-                buttonLabel:"Register",
-                isLogin:true
+                loginscreen: loginscreen,
+                loginmessage: loginmessage,
+                buttonLabel: "Register",
+                isLogin: true
             })
         }
     }
+
     render() {
         return (
             <div className="loginscreen">
@@ -58,7 +60,7 @@ class Loginscreen extends Component {
                 <div>
                     {this.state.loginmessage}
                         <div>
-                            <Button primary={true} style={style} onClick={(event) => this.handleClick(event)}>
+                            <Button variant="outlined" color="primary" primary={true} style={style} onClick={(event) => this.handleClick(event)}>
                                 {this.state.buttonLabel}
                             </Button>
                         </div>
