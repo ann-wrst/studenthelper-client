@@ -6,7 +6,6 @@ import React, { Component } from 'react'
 import Uploadscreen from './Uploadscreen'
 import {API_BASE_URL} from '../constants/api'
 import 'fontsource-roboto';
-import App from "../App";
 import {Toolbar} from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 class Login extends Component {
@@ -15,7 +14,7 @@ class Login extends Component {
         this.state={
             email:'',
             password:'',
-            error_message:''
+            error_message:'',
         }
         this.handleClick=this.handleClick.bind(this);
     }
@@ -23,45 +22,18 @@ class Login extends Component {
         const apiBaseUrl = API_BASE_URL;
         const self = this;
         const payload = {
-            "email": this.state.email,
+            "email": this.state.email.toLowerCase().trim(),
             "password": this.state.password
         };
-       /*  let response = await fetch(apiBaseUrl + '/login', {
-             method: 'POST',
-             headers: {
-                 'Content-Type': 'application/json'
-             },
-             body: JSON.stringify(payload)
-         });
-             console.log(response);
-             console.log(response.status)
-             if (response.status === 200) {
-                 //res = JSON.parse(res);
-                 let res = await response.json();
-                 //   res = JSON.parse(await res)
-                 console.log(res);
-                 if (!res.success) {
-                     this.setState(
-                         {error_message: res.error}
-                         //  {error_message: "An error has occured"}
 
-                     )
-                 }
-                 console.log("Login successful");
-                 const uploadScreen = [];
-              //   self.props.appContext.setState({loginPage: [], uploadScreen: uploadScreen});
-                 self.props.appContext.state.loginPage=[];
-                 self.props.appContext.state.uploadScreen=uploadScreen;
-                 await uploadScreen.push(<Uploadscreen appContext={self.props.appContext}/>)
-             } else {
-                 console.log("Email does not exists");
-                 alert("Email does not exist");
-             }
-*/
         fetch(apiBaseUrl + '/login', {
+            //credentials: 'same-origin',
+            credentials: 'include',
             method: 'POST',
             headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+        //      'mode': 'no-cors',
+
         },
             body: JSON.stringify(payload)
         })
@@ -80,25 +52,37 @@ class Login extends Component {
                         uploadScreen.push(<Uploadscreen appContext={self.props.appContext}/>)
                         self.props.appContext.setState({loginPage: [], uploadScreen: uploadScreen})
 
-                    } else {
-                        console.log("Email does not exists");
-                        alert("Email does not exist");
-                    }
+                    } else this.setError({error_message: "A login error occurred"})
                 }
             )
             .catch(function (error) {
                 console.log(error);
             });
     }
+
+    handleAnotherClick() {
+        const apiBaseUrl = API_BASE_URL;
+        const self = this;
+        fetch(apiBaseUrl+ '/users', {
+            credentials: 'include',
+            method: 'GET'
+        }).then(
+            async response=> {
+                let res = await response.json();
+                console.log(res);
+            }
+        )
+    }
+
     setError() {
         let alert_message;
         if(this.state.error_message!=='') {
             alert_message =<Alert severity="error"> {this.state.error_message} </Alert>;
-
         } else alert_message=null;
 
         return alert_message;
     }
+
     clearError() {
         this.setState(
             {error_message:"" }
@@ -115,12 +99,12 @@ class Login extends Component {
                                 </Typography>
                             </Toolbar>
                         </AppBar>
-                        {this.setError("An error has occured")}
-
+                        {this.setError()}
                         <TextField
                             type="email"
                             hintText="Enter your email"
                             label="Email"
+                            inputProps={{ maxLength: 255 }}
                             onChange = {(event) => this.setState({email:event.target.value})}
                         />
                         <br/>
@@ -128,12 +112,16 @@ class Login extends Component {
                             type="password"
                             hintText="Enter your Password"
                             label="Password"
+                            inputProps={{ maxLength: 70 }}
                             onChange = {(event) => this.setState({password:event.target.value})}
                         />
                         <br/>
                             <Button variant="outlined" color="primary" primary={true} style={style} onClick={(event) => this.handleClick()}>
                                 Submit
                             </Button>
+                        <Button variant="outlined" color="primary" primary={true} style={style} onClick={(event) => this.handleAnotherClick()}>
+                            Users
+                        </Button>
                     </div>
             </div>
         );

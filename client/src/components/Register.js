@@ -28,29 +28,37 @@ class Register extends Component {
         if(this.state.password===this.state.repeated_password) {
             const payload = {
                 "username": this.state.name,
-                "email": this.state.email,
+                "email": this.state.email.toLowerCase().trim(),
                 "password": this.state.password
             };
             fetch(apiBaseUrl + '/register', {
+                credentials: 'include',
+
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(payload)
             }).then(
-                response => {
+                async response => {
                     console.log(response);
+                    let res = await response.json();
                     this.clearError();
-                    if (response.data.code === 200) {
+                    if (response.status === 200) {
+                        if(!res.success) {
+                            this.setState(
+                                {error_message: res.error.message}
+                            )
+                        }
                         const loginscreen = [];
                         loginscreen.push(<Login parentContext={this}/>);
                         const loginmessage = "Not Registered yet?";
-                        self.props.parentContext.setState({
+              /*          self.props.parentContext.setState({
                             loginscreen: loginscreen,
                             loginmessage: loginmessage,
                             buttonLabel: "Register",
                             isLogin: true,
-                        });
+                        });*/
                     }
 
                 }
@@ -67,18 +75,18 @@ class Register extends Component {
     }
     setError() {
         let alert_message;
-        if(this.state.error_message==="The passwords don't match") {
+        if(this.state.error_message!=="") {
              alert_message =<Alert severity="error"> {this.state.error_message} </Alert>;
 
         } else alert_message=null;
 
         return alert_message;
     }
+
     clearError() {
         this.setState(
             {error_message:"" }
         )
-        console.log('I am here');
     }
     render() {
         return (
@@ -97,27 +105,36 @@ class Register extends Component {
                         <TextField
                             hintText="Enter your name"
                             label="Name"
+                            inputProps={{ maxLength: 45 }}
                             onChange = {(event) => this.setState({name:event.target.value})}
                         />
                         <br/>
                         <TextField
+                            required
                             hintText="Enter your Email"
                             type="email"
                             label="Email"
+                            inputProps={{ maxLength: 255 }}
+
                             onChange = {(event) => this.setState({email:event.target.value})}
                         />
                         <br/>
                         <TextField
+                            required
                             type = "password"
                             hintText="Enter your Password"
                             label="Password"
+                            inputProps={{ maxLength: 70 }}
                             onChange = {(event) => this.setState({password:event.target.value})}
                         />
                         <br/>
                         <TextField
+                            required
                             type = "password"
                             hintText="Enter your Password"
                             label="Confirm Password"
+                            inputProps={{ maxLength:70}}
+
                             onChange = {(event) => this.setState({repeated_password:event.target.value})}
                         />
                         <br/>
