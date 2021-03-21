@@ -1,7 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Login from './Login';
 import Register from './Register';
+import {login_styles} from './styles'
 import Button from '@material-ui/core/Button';
+import history from './history'
+import {API_BASE_URL} from "../constants/api";
 
 class Loginscreen extends Component {
     constructor(props) {
@@ -14,10 +17,9 @@ class Loginscreen extends Component {
             buttonLabel: 'Register',
             isLogin: true
         }
-
     }
 
-    componentWillMount() {
+    componentDidMount() {
         const loginscreen = [];
         loginscreen.push(<Login parentContext={this} appContext={this.props.parentContext}/>);
         const loginmessage = "Not registered yet?";
@@ -51,25 +53,34 @@ class Loginscreen extends Component {
                 isLogin: true
             })
         }
+        if (this.state.isLoggedIn) history.push('/');
     }
 
     render() {
         return (
             <div className="loginscreen">
                 {this.state.loginscreen}
-                <div>
+                <div style={login_styles}>
                     {this.state.loginmessage}
-                        <div>
-                            <Button variant="outlined" color="primary" primary={true} style={style} onClick={(event) => this.handleClick(event)}>
-                                {this.state.buttonLabel}
-                            </Button>
-                        </div>
+                    <div>
+                        <Button variant="outlined" color="primary" primary={true} style={style}
+                                onClick={(event) => this.handleClick(event)}>
+                            {this.state.buttonLabel}
+                        </Button>
+                    </div>
                 </div>
             </div>
         );
     }
 }
+
 const style = {
-    margin: 15,
+    margin: 20,
+};
+const generalStyle = {
+    'display': 'flex',
+    //  'align-content': 'center',
+    'flex-direction': 'column',
+
 };
 export default Loginscreen;
