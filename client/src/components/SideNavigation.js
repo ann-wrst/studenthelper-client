@@ -4,7 +4,7 @@ import {scaleDown as Menu} from 'react-burger-menu'
 import Typography from "@material-ui/core/Typography";
 import history from './history'
 import Alert from "@material-ui/lab/Alert";
-
+import { Link } from 'react-router-dom'
 class SideNavigation extends React.Component {
     constructor(props) {
         super(props);
@@ -61,32 +61,36 @@ class SideNavigation extends React.Component {
         return (
             <Menu styles={styles}>
                 <div>
-                    <a id='main' className='sidebar-title'>
+                    <Link style={items_styles} to='/'>
                         <img src={process.env.PUBLIC_URL + '/Studenthelper.svg'} alt=''/>
-                    </a>
+                    </Link>
                 </div>
                 <div style={item_styles}>
-                    <a style={items_styles}>
+                    <Link style={items_styles} to='/schedule'>
                         <img src={process.env.PUBLIC_URL + '/schedule_icon.svg'} alt='' style={icon_styles}/>
                         <Typography variant="h6" style={title_styles}>
                             Schedule
-                        </Typography> </a>
+                        </Typography>
+                    </Link>
+
                 </div>
                 <br/>
                 <div style={item_styles}>
-                    <a style={items_styles}>
+                    <Link style={items_styles} to='/deadlines'>
                         <img src={process.env.PUBLIC_URL + '/deadline_icon.svg'} alt='' style={icon_styles}/>
-
                         <Typography variant="h6" style={title_styles}>
                             Deadlines
-                        </Typography></a>
-
+                        </Typography>
+                    </Link>
                 </div>
                 <div style={item_styles}>
-                    <a style={items_styles} onClick={this.showSettings} className="menu-item--small">
+                    <Link style={items_styles} to='/notes'>
+                        <img src={process.env.PUBLIC_URL + '/notes-svgrepo-com.svg'} alt='' style={icon_styles}/>
                         <Typography variant="h6" style={title_styles}>
-                            Settings
+                            Notes
                         </Typography>
+                    </Link>
+                    <a style={items_styles} onClick={this.showSettings} className="menu-item--small">
 
                     </a>
                 </div>
@@ -111,13 +115,14 @@ const log_out_styles = {
 
 }
 const icon_styles = {
-    width: '24px',
-    height: '24px',
+    width: '23px',
+    height: '23px',
     display: 'inline',
     float: 'left'
 };
 const items_styles = {
     cursor: 'pointer',
+    color: '#554A5E'
 
 }
 const title_styles = {
@@ -140,10 +145,13 @@ const styles = {
     bmCrossButton: {
         height: '24px',
         width: '24px',
+        color: 'rgba(0,0,0,0)'
     },
     bmCross: {
-        background: '#658ba2',
-        margin: '5 10 5 5'
+      //  background: '#658ba2',
+        margin: '5 10 5 5',
+        color: 'rgba(0,0,0,0)'
+
     },
     bmMenuWrap: {
         position: 'fixed',

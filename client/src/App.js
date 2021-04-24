@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
 import Loginscreen from './components/Loginscreen'
-import {API_BASE_URL} from "./constants/api"
+import Schedule from "./components/Schedule";
+import Deadlines from "./components/Deadlines";
+import Notes from "./components/Notes";
 import {
     Router,
     Switch,
     Route
 } from "react-router-dom";
 import history from "./components/history";
-//import { ConnectedRouter as Router} from 'connected-react-router'
 
 import Homepage from "./components/Homepage";
 
@@ -21,17 +22,6 @@ class App extends Component {
     }
   }
   componentDidMount(){
-      // fetch(API_BASE_URL+'/isAuthenticated', {
-      //   credentials: 'include',
-      //   method: 'GET',
-      //
-      // }).then(
-      //     async response => {
-      //       let res = await response.json();
-      //       if(res.isAuthenticated) this.state.isAuthenticated=true;
-      //       console.log("The user isAuthenticated? "+this.state.isAuthenticated);
-      //     }
-      // )
     const loginPage = [];
     loginPage.push(<Loginscreen appContext={this} key={"login-screen"}/>);
     this.setState({
@@ -45,6 +35,9 @@ class App extends Component {
           <Router history={history}>
               <Switch>
               <Route exact path="/login"><Loginscreen/></Route>
+              <Route exact path="/schedule"><Schedule/></Route>
+              <Route exact path="/deadlines"><Deadlines/></Route>
+              <Route exact path="/notes"><Notes/></Route>
               <Route exact path="/"><Homepage/></Route>
               </Switch>
           </Router>
