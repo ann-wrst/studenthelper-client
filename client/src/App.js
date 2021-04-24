@@ -4,6 +4,7 @@ import Loginscreen from './components/Loginscreen'
 import Schedule from "./components/Schedule";
 import Deadlines from "./components/Deadlines";
 import Notes from "./components/Notes";
+import Configuration from "./components/Configuration/Configuration";
 import {
     Router,
     Switch,
@@ -38,6 +39,7 @@ class App extends Component {
               <Route exact path="/schedule"><Schedule/></Route>
               <Route exact path="/deadlines"><Deadlines/></Route>
               <Route exact path="/notes"><Notes/></Route>
+              <Route exact path="/configuration"><Configuration/></Route>
               <Route exact path="/"><Homepage/></Route>
               </Switch>
           </Router>

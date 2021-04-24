@@ -94,7 +94,17 @@ class SideNavigation extends React.Component {
 
                     </a>
                 </div>
+                <div style={item_styles}>
+                    <Link style={items_styles} to='/configuration'>
+                        <img src={process.env.PUBLIC_URL + '/settings.svg'} alt='' style={icon_styles}/>
+                        <Typography variant="h6" style={title_styles}>
+                            Configuration
+                        </Typography>
+                    </Link>
+                    <a style={items_styles} onClick={this.showSettings} className="menu-item--small">
 
+                    </a>
+                </div>
                 <div>
                     <a style={log_out_styles} onClick={this.Logout} className="menu-item--small">Log out</a>
                 </div>
@@ -160,7 +170,8 @@ const styles = {
     bmMenu: {
         background: '#eeedf4',
         padding: '2.5em 1.5em 0',
-        fontSize: '1.15em'
+        fontSize: '1.15em',
+        overflow:  'hidden'
     },
     bmMorphShape: {
         fill: '#6b7396'
@@ -175,5 +186,6 @@ const styles = {
     bmOverlay: {
         background: 'rgb(223,216,227)'
     }
+
 }
 export default SideNavigation;
