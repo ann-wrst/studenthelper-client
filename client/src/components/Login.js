@@ -3,16 +3,10 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, {Component} from 'react'
-import Homepage from './Homepage'
 import {API_BASE_URL} from '../constants/api'
 import 'fontsource-roboto';
 import {Toolbar} from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
-import {Redirect} from "react-router-dom";
-import {useRouterHistory, Router, Route} from 'react-router';
-import isLoggedin from "../services/isLoggedin";
-import {createBrowserHistory} from "history";
-import {useHistory} from "react-router-dom";
 import history from './history'
 
 import {login_styles} from './styles'
@@ -28,24 +22,6 @@ class Login extends Component {
         }
         this.handleClick = this.handleClick.bind(this);
 
-
-    }
-
-    componentDidMount() {
-        // console.log("componentDidMount"+this.state.isLoggedIn)
-        // if (this.state.isLoggedIn) history.push('/');
-
-        // fetch(API_BASE_URL+'/isAuthenticated', {
-        //     credentials: 'include',
-        //     method: 'GET',
-        //
-        // }).then(
-        //     async response => {
-        //         let res = await response.json();
-        //         if(res.isAuthenticated) this.state.isLoggedIn=true;
-        //      //   console.log("The user isAuthenticated? "+this.state.isAuthenticated);
-        //     }
-        // )
     }
 
     handleClick() {
@@ -78,14 +54,14 @@ class Login extends Component {
                             this.setState({isLoggedIn: true});
                         }
                         //    const uploadScreen = [];
-                        //   uploadScreen.push(<Homepage appContext={self.props.appContext}/>)
+                        //    uploadScreen.push(<Homepage appContext={self.props.appContext}/>)
                         //     self.props.appContext.setState({loginPage: [], uploadScreen: uploadScreen})
 
                     } else {
-                        //check if error message is undefined, if no - show an error from server if yes show default error message
-                        this.setState(
-                            {error_message: "A login error occurred"}
-                        )
+                        if (typeof res.error.message !== "undefined")
+                            this.setState(
+                                {error_message: res.error.message}
+                            )
                     }
                     if (this.state.isLoggedIn) history.push('/');
 
@@ -94,20 +70,6 @@ class Login extends Component {
             .catch(function (error) {
                 console.log(error);
             });
-    }
-
-    handleUsersClick() {
-        const apiBaseUrl = API_BASE_URL;
-        const self = this;
-        fetch(apiBaseUrl + '/users', {
-            credentials: 'include',
-            method: 'GET'
-        }).then(
-            async response => {
-                let res = await response.json();
-                console.log(res);
-            }
-        )
     }
 
     setError() {
@@ -160,11 +122,6 @@ class Login extends Component {
                         <Button variant="outlined" color="primary" primary={true} style={style}
                                 onClick={(event) => this.handleClick()}>
                             Submit
-                        </Button>
-
-                        <Button variant="outlined" color="primary" primary={true} style={style}
-                                onClick={(event) => this.handleUsersClick()}>
-                            Users
                         </Button>
                     </div>
                 </div>

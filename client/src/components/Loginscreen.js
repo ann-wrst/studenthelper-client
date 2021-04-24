@@ -4,7 +4,6 @@ import Register from './Register';
 import {login_styles} from './styles'
 import Button from '@material-ui/core/Button';
 import history from './history'
-import {API_BASE_URL} from "../constants/api";
 
 class Loginscreen extends Component {
     constructor(props) {
@@ -15,7 +14,7 @@ class Loginscreen extends Component {
             loginscreen: [],
             loginmessage: '',
             buttonLabel: 'Register',
-            isLogin: true
+            isLogin: false
         }
     }
 
@@ -79,7 +78,6 @@ const style = {
 };
 const generalStyle = {
     'display': 'flex',
-    //  'align-content': 'center',
     'flex-direction': 'column',
 
 };

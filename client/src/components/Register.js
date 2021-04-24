@@ -9,6 +9,7 @@ import Login from './Login';
 import {API_BASE_URL} from '../constants/api'
 import {Toolbar} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
+import history from "./history";
 
 class Register extends Component {
 
@@ -19,23 +20,12 @@ class Register extends Component {
             email: '',
             password: '',
             repeated_password: '',
-            error_message: ''
+            error_message: '',
+            isLoggedIn: false
+
         }
     }
 
-    componentDidMount() {
-        // fetch(API_BASE_URL+'/isAuthenticated', {
-        //     credentials: 'include',
-        //     method: 'GET',
-        //
-        // }).then(
-        //     async response => {
-        //         let res = await response.json();
-        //         if(res.isAuthenticated) this.state.isAuthenticated=true;
-        //    //     console.log("The user isAuthenticated? "+this.state.isAuthenticated);
-        //     }
-        // )
-    }
 
     handleClick() {
         const apiBaseUrl = API_BASE_URL;
@@ -49,7 +39,6 @@ class Register extends Component {
             };
             fetch(apiBaseUrl + '/register', {
                 credentials: 'include',
-
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -65,6 +54,8 @@ class Register extends Component {
                             this.setState(
                                 {error_message: res.error.message}
                             )
+                        } else {
+                            this.setState({isLoggedIn: true});
                         }
                         const loginscreen = [];
                         loginscreen.push(<Login parentContext={this}/>);
@@ -75,7 +66,13 @@ class Register extends Component {
                                       buttonLabel: "Register",
                                       isLogin: true,
                                   });*/
+                    } else {
+                        if (typeof res.error.message !== "undefined")
+                            this.setState(
+                                {error_message: res.error.message}
+                            )
                     }
+                    if (this.state.isLoggedIn) history.push('/');
 
                 }
             ).catch(function (error) {
@@ -175,10 +172,7 @@ const style = {
 // }
 const generalStyle = {
     'display': 'flex',
-    //  'align-content': 'center',
     'flex-direction':'column',
-    // 'justify-content':'center',
-    //  'align-self':'center',
     'align-items':'center'
 };
 export default Register;

@@ -3,8 +3,18 @@ import {API_BASE_URL} from '../constants/api'
 import {scaleDown as Menu} from 'react-burger-menu'
 import Typography from "@material-ui/core/Typography";
 import history from './history'
+import Alert from "@material-ui/lab/Alert";
 
-class Example extends React.Component {
+class SideNavigation extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            error_message: ''
+        }
+        this.Logout = this.Logout.bind(this);
+
+    }
+
     showSettings(event) {
         event.preventDefault();
     }
@@ -16,11 +26,38 @@ class Example extends React.Component {
             headers: {
                 'Content-Type': 'application/json',
             }
-        });
+        }).then(
+            async response => {
+                let res = await response.json();
+              //  this.clearError();
+                    if (!res.success) {
+                        this.setState(
+                            {error_message: res.error.message}
+                        )
+                }
+            }
+        );
         history.push('/login');
     }
 
+    setError() {
+        let alert_message;
+        if (this.state.error_message !== '') {
+            alert_message = <Alert severity="error"> {this.state.error_message} </Alert>;
+        } else alert_message = null;
+
+        return alert_message;
+    }
+
+    clearError() {
+        this.setState(
+            {error_message: ""}
+        )
+    }
+
     render() {
+        this.setError()
+        console.log(this.state.error_message);
         return (
             <Menu styles={styles}>
                 <div>
@@ -78,8 +115,6 @@ const icon_styles = {
     height: '24px',
     display: 'inline',
     float: 'left'
-
-
 };
 const items_styles = {
     cursor: 'pointer',
@@ -91,7 +126,6 @@ const title_styles = {
 
 }
 const styles = {
-
     bmBurgerButton: {
         position: 'fixed',
         width: '36px',
@@ -134,4 +168,4 @@ const styles = {
         background: 'rgb(223,216,227)'
     }
 }
-export default Example;
+export default SideNavigation;
