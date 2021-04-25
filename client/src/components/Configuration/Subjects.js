@@ -18,16 +18,48 @@ class Subjects extends Component {
             open: false,
             new_name: undefined,
             error_message: '',
+            subjects_list: []
         }
+        this.fetchSubjectList=this.fetchSubjectList.bind(this);
     };
+
+    async fetchSubjectList() {
+        let response= await (await fetch(API_BASE_URL + '/subjects', {
+            credentials: 'include',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })).json();
+        this.setState({subjects_list: response.data})
+        return response;
+        /*
+        fetch(API_BASE_URL + '/subjects', {
+            credentials: 'include',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(
+            async response => {
+                res = await response.json();
+                if (res.success) {
+                    this.setState({subjects_list: res.data})
+                }
+                return res;
+            }
+        );*/
+    }
 
     render() {
         return (<div style={page_style}>
             <div style={heading_style}><Typography style={subjectsheading_style} variant="h6">
                 Subjects
             </Typography>
-                <AddSubject id={"add"}> </AddSubject>
-                <SubjectsList> </SubjectsList>
+                <AddSubject fetchList={this.fetchSubjectList}> </AddSubject>
+                {console.log("state"+this.state.subjects_list)}
+                <SubjectsList list={this.state.subjects_list}> </SubjectsList>
+
             </div>
         </div>);
     }

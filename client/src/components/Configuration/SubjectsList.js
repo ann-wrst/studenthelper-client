@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from "@material-ui/core/Button";
 import DeleteIcon from '@material-ui/icons/Delete';
 import {API_BASE_URL} from "../../constants/api";
+import DeleteButton from "./DeleteButton";
 
 class SubjectsList extends Component {
     constructor(props) {
@@ -17,10 +18,14 @@ class SubjectsList extends Component {
         this.state = {
             subjects_list: []
         }
+        this.fetchSubjectList=this.fetchSubjectList.bind(this);
     }
 
-    //  rows = [];
     componentDidMount() {
+        this.fetchSubjectList();
+    }
+
+    fetchSubjectList() {
         fetch(API_BASE_URL + '/subjects', {
             credentials: 'include',
             method: 'GET',
@@ -31,40 +36,10 @@ class SubjectsList extends Component {
             async response => {
                 let res = await response.json();
                 if (res.success) {
-                    this.rows = res.data;
-                    this.setState({subjects_list:res.data})
-                    this.state.subjects_list = res.data;
-                    console.log(res.data);
-                    return res.data;
-
+                    this.setState({subjects_list: res.data})
                 }
             }
         );
-    }
-
-    getSubjectsList() {
-        // this.rows = [{id: "1", name: "math"}, {id: "2", name: "algebra"}];
-        // return [{id: "1", name: "math"}, {id: "2", name: "algebra"}];
-        // fetch(API_BASE_URL + '/subjects', {
-        //     credentials: 'include',
-        //     method: 'GET',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        // }).then(
-        //     async response => {
-        //         let res = await response.json();
-        //         if (res.success) {
-        //             this.rows = res.data;
-        //             this.setState({subjects_list:res.data})
-        //             this.state.subjects_list = res.data;
-        //             console.log(res.data);
-        //             return res.data;
-        //
-        //         }
-        //     }
-        // );
-
     }
 
     // renderSubjectsList() {
@@ -91,7 +66,7 @@ class SubjectsList extends Component {
             "name": name
         };
         console.log(id);
-        fetch(API_BASE_URL + '/subjects/$id', {
+        fetch(API_BASE_URL + `/subjects/${id}`, {
             credentials: 'include',
             method: 'PATCH',
             headers: {
@@ -111,14 +86,35 @@ class SubjectsList extends Component {
     }
 
     handleDelete(id) {
-        console.log(id);
+        fetch(API_BASE_URL + `/subjects/${id}`, {
+            credentials: 'include',
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(
+            async response => {
+                let res = await response.json();
+                if (!res.success && typeof res.error.message !== "undefined") {
+                    this.setState(
+                        {error_message: res.error.message}
+                    )
+                }
+                this.fetchSubjectList();
+            }
+        );
+
     }
 
     render() {
-       // this.getSubjectsList();
-        let rows = [];
-        rows = this.state.subjects_list;
-        console.log("rows" + this.state.subjects_list);
+        let rows;
+        console.log("HERE");
+        console.log(this.props.list);
+        console.log(this.state.subjects_list);
+        if (this.props.list.length === 0)
+            rows = this.state.subjects_list;
+        else rows = this.props.list;
+        console.log(rows);
         return (
             <TableContainer component={Paper}>
                 <Table className="table" aria-label="simple table">
@@ -144,11 +140,13 @@ class SubjectsList extends Component {
                                             onClick={(event) => this.handleEdit(row.idSubject)}>
                                         Edit
                                     </Button>
-                                    <Button variant="outlined" size="small"
-                                            color="secondary" primary={true} startIcon={<DeleteIcon/>}
-                                            onClick={(event) => this.handleDelete(row.idSubject)}>
-                                        Delete
-                                    </Button>
+                                    <DeleteButton id={row.idSubject} fetchList={this.fetchSubjectList}>
+                                    </DeleteButton>
+                                    {/*<Button variant="outlined" size="small"*/}
+                                    {/*        color="secondary" primary={true} startIcon={<DeleteIcon/>}*/}
+                                    {/*        onClick={(event) => this.handleDelete(row.idSubject)}>*/}
+                                    {/*    Delete*/}
+                                    {/*</Button>*/}
                                 </TableCell>
                             </TableRow>
                         ))}
