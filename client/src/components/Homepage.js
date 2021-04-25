@@ -34,7 +34,7 @@ class Homepage extends Component {
                 isAuthenticated: true
             });
         }
-        console.log('json', json);
+
     }
 
 

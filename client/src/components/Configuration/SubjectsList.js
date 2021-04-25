@@ -9,43 +9,129 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from "@material-ui/core/Button";
 import DeleteIcon from '@material-ui/icons/Delete';
-
-import * as rows from "react-bootstrap/ElementChildren";
+import {API_BASE_URL} from "../../constants/api";
 
 class SubjectsList extends Component {
-
     constructor(props) {
         super(props);
+        this.state = {
+            subjects_list: []
+        }
     }
 
-    rows = [
-        this.createData('Frozen yoghurt'),
-        this.createData('Ice cream sandwich'),
-        this.createData('Eclair'),
-        this.createData('Cupcake'),
-        this.createData('Gingerbread'),
-    ];
+    //  rows = [];
+    componentDidMount() {
+        fetch(API_BASE_URL + '/subjects', {
+            credentials: 'include',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(
+            async response => {
+                let res = await response.json();
+                if (res.success) {
+                    this.rows = res.data;
+                    this.setState({subjects_list:res.data})
+                    this.state.subjects_list = res.data;
+                    console.log(res.data);
+                    return res.data;
 
-    createData(name, calories, fat) {
+                }
+            }
+        );
+    }
+
+    getSubjectsList() {
+        // this.rows = [{id: "1", name: "math"}, {id: "2", name: "algebra"}];
+        // return [{id: "1", name: "math"}, {id: "2", name: "algebra"}];
+        // fetch(API_BASE_URL + '/subjects', {
+        //     credentials: 'include',
+        //     method: 'GET',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        // }).then(
+        //     async response => {
+        //         let res = await response.json();
+        //         if (res.success) {
+        //             this.rows = res.data;
+        //             this.setState({subjects_list:res.data})
+        //             this.state.subjects_list = res.data;
+        //             console.log(res.data);
+        //             return res.data;
+        //
+        //         }
+        //     }
+        // );
+
+    }
+
+    // renderSubjectsList() {
+    //     let res = this.getSubjectsList();
+    //     //  let res = [{id: "1", name: "math"}, {id: "2", name: "algebra"}]
+    //     let subject_names = []
+    //     for (let i = 0; i < res.length; i++) {
+    //         subject_names[i] = res[i].name;
+    //     }
+    //     console.log(subject_names);
+    //     let subject_namesJson = [];
+    //     for (let i = 0; i < subject_names.length; i++) {
+    //         subject_namesJson[i] = this.createData(subject_names[i]);
+    //     }
+    //     this.rows = subject_namesJson;
+    // }
+
+    createData(name) {
         return {name};
     }
 
+    handleEdit(id, name) {
+        const payload = {
+            "name": name
+        };
+        console.log(id);
+        fetch(API_BASE_URL + '/subjects/$id', {
+            credentials: 'include',
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: payload
+        }).then(
+            async response => {
+                let res = await response.json();
+                if (!res.success) {
+                    this.setState(
+                        {error_message: res.error.message}
+                    )
+                } else return res.data;
+            }
+        );
+    }
+
+    handleDelete(id) {
+        console.log(id);
+    }
 
     render() {
-        console.log(this.rows);
+       // this.getSubjectsList();
+        let rows = [];
+        rows = this.state.subjects_list;
+        console.log("rows" + this.state.subjects_list);
         return (
             <TableContainer component={Paper}>
                 <Table className="table" aria-label="simple table">
                     <TableHead>
                         <TableRow>
                             <TableCell>Name</TableCell>
-                            <TableCell align="right"></TableCell>
-                            <TableCell align="right"></TableCell>
+                            <TableCell align="right"> </TableCell>
+                            <TableCell align="right"> </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.rows.map((row) => (
-                            <TableRow key={row.name}>
+                        {rows.map((row) => (
+                            <TableRow key={row.idSubject}>
                                 <TableCell component="th" scope="row">
                                     {row.name}
                                 </TableCell>
@@ -53,13 +139,14 @@ class SubjectsList extends Component {
 
                                 </TableCell>
                                 <TableCell align="right">
-                                    <Button variant="outlined" color="primary" primary={true} style={edit_style} size="small"
-                                            onClick={(event) => this.handleClick()}>
+                                    <Button variant="outlined" color="primary" primary={true} style={edit_style}
+                                            size="small"
+                                            onClick={(event) => this.handleEdit(row.idSubject)}>
                                         Edit
                                     </Button>
                                     <Button variant="outlined" size="small"
                                             color="secondary" primary={true} startIcon={<DeleteIcon/>}
-                                            onClick={(event) => this.handleClick()}>
+                                            onClick={(event) => this.handleDelete(row.idSubject)}>
                                         Delete
                                     </Button>
                                 </TableCell>
@@ -71,7 +158,8 @@ class SubjectsList extends Component {
         );
     }
 }
+
 const edit_style = {
-    'margin-right':'4px'
+    'margin-right': '4px'
 }
 export default SubjectsList;

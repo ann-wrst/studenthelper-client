@@ -64,7 +64,6 @@ class Login extends Component {
                             )
                     }
                     if (this.state.isLoggedIn) history.push('/');
-
                 }
             )
             .catch(function (error) {
