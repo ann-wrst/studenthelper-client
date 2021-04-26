@@ -8,9 +8,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
-import AddSubject from "../Subjects/AddSubject";
-import EditSubject from "../Subjects/EditSubject";
-import DeleteButton from "../Subjects/DeleteButton";
+import AddTeacher from "./AddTeacher";
 
 class Teachers extends Component {
     constructor(props) {
@@ -20,7 +18,7 @@ class Teachers extends Component {
             error_message: '',
             teachers_list: []
         }
-      //  this.fetchTeachersList = this.fetchTeachersList.bind(this);
+        this.fetchTeachersList = this.fetchTeachersList.bind(this);
     }
     componentDidMount() {
         this.fetchTeachersList();
@@ -50,7 +48,7 @@ class Teachers extends Component {
             <div style={heading_style}><Typography style={teachersheading_style} variant="h6">
                 Subjects
             </Typography>
-                {/*{<AddSubject fetchList={this.fetchTeachersList()}> </AddSubject>}*/}
+                <AddTeacher fetchList={this.fetchTeachersList}> </AddTeacher>
                 <TableContainer component={Paper}>
                     <Table className="table" aria-label="simple table">
                         <TableHead>
