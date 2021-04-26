@@ -8,7 +8,6 @@ import 'fontsource-roboto';
 import {Toolbar} from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import history from './history'
-
 import {login_styles} from './styles'
 
 class Login extends Component {
@@ -21,7 +20,6 @@ class Login extends Component {
             isLoggedIn: false
         }
         this.handleClick = this.handleClick.bind(this);
-
     }
 
     handleClick() {
@@ -106,6 +104,7 @@ class Login extends Component {
                             hintText="Enter your email"
                             label="Email"
                             inputProps={{maxLength: 255}}
+                            defaultValue="annwrst@gmail.com"
                             onChange={(event) => this.setState({email: event.target.value})}
                         />
                         <br/>
@@ -114,6 +113,7 @@ class Login extends Component {
                             type="password"
                             hintText="Enter your Password"
                             label="Password"
+                            defaultValue="password"
                             inputProps={{maxLength: 70}}
                             onChange={(event) => this.setState({password: event.target.value})}
                         />
