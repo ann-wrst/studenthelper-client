@@ -10,20 +10,34 @@ import Paper from '@material-ui/core/Paper';
 import Button from "@material-ui/core/Button";
 import DeleteIcon from '@material-ui/icons/Delete';
 import {API_BASE_URL} from "../../constants/api";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 import DeleteButton from "./DeleteButton";
+import {Dialog, DialogContentText} from "@material-ui/core";
+import DialogActions from "@material-ui/core/DialogActions";
 
 class SubjectsList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            subjects_list: []
+            subjects_list: [],
+            open: false
         }
-        this.fetchSubjectList=this.fetchSubjectList.bind(this);
+        this.fetchSubjectList = this.fetchSubjectList.bind(this);
     }
 
     componentDidMount() {
         this.fetchSubjectList();
     }
+    handleClickOpen(id) {
+        this.setState({open: true});
+        this.currentID=id;
+        this.added = false;
+    };
+    handleClose = () => {
+        this.setState({open: false});
+        this.currentID=undefined;
+    };
 
     fetchSubjectList() {
         fetch(API_BASE_URL + '/subjects', {
@@ -38,6 +52,7 @@ class SubjectsList extends Component {
                 if (res.success) {
                     this.setState({subjects_list: res.data})
                 }
+                return res;
             }
         );
     }
@@ -56,6 +71,7 @@ class SubjectsList extends Component {
     //     }
     //     this.rows = subject_namesJson;
     // }
+    rows = [];
 
     createData(name) {
         return {name};
@@ -85,7 +101,7 @@ class SubjectsList extends Component {
         );
     }
 
-    handleDelete(id) {
+    async handleDelete(id) {
         fetch(API_BASE_URL + `/subjects/${id}`, {
             credentials: 'include',
             method: 'DELETE',
@@ -95,26 +111,30 @@ class SubjectsList extends Component {
         }).then(
             async response => {
                 let res = await response.json();
-                if (!res.success && typeof res.error.message !== "undefined") {
+                if (!res?.success && typeof res?.error?.message !== "undefined") {
                     this.setState(
-                        {error_message: res.error.message}
+                        {error_message: res?.error?.message}
                     )
                 }
+                this.handleClose();
+                this.added = true;
+
                 this.fetchSubjectList();
             }
         );
-
     }
 
+    added = false;
+    currentID = undefined;
     render() {
-        let rows;
-        console.log("HERE");
-        console.log(this.props.list);
-        console.log(this.state.subjects_list);
-        if (this.props.list.length === 0)
-            rows = this.state.subjects_list;
-        else rows = this.props.list;
-        console.log(rows);
+        if (this.props.list.length === 0 || this.added) {
+            this.added = false;
+            this.rows = this.state.subjects_list;
+        } else {
+
+            this.rows = this.props.list;
+        }
+        console.log(this.added);
         return (
             <TableContainer component={Paper}>
                 <Table className="table" aria-label="simple table">
@@ -126,7 +146,7 @@ class SubjectsList extends Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
+                        {this.rows.map((row) => (
                             <TableRow key={row.idSubject}>
                                 <TableCell component="th" scope="row">
                                     {row.name}
@@ -140,13 +160,31 @@ class SubjectsList extends Component {
                                             onClick={(event) => this.handleEdit(row.idSubject)}>
                                         Edit
                                     </Button>
-                                    <DeleteButton id={row.idSubject} fetchList={this.fetchSubjectList}>
-                                    </DeleteButton>
-                                    {/*<Button variant="outlined" size="small"*/}
-                                    {/*        color="secondary" primary={true} startIcon={<DeleteIcon/>}*/}
-                                    {/*        onClick={(event) => this.handleDelete(row.idSubject)}>*/}
-                                    {/*    Delete*/}
-                                    {/*</Button>*/}
+                                    {/*<DeleteButton id={row.idSubject} fetchList={this.fetchSubjectList}>*/}
+                                    {/*</DeleteButton>*/}
+                                    <Button variant="outlined" size="small"
+                                            color="secondary" primary={true} startIcon={<DeleteIcon/>}
+                                            onClick={(event) => this.handleClickOpen(row.idSubject)}>
+                                        Delete
+                                    </Button>
+                                    <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
+                                        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                                            Delete
+                                        </DialogTitle>
+                                        <DialogContent>
+                                            <DialogContentText>
+                                                Do you want to delete subject?
+                                            </DialogContentText>
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={() => this.handleClose()} color="primary">
+                                                Cancel
+                                            </Button>
+                                            <Button onClick={() => this.handleDelete(this.currentID)} color="primary">
+                                                Done
+                                            </Button>
+                                        </DialogActions>
+                                    </Dialog>
                                 </TableCell>
                             </TableRow>
                         ))}

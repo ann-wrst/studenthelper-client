@@ -53,6 +53,7 @@
     ]
   },
   "devDependencies": {
+    "@material-ui/icons": "^4.11.2",
     "file-loader": "^6.2.0",
     "history": "^4.10.1"
   }

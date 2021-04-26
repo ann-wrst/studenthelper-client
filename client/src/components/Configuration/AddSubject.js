@@ -7,7 +7,6 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
-import SubjectsList from "./SubjectsList";
 class AddSubject extends Component {
     constructor(props) {
         super(props);
@@ -16,7 +15,6 @@ class AddSubject extends Component {
             new_name: undefined,
             error_message:'',
         }
-
     }
     handleClickOpen() {
         this.setState({open: true});
@@ -50,7 +48,6 @@ class AddSubject extends Component {
         this.setState({open: false});
     }
     render() {
-        console.log(this.state.open)
         return (<div>
             <Button variant="outlined" color="primary" primary={true} startIcon={<AddIcon/>}
                     onClick={(event) => this.handleClickOpen()}>
