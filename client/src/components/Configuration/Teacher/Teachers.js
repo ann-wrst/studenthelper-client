@@ -9,6 +9,8 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import AddTeacher from "./AddTeacher";
+import EditTeacher from "./EditTeacher";
+import DeleteTeacher from "./DeleteTeacher";
 
 class Teachers extends Component {
     constructor(props) {
@@ -20,11 +22,12 @@ class Teachers extends Component {
         }
         this.fetchTeachersList = this.fetchTeachersList.bind(this);
     }
+
     componentDidMount() {
         this.fetchTeachersList();
 
-
     }
+
     async fetchTeachersList() {
         console.log(1);
 
@@ -38,6 +41,7 @@ class Teachers extends Component {
         this.setState({teachers_list: response.data})
         return response;
     }
+
     rows = [];
 
     render() {
@@ -57,6 +61,7 @@ class Teachers extends Component {
                                 <TableCell>Name</TableCell>
                                 <TableCell>Middle Name</TableCell>
                                 <TableCell align="right"> </TableCell>
+                                <TableCell align="left"> </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -72,14 +77,14 @@ class Teachers extends Component {
                                         {row['middle name']}
                                     </TableCell>
                                     <TableCell align="left">
-                                        {/*<EditTeacher id={row.idTeacher} name={row.name}*/}
-                                        {/*             fetchList={this.fetchTeachersList}>*/}
-                                        {/*</EditTeacher>*/}
+                                        <EditTeacher id={row.idTeacher} surname={row.surname} name={row.name} middle_name={row['middle name']}
+                                                     fetchList={this.fetchTeachersList}>
+                                        </EditTeacher>
                                     </TableCell>
 
                                     <TableCell align="left">
-                                        {/*<DeleteButton id={row.idTeacher} fetchList={this.fetchSubjectList}>*/}
-                                        {/*</DeleteButton>*/}
+                                        <DeleteTeacher id={row.idTeacher} fetchList={this.fetchTeachersList}>
+                                        </DeleteTeacher>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -90,6 +95,7 @@ class Teachers extends Component {
         </div>);
     }
 }
+
 const page_style = {
     'display': 'flex',
     'flex-direction': 'column',

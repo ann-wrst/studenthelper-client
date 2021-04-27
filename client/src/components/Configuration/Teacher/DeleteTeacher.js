@@ -7,8 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import {DialogContentText} from "@material-ui/core";
 import DialogActions from "@material-ui/core/DialogActions";
-
-class DeleteButton extends Component {
+class DeleteTeacher extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,7 +15,6 @@ class DeleteButton extends Component {
             error_message: '',
         }
     }
-
     handleClickOpen() {
         this.setState({open: true});
     };
@@ -26,7 +24,7 @@ class DeleteButton extends Component {
     };
 
     handleDelete(id) {
-        fetch(API_BASE_URL + `/subjects/${id}`, {
+        fetch(API_BASE_URL + `/teachers/${id}`, {
             credentials: 'include',
             method: 'DELETE',
             headers: {
@@ -45,7 +43,6 @@ class DeleteButton extends Component {
         );
 
     }
-
     render() {
         return (<div>
             <Button variant="outlined" size="small"
@@ -60,7 +57,7 @@ class DeleteButton extends Component {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Do you want to delete subject?
+                        Do you want to delete teacher?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -75,7 +72,6 @@ class DeleteButton extends Component {
             </Dialog>
         </div>);
     }
+
 }
-
-export default DeleteButton;
-
+export default DeleteTeacher;

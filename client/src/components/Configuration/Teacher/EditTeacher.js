@@ -7,18 +7,22 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 
-class EditSubject extends Component {
+class EditTeacher extends Component {
     constructor(props) {
         super(props);
         this.state = {
             open: false,
+            new_surname: undefined,
             new_name: undefined,
+            new_middle_name: undefined,
             error_message: '',
         }
     }
 
-    handleClickOpen() {
-        this.setState({new_name:this.props.name})
+     handleClickOpen() {
+        this.setState({new_surname:this.props.surname});
+        this.setState({new_name:this.props.name});
+        this.setState({new_middle_name:this.props.middle_name});
         this.setState({open: true});
     };
 
@@ -26,11 +30,13 @@ class EditSubject extends Component {
         this.setState({open: false});
     };
 
-    editSubject(id) {
+    editTeacher(id) {
         const payload = {
-            "name": this.state.new_name
+            "surname": this.state.new_surname,
+            "name": this.state.new_name,
+            "middle_name": this.state.new_middle_name,
         };
-        fetch(API_BASE_URL + `/subjects/${id}`, {
+        fetch(API_BASE_URL + `/teachers/${id}`, {
             credentials: 'include',
             method: 'PATCH',
             headers: {
@@ -56,7 +62,7 @@ class EditSubject extends Component {
                 <Button style={edit_button} variant="outlined" color="primary" primary={true}
                         onClick={(event) => this.handleClickOpen()}>
                     Edit
-                </Button>   
+                </Button>
                 <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
 
                     <DialogTitle id="form-dialog-title">Edit</DialogTitle>
@@ -65,10 +71,28 @@ class EditSubject extends Component {
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Subject name"
-                            defaultValue={this.props.name}
+                            label="Teacher surname"
+                            defaultValue={this.props.surname}
                             fullWidth
+                            onChange={(event) => this.setState({new_surname: event.target.value})}
+                        />
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Teacher name"
+                            fullWidth
+                            defaultValue={this.props.name}
                             onChange={(event) => this.setState({new_name: event.target.value})}
+                        />
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Teacher middle name"
+                            fullWidth
+                            defaultValue={this.props.middle_name}
+                            onChange={(event) => this.setState({new_middle_name: event.target.value})}
                         />
                     </DialogContent>
 
@@ -76,7 +100,7 @@ class EditSubject extends Component {
                         <Button onClick={() => this.handleClose()} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={() => this.editSubject(this.props.id)} color="primary">
+                        <Button onClick={() => this.editTeacher(this.props.id)} color="primary">
                             Done
                         </Button>
                     </DialogActions>
@@ -92,4 +116,4 @@ const edit_button = {
     paddingBottom: '2px',
 }
 
-export default EditSubject;
+export default EditTeacher;
