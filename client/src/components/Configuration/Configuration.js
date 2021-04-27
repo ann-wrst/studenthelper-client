@@ -4,7 +4,7 @@ import 'react-tabs/style/react-tabs.css';
 import Subjects from "./Subjects/Subjects";
 import SideNavigation from "../SideNavigation";
 import Teachers from "./Teacher/Teachers";
-
+import Classtypes from "./Class types/Classtypes";
 class Configuration extends Component {
     constructor(props) {
         super(props);
@@ -28,7 +28,7 @@ class Configuration extends Component {
                     <Teachers/>
                 </TabPanel>
                 <TabPanel>
-                    <h2>Class types</h2>
+                    <Classtypes/>
                 </TabPanel>
             </Tabs></div>);
     }

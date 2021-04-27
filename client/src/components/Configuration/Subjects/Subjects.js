@@ -11,6 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
+import EmptyStub from "../EmptyStub";
 
 class Subjects extends Component {
     constructor(props) {
@@ -61,6 +62,8 @@ class Subjects extends Component {
         this.rows = this.state.subjects_list;
         if (typeof this.rows === "undefined")
             this.rows = [];
+        if (this.rows.length===0)
+            return(<EmptyStub name={"subjects"}/>)
         return (<div style={page_style}>
             <div style={heading_style}><Typography style={subjectsheading_style} variant="h6">
                 Subjects

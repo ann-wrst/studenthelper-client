@@ -8,84 +8,79 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
-import AddTeacher from "./AddTeacher";
-import EditTeacher from "./EditTeacher";
-import DeleteTeacher from "./DeleteTeacher";
+import AddClassType from "./AddClassType";
+import DeleteClassType from "./DeleteClassType";
+import EditClassType from "./EditClassType";
 import EmptyStub from "../EmptyStub";
-
-class Teachers extends Component {
+class Classtypes extends Component {
     constructor(props) {
         super(props);
         this.state = {
             open: false,
             error_message: '',
-            teachers_list: []
+            classtypes_list: []
         }
-        this.fetchTeachersList = this.fetchTeachersList.bind(this);
+        this.fetchClassTypesList = this.fetchClassTypesList.bind(this);
     }
 
     componentDidMount() {
-        this.fetchTeachersList();
+        this.fetchClassTypesList();
     }
 
-    async fetchTeachersList() {
-        let response = await (await fetch(API_BASE_URL + '/teachers', {
+    async fetchClassTypesList() {
+        let response = await (await fetch(API_BASE_URL + '/classtypes', {
             credentials: 'include',
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
         })).json();
-        this.setState({teachers_list: response.data})
+        this.setState({classtypes_list: response.data})
         return response;
     }
 
     rows = [];
 
     render() {
-        this.rows = this.state.teachers_list;
-        if (typeof this.rows === "undefined")
+        this.rows = this.state.classtypes_list;
+        //so the page won't crash on map() function
+        if (typeof this.rows === "undefined") {
             this.rows = [];
+        }
         if (this.rows.length===0)
-            return(<EmptyStub name={"teachers"}/>)
+            return(<EmptyStub name={"class types"}/>)
         return (<div style={page_style}>
-            <div style={heading_style}><Typography style={teachersheading_style} variant="h6">
-                Teachers
-            </Typography>
-                <AddTeacher fetchList={this.fetchTeachersList}> </AddTeacher>
+            <div style={heading_style}>
+                <Typography style={classtypesheading_style} variant="h6">
+                    Class types
+                </Typography>
+                <AddClassType fetchList={this.fetchClassTypesList}> </AddClassType>
                 <TableContainer component={Paper}>
                     <Table className="table" aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Surname</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Middle Name</TableCell>
+                                <TableCell>Type</TableCell>
                                 <TableCell align="right"> </TableCell>
                                 <TableCell align="left"> </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {this.rows.map((row) => (
-                                <TableRow key={row.idTeacher}>
+                                <TableRow key={row.idClassType}>
                                     <TableCell component="th" scope="row">
-                                        {row.surname}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        {row.name}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        {row['middle name']}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        <EditTeacher id={row.idTeacher} surname={row.surname} name={row.name}
-                                                     middle_name={row['middle name']}
-                                                     fetchList={this.fetchTeachersList}>
-                                        </EditTeacher>
+                                        {row.typeName}
                                     </TableCell>
 
                                     <TableCell align="left">
-                                        <DeleteTeacher id={row.idTeacher} fetchList={this.fetchTeachersList}>
-                                        </DeleteTeacher>
+                                        <EditClassType id={row.idClassType} type={row.type}
+                                                     fetchList={this.fetchClassTypesList}>
+                                        </EditClassType>
+                                    </TableCell>
+
+                                    <TableCell align="left">
+                                        <DeleteClassType id={row.idClassType} fetchList={this.fetchClassTypesList}>
+
+                                        </DeleteClassType>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -108,7 +103,7 @@ const heading_style = {
     'flex-wrap': 'wrap',
     'align-content': 'stretch'
 };
-const teachersheading_style = {
+const classtypesheading_style = {
     'margin-right': '20px'
 }
-export default Teachers;
+export default Classtypes;
