@@ -65,6 +65,7 @@ class SideNavigation extends React.Component {
                         <img src={process.env.PUBLIC_URL + '/Studenthelper.svg'} alt=''/>
                     </Link>
                 </div>
+                <div style={container_styles}>
                 <div style={item_styles}>
                     <Link style={items_styles} to='/schedule'>
                         <img src={process.env.PUBLIC_URL + '/schedule_icon.svg'} alt='' style={icon_styles}/>
@@ -72,9 +73,7 @@ class SideNavigation extends React.Component {
                             Schedule
                         </Typography>
                     </Link>
-
                 </div>
-                <br/>
                 <div style={item_styles}>
                     <Link style={items_styles} to='/deadlines'>
                         <img src={process.env.PUBLIC_URL + '/deadline_icon.svg'} alt='' style={icon_styles}/>
@@ -102,8 +101,8 @@ class SideNavigation extends React.Component {
                         </Typography>
                     </Link>
                     <a style={items_styles} onClick={this.showSettings} className="menu-item--small">
-
                     </a>
+                </div>
                 </div>
                 <div>
                     <a style={log_out_styles} onClick={this.Logout} className="menu-item--small">Log out</a>
@@ -114,7 +113,10 @@ class SideNavigation extends React.Component {
         );
     }
 }
-
+const container_styles = {
+    display:'flex',
+    flexDirection:'column'
+}
 const item_styles = {}
 const log_out_styles = {
     position: 'absolute',
@@ -132,13 +134,14 @@ const icon_styles = {
 };
 const items_styles = {
     cursor: 'pointer',
-    color: '#554A5E'
-
+    color: '#554A5E',
+    display:'flex',
+    alignItems:'center',
+    textDecoration:'none'
 }
 const title_styles = {
-    float: 'left',
+    // float: 'left',
     marginLeft: '5px'
-
 }
 const styles = {
     bmBurgerButton: {
@@ -155,13 +158,15 @@ const styles = {
     bmCrossButton: {
         height: '24px',
         width: '24px',
-        color: 'rgba(0,0,0,0)'
+        color: 'rgba(0,0,0,0)',
+        cursor:'default'
+
     },
     bmCross: {
       //  background: '#658ba2',
         margin: '5 10 5 5',
-        color: 'rgba(0,0,0,0)'
-
+        color: 'rgba(0,0,0,0)',
+        cursor:'default'
     },
     bmMenuWrap: {
         position: 'fixed',

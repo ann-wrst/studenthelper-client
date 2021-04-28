@@ -12,6 +12,8 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import EmptyStub from "../EmptyStub";
+import AddClassType from "../Class types/AddClassType";
+import history from "../../history";
 
 class Subjects extends Component {
     constructor(props) {
@@ -29,16 +31,6 @@ class Subjects extends Component {
     }
 
     async fetchSubjectList() {
-        let response = await (await fetch(API_BASE_URL + '/subjects', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })).json();
-        this.setState({subjects_list: response.data})
-        return response;
-        /*
         fetch(API_BASE_URL + '/subjects', {
             credentials: 'include',
             method: 'GET',
@@ -47,13 +39,15 @@ class Subjects extends Component {
             },
         }).then(
             async response => {
-                res = await response.json();
-                if (res.success) {
-                    this.setState({subjects_list: res.data})
+                if(response.status===403)
+                    history.push('/login');
+                let res = await response.json();
+                if (res?.success) {
+                    this.setState({subjects_list: res?.data})
                 }
                 return res;
             }
-        );*/
+        );
     }
 
     rows = [];
@@ -62,46 +56,54 @@ class Subjects extends Component {
         this.rows = this.state.subjects_list;
         if (typeof this.rows === "undefined")
             this.rows = [];
-        if (this.rows.length===0)
-            return(<EmptyStub name={"subjects"}/>)
-        return (<div style={page_style}>
-            <div style={heading_style}><Typography style={subjectsheading_style} variant="h6">
-                Subjects
-            </Typography>
-                <AddSubject fetchList={this.fetchSubjectList}> </AddSubject>
-                {console.log(this.state.subjects_list)}
-                <TableContainer component={Paper}>
-                    <Table className="table" aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Name</TableCell>
-                                <TableCell align="right"> </TableCell>
-                                <TableCell align="right"> </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {this.rows.map((row) => (
-                                <TableRow key={row.idSubject}>
-                                    <TableCell component="th" scope="row">
-                                        {row.name}
-                                    </TableCell>
-
-                                    <TableCell align="right">
-                                        <EditSubject id={row.idSubject} name={row.name}
-                                                     fetchList={this.fetchSubjectList}>
-                                        </EditSubject>
-                                    </TableCell>
-
-                                    <TableCell align="left">
-                                        <DeleteButton id={row.idSubject} fetchList={this.fetchSubjectList}>
-                                        </DeleteButton>
-                                    </TableCell>
+        if (this.rows.length !== 0)
+            return (<div style={page_style}>
+                <div style={heading_style}><Typography style={subjectsheading_style} variant="h6">
+                    Subjects
+                </Typography>
+                    <AddSubject fetchList={this.fetchSubjectList}> </AddSubject>
+                    {console.log(this.state.subjects_list)}
+                    <TableContainer component={Paper}>
+                        <Table className="table" aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell align="right"> </TableCell>
+                                    <TableCell align="right"> </TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                            </TableHead>
+                            <TableBody>
+                                {this.rows.map((row) => (
+                                    <TableRow key={row.idSubject}>
+                                        <TableCell component="th" scope="row">
+                                            {row.name}
+                                        </TableCell>
+
+                                        <TableCell align="right">
+                                            <EditSubject id={row.idSubject} name={row.name}
+                                                         fetchList={this.fetchSubjectList}>
+                                            </EditSubject>
+                                        </TableCell>
+
+                                        <TableCell align="left">
+                                            <DeleteButton id={row.idSubject} fetchList={this.fetchSubjectList}>
+                                            </DeleteButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </div>
+            </div>)
+        else return(<div>
+            <div style={heading_style}>
+                <Typography style={subjectsheading_style} variant="h6">
+                    Subjects
+                </Typography>
+                <AddClassType fetchList={this.fetchClassTypesList}> </AddClassType>
             </div>
+            <EmptyStub name={"subjects"}/>
         </div>);
     }
 }
