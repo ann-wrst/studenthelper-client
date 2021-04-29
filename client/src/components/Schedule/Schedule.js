@@ -9,7 +9,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
-
+import AddSchedule from "./AddSchedule";
 
 function Schedule() {
     return (<div>
@@ -17,9 +17,7 @@ function Schedule() {
             <Table className="table" aria-label="simple table">
                 <TableHead>
                     <TableRow style={row_style}>
-                        <TableCell style={table_heading} align="center">Monday <IconButton size="small"
-                                                                                           style={addbutton}><AddIcon/>
-                        </IconButton></TableCell>
+                        <TableCell style={table_heading} align="center">Monday <AddSchedule day="Monday"/></TableCell>
                         <TableCell style={table_heading} align="center">Tuesday <IconButton size="small"
                                                                                             style={addbutton}><AddIcon/>
                         </IconButton></TableCell>
