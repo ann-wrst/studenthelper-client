@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Loginscreen from './components/Loginscreen'
-import Schedule from "./components/Schedule";
+import Schedule from "./components/Schedule/Schedule";
 import Deadlines from "./components/Deadlines";
 import Notes from "./components/Notes";
 import Configuration from "./components/Configuration/Configuration";
