@@ -48,15 +48,6 @@ class Classtypes extends Component {
                 return res;
             }
         );
-        // let response = await (await fetch(API_BASE_URL + '/classtypes', {
-        //     credentials: 'include',
-        //     method: 'GET',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        // })).json();
-        // this.setState({classtypes_list: response.data})
-        // return response;
     }
 
 
@@ -93,7 +84,7 @@ class Classtypes extends Component {
                                         </TableCell>
 
                                         <TableCell align="left">
-                                            <EditClassType id={row.idClassType} type={row.type}
+                                            <EditClassType id={row.idClassType} type={row.typeName}
                                                            fetchList={this.fetchClassTypesList}>
                                             </EditClassType>
                                         </TableCell>

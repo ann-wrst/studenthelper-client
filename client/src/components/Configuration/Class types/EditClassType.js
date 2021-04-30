@@ -7,23 +7,26 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import EditSubject from "../Subjects/EditSubject";
+
 class EditClassType extends Component {
     constructor(props) {
         super(props);
         this.state = {
             open: false,
-            type:undefined,
+            type: undefined,
             error_message: '',
         }
     }
+
     handleClickOpen() {
-        this.setState({type:this.props.type});
+        this.setState({type: this.props.type});
         this.setState({open: true});
     };
 
     handleClose = () => {
         this.setState({open: false});
     };
+
     editClassType(id) {
         const payload = {
             "typeName": this.state.type
@@ -49,6 +52,7 @@ class EditClassType extends Component {
         this.setState({open: false});
 
     }
+
     render() {
         return (<div>
                 <Button style={edit_button} variant="outlined" color="primary" primary={true}
@@ -56,7 +60,7 @@ class EditClassType extends Component {
                     Edit
                 </Button>
                 <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
-
+                    {console.log(this.props.type)}
                     <DialogTitle id="form-dialog-title">Edit</DialogTitle>
                     <DialogContent>
                         <TextField
@@ -64,7 +68,7 @@ class EditClassType extends Component {
                             margin="dense"
                             id="name"
                             label="Class type name"
-                            defaultValue={this.props.name}
+                            defaultValue={this.props.type}
                             fullWidth
                             onChange={(event) => this.setState({type: event.target.value})}
                         />
@@ -83,6 +87,7 @@ class EditClassType extends Component {
         );
     }
 }
+
 const edit_button = {
     float: 'left',
     paddingTop: '2px',

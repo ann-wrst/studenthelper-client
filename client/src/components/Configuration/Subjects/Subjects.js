@@ -14,7 +14,6 @@ import TableContainer from "@material-ui/core/TableContainer";
 import EmptyStub from "../EmptyStub";
 import AddClassType from "../Class types/AddClassType";
 import history from "../../history";
-
 class Subjects extends Component {
     constructor(props) {
         super(props);
@@ -25,12 +24,12 @@ class Subjects extends Component {
         }
         this.fetchSubjectList = this.fetchSubjectList.bind(this);
     };
-
     componentDidMount() {
         this.fetchSubjectList();
     }
 
     async fetchSubjectList() {
+        console.log('in fetch');
         fetch(API_BASE_URL + '/subjects', {
             credentials: 'include',
             method: 'GET',
@@ -101,11 +100,12 @@ class Subjects extends Component {
                 <Typography style={subjectsheading_style} variant="h6">
                     Subjects
                 </Typography>
-                <AddClassType fetchList={this.fetchClassTypesList}> </AddClassType>
+                <AddSubject fetchList={this.fetchSubjectList}> </AddSubject>
             </div>
             <EmptyStub name={"subjects"}/>
         </div>);
     }
+
 }
 
 const page_style = {

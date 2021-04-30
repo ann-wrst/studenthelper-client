@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './App.css';
 import Loginscreen from './components/Loginscreen'
 import Schedule from "./components/Schedule/Schedule";
@@ -15,42 +15,44 @@ import history from "./components/history";
 import Homepage from "./components/Homepage";
 
 class App extends Component {
-  constructor(props){
-    super(props);
-    this.state={
-      loginPage:[],
-      uploadScreen:[]
+    constructor(props) {
+        super(props);
+        this.state = {
+            loginPage: [],
+            uploadScreen: []
+        }
     }
-  }
-  componentDidMount(){
-    const loginPage = [];
-    loginPage.push(<Loginscreen appContext={this} key={"login-screen"}/>);
-    this.setState({
-      loginPage:loginPage
-    })
 
-  }
-  render() {
+    componentDidMount() {
+        const loginPage = [];
+        loginPage.push(<Loginscreen appContext={this} key={"login-screen"}/>);
+        this.setState({
+            loginPage: loginPage
+        })
 
-      return (
-          <Router history={history}>
-              <Switch>
-              <Route exact path="/login"><Loginscreen/></Route>
-              <Route exact path="/schedule"><Schedule/></Route>
-              <Route exact path="/deadlines"><Deadlines/></Route>
-              <Route exact path="/notes"><Notes/></Route>
-              <Route exact path="/configuration"><Configuration/></Route>
-              <Route exact path="/"><Homepage/></Route>
-              </Switch>
-          </Router>
-      );
-  }
+    }
 
-   //     <div className="App">
-        //  {this.state.loginPage}
-        //  {this.state.uploadScreen}
-      //  </div>
-  //  );
+    render() {
+
+        return (
+            <Router history={history}>
+                <Switch>
+                    <Route exact path="/login"><Loginscreen/></Route>
+                    <Route exact path="/schedule"><Schedule/></Route>
+                    <Route exact path="/deadlines"><Deadlines/></Route>
+                    <Route exact path="/notes"><Notes/></Route>
+                    <Route exact path="/configuration"><Configuration/></Route>
+                    <Route exact path="/"><Homepage/></Route>
+                </Switch>
+            </Router>
+        );
+    }
+
+    //     <div className="App">
+    //  {this.state.loginPage}
+    //  {this.state.uploadScreen}
+    //  </div>
+    //  );
 //  }
 }
 

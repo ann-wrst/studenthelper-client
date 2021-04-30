@@ -108,7 +108,7 @@ class Teachers extends Component {
                     <Typography style={teachersheading_style} variant="h6">
                         Teachers
                     </Typography>
-                    <AddClassType fetchList={this.fetchClassTypesList}> </AddClassType>
+                    <AddTeacher fetchList={this.fetchTeachersList}> </AddTeacher>
                 </div>
                 <EmptyStub name={"teachers"}/>
             </div>
