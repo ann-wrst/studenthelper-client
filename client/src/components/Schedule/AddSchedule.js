@@ -19,14 +19,15 @@ import {Link} from "react-router-dom";
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
+
 class AddSchedule extends Component {
     constructor(props) {
         super(props);
         this.state = {
             open: false,
             class_number: undefined,
-            date_from: undefined,
-            date_to: undefined,
+            time_from: undefined,
+            time_to: undefined,
             parity: true,
             parityDependent: false,
             subject: undefined,
@@ -114,11 +115,13 @@ class AddSchedule extends Component {
             subject: undefined,
             teacher: undefined,
             class_type: undefined,
+
         });
     };
     subjects_list = [];
     teachers_list = [];
     classtypes_list = [];
+
     handleSubjects = (event) => {
         this.setState({subject: event.target.value})
     };
@@ -198,23 +201,59 @@ class AddSchedule extends Component {
         return dropdown;
     }
 
-    handleParity(event) {
-        this.setState({parity: event.target.value})
-    }
+    handleParity = event => {
+        this.setState({parity: event.target.value});
+        //let value = event.target.value === 'true';
+        //this.setState({parity: value});
+    };
+
     showParity() {
         let radio;
+        console.log("par");
+        console.log(typeof this.state.parity);
+        console.log(typeof this.state.parityDependent);
         if (this.state.parityDependent) {
             radio = <div><FormLabel component="legend">Parity</FormLabel>
-                <RadioGroup aria-label="parity" name="parity" value={this.state.parity} onChange={()=>this.handleParity()}>
-                    <FormControlLabel value={true} control={<Radio/>} label="Even"/>
-                    <FormControlLabel value={false} control={<Radio/>} label="Odd"/>
+                <RadioGroup aria-label="parity" name="parity" value={this.state.parity} onChange={this.handleParity}>
+                    <FormControlLabel value={"true"} control={<Radio color="primary"/>} label="Even"/>
+                    <FormControlLabel value={"false"} control={<Radio color="primary"/>} label="Odd"/>
                 </RadioGroup></div>
         }
         return radio;
     }
 
     addSchedule() {
-
+        let parity;
+        if (!this.state.parityDependent) parity = null;
+        else {
+            if (this.state.parity === 'true') parity = true;
+            if (this.state.parity === 'false') parity = false;
+        }
+        const payload = {
+            "class": {
+                "number": this.state.class_number,
+                "from": this.state.time_from,
+                "to": this.state.time_to,
+            },
+            "subject": this.state.subject,
+            "teacher": this.state.teacher,
+            "classType": this.state.class_type,
+            "parity": parity
+        };
+        fetch(API_BASE_URL + '/schedule', {
+            credentials: 'include',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+        }).then(
+            async response => {
+                if (response.status === 403)
+                    history.push('/login');
+                return await response.json();
+            }
+        );
     }
 
     render() {
@@ -254,7 +293,7 @@ class AddSchedule extends Component {
                                inputProps={{
                                    step: 300, // 5 min
                                }}
-                               onChange={(event) => this.setState({date_from: event.target.value})}
+                               onChange={(event) => this.setState({time_from: event.target.value})}
                     />
                     <br/>
                         {console.log(this.props.subjects)}
@@ -270,7 +309,7 @@ class AddSchedule extends Component {
                                    inputProps={{
                                        step: 300, // 5 min
                                    }}
-                                   onChange={(event) => this.setState({date_to: event.target.value})}
+                                   onChange={(event) => this.setState({time_to: event.target.value})}
                         />
                     <div>
                     <div style={dropdown_style}>
@@ -301,7 +340,7 @@ class AddSchedule extends Component {
                     <Button onClick={() => this.handleClose()} color="primary">
                     Cancel
                     </Button>
-                    <Button onClick={() => this.createSubject()} color="primary">
+                    <Button onClick={() => this.addSchedule()} color="primary">
                     Done
                     </Button>
                     </DialogActions>
@@ -309,9 +348,10 @@ class AddSchedule extends Component {
     }
 }
 
-const dropdown_style = {
-    width: '552px',
-    marginTop: '10px',
-    marginBottom: '10px'
-};
+const
+    dropdown_style = {
+        width: '552px',
+        marginTop: '10px',
+        marginBottom: '10px'
+    };
 export default AddSchedule;
