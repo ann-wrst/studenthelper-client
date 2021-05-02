@@ -4,8 +4,14 @@ import {scaleDown as Menu} from 'react-burger-menu'
 import Typography from "@material-ui/core/Typography";
 import history from './history'
 import Alert from "@material-ui/lab/Alert";
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 import ErrorSnackbar from "./ErrorSnackbar";
+
 class SideNavigation extends React.Component {
     constructor(props) {
         super(props);
@@ -18,6 +24,7 @@ class SideNavigation extends React.Component {
     showSettings(event) {
         event.preventDefault();
     }
+
     Logout() {
         fetch(API_BASE_URL + '/logout', {
             credentials: 'include',
@@ -28,11 +35,11 @@ class SideNavigation extends React.Component {
         }).then(
             async response => {
                 let res = await response.json();
-              //  this.clearError();
-                    if (!res.success) {
-                        this.setState(
-                            {error_message: res.error.message}
-                        )
+                //  this.clearError();
+                if (!res.success) {
+                    this.setState(
+                        {error_message: res.error.message}
+                    )
                 }
             }
         );
@@ -58,138 +65,84 @@ class SideNavigation extends React.Component {
         // this.setError()
         console.log(this.state.error_message);
         return (
-            <Menu styles={styles}>
-                <div>
-                    <Link style={items_styles} to='/'>
-                        <img src={process.env.PUBLIC_URL + '/Studenthelper.svg'} alt=''/>
-                    </Link>
-                </div>
-                <div style={container_styles}>
-                <div style={item_styles}>
-                    <Link style={items_styles} to='/schedule'>
-                        <img src={process.env.PUBLIC_URL + '/schedule_icon.svg'} alt='' style={icon_styles}/>
-                        <Typography variant="h6" style={title_styles}>
-                            Schedule
-                        </Typography>
-                    </Link>
-                </div>
-                <div style={item_styles}>
-                    <Link style={items_styles} to='/deadlines'>
-                        <img src={process.env.PUBLIC_URL + '/deadline_icon.svg'} alt='' style={icon_styles}/>
-                        <Typography variant="h6" style={title_styles}>
-                            Deadlines
-                        </Typography>
-                    </Link>
-                </div>
-                <div style={item_styles}>
-                    <Link style={items_styles} to='/notes'>
-                        <img src={process.env.PUBLIC_URL + '/notes-svgrepo-com.svg'} alt='' style={icon_styles}/>
-                        <Typography variant="h6" style={title_styles}>
-                            Notes
-                        </Typography>
-                    </Link>
-                    <a style={items_styles} onClick={this.showSettings} className="menu-item--small">
-
-                    </a>
-                </div>
-                <div style={item_styles}>
-                    <Link style={items_styles} to='/configuration'>
-                        <img src={process.env.PUBLIC_URL + '/settings.svg'} alt='' style={icon_styles}/>
-                        <Typography variant="h6" style={title_styles}>
-                            Configuration
-                        </Typography>
-                    </Link>
-                    <a style={items_styles} onClick={this.showSettings} className="menu-item--small">
-                    </a>
-                </div>
-                </div>
-                <div>
-                    <a style={log_out_styles} onClick={this.Logout} className="menu-item--small">Log out</a>
-                </div>
-
-                <br/>
-            </Menu>
+            <AppBar position="static">
+                <Toolbar>
+                    {/*<IconButton edge="start"  color="inherit" aria-label="menu">*/}
+                    {/*    <MenuIcon/>*/}
+                    {/*</IconButton>*/}
+                    {/*<Link to='/'>*/}
+                    {/*    <img src={process.env.PUBLIC_URL + '/Studenthelper.svg'} alt=''/>*/}
+                    {/*</Link>*/}
+                    <div style={menu_style}>
+                        <div style={item_styles}>
+                            <Link style={items_styles} to='/schedule'>
+                                <img src={process.env.PUBLIC_URL + '/schedule_icon.svg'} alt='' style={icon_styles}/>
+                                <Typography variant="h6" style={title_styles}>
+                                    Schedule
+                                </Typography>
+                            </Link>
+                        </div>
+                        <div style={item_styles}>
+                            <Link style={items_styles} to='/deadlines'>
+                                <img src={process.env.PUBLIC_URL + '/deadline_icon.svg'} alt='' style={icon_styles}/>
+                                <Typography variant="h6" style={title_styles}>
+                                    Deadlines
+                                </Typography>
+                            </Link>
+                        </div>
+                        <div style={item_styles}>
+                            <Link style={items_styles} to='/notes'>
+                                <img src={process.env.PUBLIC_URL + '/notes.svg'} alt='' style={icon_styles}/>
+                                <Typography variant="h6" style={title_styles}>
+                                    Notes
+                                </Typography>
+                            </Link>
+                        </div>
+                        <div style={item_styles}>
+                        <Link style={items_styles} to='/configuration'>
+                            <img src={process.env.PUBLIC_URL + '/settings.svg'} alt='' style={icon_styles}/>
+                            <Typography variant="h6" style={title_styles}>
+                                Configuration
+                            </Typography>
+                        </Link>
+                        </div>
+                        <div style={log_out_styles}>
+                    <Button color="inherit" onClick={this.Logout}>Logout</Button>
+                        </div>
+                    </div>
+                </Toolbar>
+            </AppBar>
         );
     }
 }
-const container_styles = {
-    display:'flex',
-    flexDirection:'column'
+
+const menu_style = {
+    display: 'flex',
+    alignItems: 'center'
 }
-const item_styles = {}
+const item_styles = {
+    paddingRight:'20px'
+}
 const log_out_styles = {
     position: 'absolute',
-    bottom: '15px',
-    left: '10px',
-    padding: '2.5em 1.5em 0px',
-    cursor: 'pointer'
-
+    right: '5px',
+    // padding: '2.5em 1.5em 0px',
+    // cursor: 'pointer'
 }
 const icon_styles = {
-    width: '23px',
-    height: '23px',
+    width: '20px',
+    height: '20px',
     display: 'inline',
     float: 'left'
 };
 const items_styles = {
     cursor: 'pointer',
-    color: '#554A5E',
-    display:'flex',
-    alignItems:'center',
-    textDecoration:'none'
+    color: 'white',
+    display: 'flex',
+    alignItems: 'center',
+    textDecoration: 'none'
 }
 const title_styles = {
-    // float: 'left',
     marginLeft: '5px'
-}
-const styles = {
-    bmBurgerButton: {
-        position: 'fixed',
-        width: '36px',
-        height: '30px',
-        left: '36px',
-        top: '36px'
-    },
-    bmBurgerBars: {
-        background: '#D5B1F5'
-    },
-
-    bmCrossButton: {
-        height: '24px',
-        width: '24px',
-        color: 'rgba(0,0,0,0)',
-        cursor:'default'
-
-    },
-    bmCross: {
-      //  background: '#658ba2',
-        margin: '5 10 5 5',
-        color: 'rgba(0,0,0,0)',
-        cursor:'default'
-    },
-    bmMenuWrap: {
-        position: 'fixed',
-        height: '100%'
-    },
-    bmMenu: {
-        background: '#eeedf4',
-        padding: '2.5em 1.5em 0',
-        fontSize: '1.15em',
-        overflow:  'hidden'
-    },
-    bmMorphShape: {
-        fill: '#6b7396'
-    },
-    bmItemList: {
-        color: '#554A5E',
-        padding: '0.8em'
-    },
-    bmItem: {
-        display: 'inline-block'
-    },
-    bmOverlay: {
-        background: 'rgb(223,216,227)'
-    }
-
 }
 export default SideNavigation;

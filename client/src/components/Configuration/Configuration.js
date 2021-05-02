@@ -5,6 +5,7 @@ import Subjects from "./Subjects/Subjects";
 import SideNavigation from "../SideNavigation";
 import Teachers from "./Teacher/Teachers";
 import Classtypes from "./Class types/Classtypes";
+
 class Configuration extends Component {
     constructor(props) {
         super(props);
@@ -35,6 +36,7 @@ class Configuration extends Component {
 }
 
 const tabs_style = {
-    'margin-left': '80px'
+    'margin-left': '24px',
+    'margin-top': '5px'
 }
 export default Configuration;

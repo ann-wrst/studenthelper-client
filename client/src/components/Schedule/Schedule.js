@@ -10,6 +10,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
 import AddSchedule from "./AddSchedule";
+import SideNavigation from "../SideNavigation";
 import {API_BASE_URL} from "../../constants/api";
 import history from "../history";
 
@@ -26,6 +27,7 @@ class Schedule extends Component {
 
     render() {
         return (<div>
+            <SideNavigation/>
             <TableContainer component={Paper}>
                 <Table className="table" aria-label="simple table">
                     <TableHead>
