@@ -13,6 +13,7 @@ import AddSchedule from "./AddSchedule";
 import {API_BASE_URL} from "../../constants/api";
 import history from "../history";
 import SideNavigation from "../SideNavigation";
+import Divider from '@material-ui/core/Divider';
 
 class Schedule extends Component {
     constructor(props) {
@@ -70,9 +71,14 @@ class Schedule extends Component {
             return `${from} - ${to}`;
         else return null;
     }
-    // renderMoreButton() {
-    //     if (typeof this.schedules_list)
-    // }
+
+    renderMoreButton(day, number) {
+        if (this.getScheduleByDayAndNumber(day, number))
+            return (<div style={more_button}>
+                <IconButton size="small"><MoreVertIcon/></IconButton>
+            </div>)
+    }
+
     render() {
         this.schedules_list = this.state.schedules_list;
         if (typeof this.state.schedules_list === 'undefined') {
@@ -81,59 +87,56 @@ class Schedule extends Component {
         let elements = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         let items = []
+        let current;
         for (const [index, value] of elements.entries()) {
             items.push(<TableCell style={table_heading} align="center">{value} <AddSchedule
                 dayNumber={index + 1} day={value}/></TableCell>)
         }
-        console.log(this.getScheduleByDayAndNumber(0, 1));
         return (<div>
                 <SideNavigation/>
                 <TableContainer component={Paper}>
                     <Table className="table" aria-label="simple table">
                         <TableHead>
-                            <TableRow style={row_style}>
+                            <TableRow>
                                 {items}
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {numbers.map((num) => (
-                                <TableRow key={"weekdays"}>
+                                <TableRow style={row_style} key={"weekdays"}>
                                     {this.weekdays.map((day, dayIdx) => (
+                                        // {current = this.getScheduleByDayAndNumber(dayIdx, num)}
                                         <TableCell align="center">
                                             <div style={table_item}>
-                                                <div>
-                                                    <div style={class_number_container}>
-                                                        <div>
-                                                            {this.getScheduleByDayAndNumber(dayIdx, num)?.$class?.number}
-                                                        </div>
+                                                <div style={class_number_container}>
+                                                    <div>
+                                                        {this.getScheduleByDayAndNumber(dayIdx, num)?.$class?.number}
                                                     </div>
-                                                    <div style={class_info_container}>
-                                                        <div>
-                                                            {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num)?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num)?.$class?.to)}
-                                                        </div>
+                                                </div>
+
+                                                <div style={class_info_container}>
+                                                    <div>
+                                                        {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num)?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num)?.$class?.to)}
+                                                    </div>
+                                                    <div>
                                                         <div>
                                                             <div>
-                                                                <div>
-                                                                    {this.getScheduleByDayAndNumber(dayIdx, num)?.subject.name}
-                                                                </div>
-                                                                <div>
-                                                                    {this.getScheduleByDayAndNumber(dayIdx, num)?.classtype?.typeName}
-                                                                </div>
-                                                                <div>
-                                                                    {this.getScheduleByDayAndNumber(dayIdx, num)?.teacher.surname} {this.getScheduleByDayAndNumber(dayIdx, num)?.teacher.name} {this.getScheduleByDayAndNumber(dayIdx, num)?.teacher.middle_name}
-                                                                </div>
+                                                                {this.getScheduleByDayAndNumber(dayIdx, num)?.subject.name}
+                                                            </div>
+                                                            <div>
+                                                                {this.getScheduleByDayAndNumber(dayIdx, num)?.classtype?.typeName}
+                                                            </div>
+                                                            <div>
+                                                                {this.getScheduleByDayAndNumber(dayIdx, num)?.teacher.surname} {this.getScheduleByDayAndNumber(dayIdx, num)?.teacher.name} {this.getScheduleByDayAndNumber(dayIdx, num)?.teacher.middle_name}
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div style={more_button}>
-                                                        <IconButton size="small"><MoreVertIcon/></IconButton>
-                                                    </div>
                                                 </div>
+                                                {this.renderMoreButton(dayIdx, num)}
+                                                <Divider orientation="vertical" flexItem />
                                             </div>
                                         </TableCell>
                                     ))}
-
-
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -160,7 +163,9 @@ const class_number_container = {
     display: 'flex',
     flexDirection: 'column',
 }
-const row_style = {}
+const row_style = {
+    height:'133px'
+}
 const class_info_container = {
     display: 'flex',
     flexDirection: 'column',

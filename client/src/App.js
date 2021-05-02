@@ -42,7 +42,7 @@ class App extends Component {
                     <Route exact path="/deadlines"><Deadlines/></Route>
                     <Route exact path="/notes"><Notes/></Route>
                     <Route exact path="/configuration"><Configuration/></Route>
-                    <Route exact path="/"><Schedule/></Route>
+                    <Route exact path="/"><ScheduleTest/></Route>
                 </Switch>
             </Router>
         );
