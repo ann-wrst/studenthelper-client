@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import history from './history'
 import Alert from "@material-ui/lab/Alert";
 import { Link } from 'react-router-dom'
+import ErrorSnackbar from "./ErrorSnackbar";
 class SideNavigation extends React.Component {
     constructor(props) {
         super(props);
@@ -12,13 +13,11 @@ class SideNavigation extends React.Component {
             error_message: ''
         }
         this.Logout = this.Logout.bind(this);
-
     }
 
     showSettings(event) {
         event.preventDefault();
     }
-
     Logout() {
         fetch(API_BASE_URL + '/logout', {
             credentials: 'include',
@@ -40,14 +39,14 @@ class SideNavigation extends React.Component {
         history.push('/login');
     }
 
-    setError() {
-        let alert_message;
-        if (this.state.error_message !== '') {
-            alert_message = <Alert severity="error"> {this.state.error_message} </Alert>;
-        } else alert_message = null;
-
-        return alert_message;
-    }
+    // setError() {
+    //     let alert_message;
+    //     if (this.state.error_message !== '') {
+    //         alert_message = <Alert severity="error"> {this.state.error_message} </Alert>;
+    //     } else alert_message = null;
+    //
+    //     return alert_message;
+    // }
 
     clearError() {
         this.setState(
@@ -56,7 +55,7 @@ class SideNavigation extends React.Component {
     }
 
     render() {
-        this.setError()
+        // this.setError()
         console.log(this.state.error_message);
         return (
             <Menu styles={styles}>

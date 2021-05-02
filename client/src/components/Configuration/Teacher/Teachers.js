@@ -86,15 +86,19 @@ class Teachers extends Component {
                                             {row['middle name']}
                                         </TableCell>
                                         <TableCell align="left">
+                                        </TableCell>
+
+                                        <TableCell align="right">
+                                            <div style={buttons_container}>
+                                                <div style={edit_button}>
                                             <EditTeacher id={row.idTeacher} surname={row.surname} name={row.name}
                                                          middle_name={row['middle name']}
                                                          fetchList={this.fetchTeachersList}>
                                             </EditTeacher>
-                                        </TableCell>
-
-                                        <TableCell align="left">
+                                                </div>
                                             <DeleteTeacher id={row.idTeacher} fetchList={this.fetchTeachersList}>
                                             </DeleteTeacher>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -130,5 +134,12 @@ const heading_style = {
 };
 const teachersheading_style = {
     'margin-right': '20px'
+}
+const buttons_container = {
+    'display': 'flex',
+    justifyContent: 'flex-end'
+}
+const edit_button = {
+    paddingRight: '5px'
 }
 export default Teachers;

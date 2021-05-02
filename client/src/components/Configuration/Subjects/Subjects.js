@@ -14,6 +14,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import EmptyStub from "../EmptyStub";
 import AddClassType from "../Class types/AddClassType";
 import history from "../../history";
+
 class Subjects extends Component {
     constructor(props) {
         super(props);
@@ -24,6 +25,7 @@ class Subjects extends Component {
         }
         this.fetchSubjectList = this.fetchSubjectList.bind(this);
     };
+
     componentDidMount() {
         this.fetchSubjectList();
     }
@@ -38,7 +40,7 @@ class Subjects extends Component {
             },
         }).then(
             async response => {
-                if(response.status===403)
+                if (response.status === 403)
                     history.push('/login');
                 let res = await response.json();
                 if (res?.success) {
@@ -79,14 +81,18 @@ class Subjects extends Component {
                                         </TableCell>
 
                                         <TableCell align="right">
-                                            <EditSubject id={row.idSubject} name={row.name}
-                                                         fetchList={this.fetchSubjectList}>
-                                            </EditSubject>
                                         </TableCell>
 
-                                        <TableCell align="left">
-                                            <DeleteButton id={row.idSubject} fetchList={this.fetchSubjectList}>
-                                            </DeleteButton>
+                                        <TableCell align="right">
+                                            <div style={buttons_container}>
+                                                <div style={edit_button}>
+                                                    <EditSubject id={row.idSubject} name={row.name}
+                                                                 fetchList={this.fetchSubjectList}>
+                                                    </EditSubject>
+                                                </div>
+                                                <DeleteButton id={row.idSubject} fetchList={this.fetchSubjectList}>
+                                                </DeleteButton>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -95,7 +101,7 @@ class Subjects extends Component {
                     </TableContainer>
                 </div>
             </div>)
-        else return(<div>
+        else return (<div>
             <div style={heading_style}>
                 <Typography style={subjectsheading_style} variant="h6">
                     Subjects
@@ -112,7 +118,13 @@ const page_style = {
     'display': 'flex',
     'flex-direction': 'column',
 };
-
+const buttons_container = {
+    'display': 'flex',
+    justifyContent: 'flex-end'
+}
+const edit_button = {
+    paddingRight: '5px'
+}
 const heading_style = {
     'display': 'flex',
     'flex-direction': 'row',

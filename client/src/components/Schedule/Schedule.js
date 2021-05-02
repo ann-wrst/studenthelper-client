@@ -21,76 +21,8 @@ class Schedule extends Component {
             teachers_list: undefined,
             classtypes_list: undefined
         }
-
     }
 
-    // async fetchSubjectList() {
-    //     console.log('in fetch');
-    //     fetch(API_BASE_URL + '/subjects', {
-    //         credentials: 'include',
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //     }).then(
-    //         async response => {
-    //             if (response.status === 403)
-    //                 history.push('/login');
-    //             let res = await response.json();
-    //             if (res?.success) {
-    //                 this.setState({subjects_list: res?.data})
-    //             }
-    //             return res;
-    //         }
-    //     );
-    // }
-    //
-    // async fetchTeachersList() {
-    //     fetch(API_BASE_URL + '/teachers', {
-    //         credentials: 'include',
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //     }).then(
-    //         async response => {
-    //             if (response.status === 403)
-    //                 history.push('/login');
-    //             let res = await response.json();
-    //             if (res?.success) {
-    //                 this.setState({teachers_list: res?.data})
-    //             }
-    //             return res;
-    //         }
-    //     );
-    // }
-    //
-    // async fetchClassTypesList() {
-    //     fetch(API_BASE_URL + '/classtypes', {
-    //         credentials: 'include',
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //     }).then(
-    //         async response => {
-    //             if (response.status === 403)
-    //                 history.push('/login');
-    //             let res = await response.json();
-    //             if (res?.success) {
-    //                 this.setState({classtypes_list: res?.data})
-    //             }
-    //             return res;
-    //         }
-    //     );
-    // }
-
-    async componentDidMount() {
-        // console.log("in comp did mount");
-        // await this.fetchClassTypesList();
-        // await this.fetchSubjectList();
-        // await this.fetchTeachersList()
-    }
 
     render() {
         return (<div>
@@ -102,7 +34,7 @@ class Schedule extends Component {
                             {console.log(this.state.subjects_list)}
                             <TableCell style={table_heading} align="center">Monday <AddSchedule
                                 subjects={this.state.subjects_list} teachers={this.state.teachers_list}
-                                classtypes={this.state.classtypes_list} day="Monday"/></TableCell>
+                                classtypes={this.state.classtypes_list} dayNumber={1} day="Monday"/></TableCell>
                             <TableCell style={table_heading} align="center">Tuesday <IconButton size="small"
                                                                                                 style={addbutton}><AddIcon/>
                             </IconButton></TableCell>

@@ -39,7 +39,7 @@ class Classtypes extends Component {
             },
         }).then(
             async response => {
-                if(response.status===403)
+                if (response.status === 403)
                     history.push('/login');
                 let res = await response.json();
                 if (res?.success) {
@@ -84,15 +84,20 @@ class Classtypes extends Component {
                                         </TableCell>
 
                                         <TableCell align="left">
-                                            <EditClassType id={row.idClassType} type={row.typeName}
-                                                           fetchList={this.fetchClassTypesList}>
-                                            </EditClassType>
+
                                         </TableCell>
 
-                                        <TableCell align="left">
-                                            <DeleteClassType id={row.idClassType} fetchList={this.fetchClassTypesList}>
-
-                                            </DeleteClassType>
+                                        <TableCell align="right">
+                                            <div style={buttons_container}>
+                                                <div style={edit_button}>
+                                                    <EditClassType id={row.idClassType} type={row.typeName}
+                                                                   fetchList={this.fetchClassTypesList}>
+                                                    </EditClassType>
+                                                </div>
+                                                <DeleteClassType id={row.idClassType}
+                                                                 fetchList={this.fetchClassTypesList}>
+                                                </DeleteClassType>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -103,10 +108,10 @@ class Classtypes extends Component {
             </div>);
         else return (<div>
             <div style={heading_style}>
-            <Typography style={classtypesheading_style} variant="h6">
-                Class types
-            </Typography>
-            <AddClassType fetchList={this.fetchClassTypesList}> </AddClassType>
+                <Typography style={classtypesheading_style} variant="h6">
+                    Class types
+                </Typography>
+                <AddClassType fetchList={this.fetchClassTypesList}> </AddClassType>
             </div>
             <EmptyStub name={"class types"}/>
         </div>);
@@ -127,5 +132,12 @@ const heading_style = {
 };
 const classtypesheading_style = {
     'margin-right': '20px'
+}
+const buttons_container = {
+    'display': 'flex',
+    justifyContent: 'flex-end'
+}
+const edit_button = {
+    paddingRight: '5px'
 }
 export default Classtypes;

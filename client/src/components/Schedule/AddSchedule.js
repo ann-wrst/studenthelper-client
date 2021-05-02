@@ -28,7 +28,7 @@ class AddSchedule extends Component {
             class_number: undefined,
             time_from: undefined,
             time_to: undefined,
-            parity: true,
+            parity: 'true',
             parityDependent: false,
             subject: undefined,
             teacher: undefined,
@@ -40,7 +40,6 @@ class AddSchedule extends Component {
     }
 
     async fetchSubjectList() {
-        console.log('in fetch');
         fetch(API_BASE_URL + '/subjects', {
             credentials: 'include',
             method: 'GET',
@@ -101,7 +100,7 @@ class AddSchedule extends Component {
     }
 
     async handleClickOpen() {
-        this.setState({open: true});
+        this.setState({open: true, time_from: "08:30", time_to: "10:35"});
         await this.fetchClassTypesList();
         await this.fetchSubjectList();
         await this.fetchTeachersList()
@@ -109,13 +108,15 @@ class AddSchedule extends Component {
 
     handleClose = () => {
         this.setState({
-            open: false, class_number: undefined, date_from: undefined,
-            date_to: undefined,
-            parity: false,
-            subject: undefined,
-            teacher: undefined,
-            class_type: undefined,
-
+            open: false,
+            class_number: undefined,
+            time_from: undefined,
+            time_to: undefined,
+            parity: 'true',
+            parityDependent: false,
+            subject: '',
+            teacher: '',
+            class_type: '',
         });
     };
     subjects_list = [];
@@ -203,8 +204,6 @@ class AddSchedule extends Component {
 
     handleParity = event => {
         this.setState({parity: event.target.value});
-        //let value = event.target.value === 'true';
-        //this.setState({parity: value});
     };
 
     showParity() {
@@ -230,17 +229,19 @@ class AddSchedule extends Component {
             if (this.state.parity === 'false') parity = false;
         }
         const payload = {
-            "class": {
+            "$class": {
                 "number": this.state.class_number,
                 "from": this.state.time_from,
                 "to": this.state.time_to,
             },
-            "subject": this.state.subject,
-            "teacher": this.state.teacher,
-            "classType": this.state.class_type,
-            "parity": parity
+            "subjectId": this.state.subject,
+            "teacherId": this.state.teacher,
+            "classtypeId": this.state.class_type,
+            "parity": parity,
+            "weekdayId": this.props.dayNumber
         };
-        fetch(API_BASE_URL + '/schedule', {
+
+        fetch(API_BASE_URL + '/schedules', {
             credentials: 'include',
             method: 'POST',
             headers: {
@@ -271,7 +272,7 @@ class AddSchedule extends Component {
                     <Dialog open={this.state.open} onClose={() => this.handleClose()}
                             aria-labelledby="form-dialog-title">
 
-                    <DialogTitle id="form-dialog-title">Add</DialogTitle>
+                    <DialogTitle id="form-dialog-title">Add ({this.props.day})</DialogTitle>
                     <DialogContent>
                     <TextField
                         autoFocus
@@ -286,7 +287,7 @@ class AddSchedule extends Component {
                                id="time"
                                label="Date from"
                                type="time"
-                               defaultValue="06:30"
+                               defaultValue="08:30"
                                InputLabelProps={{
                                    shrink: true,
                                }}
@@ -302,7 +303,7 @@ class AddSchedule extends Component {
                                    id="time"
                                    label="Date to"
                                    type="time"
-                                   defaultValue="07:00"
+                                   defaultValue="10:35"
                                    InputLabelProps={{
                                        shrink: true,
                                    }}

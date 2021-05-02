@@ -6,7 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
-
+import ErrorSnackbar from "../../ErrorSnackbar";
 class EditSubject extends Component {
     constructor(props) {
         super(props);
@@ -26,6 +26,8 @@ class EditSubject extends Component {
         this.setState({open: false});
     };
 
+    error;
+
     editSubject(id) {
         const payload = {
             "name": this.state.new_name
@@ -44,13 +46,19 @@ class EditSubject extends Component {
                     this.setState(
                         {error_message: res?.error?.message}
                     )
+                    console.log("here in edit");
+                    this.error = <ErrorSnackbar message={res?.error?.message}/>;
                 }
                 this.props.fetchList();
             }
         );
         this.setState({open: false});
     }
-
+    renderError() {
+        if(typeof this.error==='undefined') {
+            return null;
+        } else return this.error;
+    }
     render() {
         return (<div>
                 <Button style={edit_button} variant="outlined" color="primary" primary={true}
@@ -79,8 +87,11 @@ class EditSubject extends Component {
                         <Button onClick={() => this.editSubject(this.props.id)} color="primary">
                             Done
                         </Button>
+                        {console.log(this.error)}
+
                     </DialogActions>
                 </Dialog>
+                {this.renderError}
             </div>
         );
     }
