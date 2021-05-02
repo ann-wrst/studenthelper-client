@@ -12,7 +12,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import EmptyStub from "../EmptyStub";
-import AddClassType from "../Class types/AddClassType";
 import history from "../../history";
 
 class Subjects extends Component {
@@ -31,7 +30,6 @@ class Subjects extends Component {
     }
 
     async fetchSubjectList() {
-        console.log('in fetch');
         fetch(API_BASE_URL + '/subjects', {
             credentials: 'include',
             method: 'GET',

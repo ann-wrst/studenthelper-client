@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AddSchedule from "./AddSchedule";
 import {API_BASE_URL} from "../../constants/api";
 import history from "../history";
+import SideNavigation from "../SideNavigation";
 
 class Schedule extends Component {
     constructor(props) {
@@ -21,7 +22,13 @@ class Schedule extends Component {
         }
     }
 
+    componentDidMount() {
+        this.fetchSchedules();
+    }
+
     fetchSchedules() {
+        console.log("in comp did mount");
+
         fetch(API_BASE_URL + '/schedules', {
             credentials: 'include',
             method: 'GET',
@@ -41,81 +48,94 @@ class Schedule extends Component {
         );
     }
 
-    weekdays = {
-        1: "Monday",
-        2: "Tuesday",
-        3: "Wednesday",
-        4: "Thursday",
-        5: "Friday",
-        6: "Saturday",
-        7: "Sunday"
-    };
+    getScheduleByDayAndNumber(weekday, number) {
 
+        //if (this.schedules_list.length === 0) return null;
+        if (!this.schedules_list[weekday]) return null;
+        let res;
+
+        for (let i = 0; i < this.schedules_list[weekday].length; i++) {
+            if (this.schedules_list[weekday][i]?.$class?.number === number) {
+                res = this?.schedules_list[weekday][i];
+            }
+        }
+        return res;
+    }
+
+    weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    schedules_list = []
+
+    renderTime(from, to) {
+        if (typeof from !== 'undefined' && typeof to !== 'undefined')
+            return `${from} - ${to}`;
+        else return null;
+    }
+    // renderMoreButton() {
+    //     if (typeof this.schedules_list)
+    // }
     render() {
+        this.schedules_list = this.state.schedules_list;
+        if (typeof this.state.schedules_list === 'undefined') {
+            this.schedules_list = []
+        }
+        let elements = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        let items = []
+        for (const [index, value] of elements.entries()) {
+            items.push(<TableCell style={table_heading} align="center">{value} <AddSchedule
+                dayNumber={index + 1} day={value}/></TableCell>)
+        }
+        console.log(this.getScheduleByDayAndNumber(0, 1));
         return (<div>
+                <SideNavigation/>
                 <TableContainer component={Paper}>
                     <Table className="table" aria-label="simple table">
                         <TableHead>
                             <TableRow style={row_style}>
-                                {console.log("in schedule")}
-                                {console.log(this.state.subjects_list)}
-                                {this.weekdays}
-                                <TableCell style={table_heading} align="center">Monday <AddSchedule
-                                    subjects={this.state.subjects_list} teachers={this.state.teachers_list}
-                                    classtypes={this.state.classtypes_list} dayNumber={1} day="Monday"/></TableCell>
-                                <TableCell style={table_heading} align="center">Tuesday <IconButton size="small"
-                                                                                                    style={addbutton}><AddIcon/>
-                                </IconButton></TableCell>
-                                <TableCell style={table_heading} align="center">Wednesday <IconButton size="small"
-                                                                                                      style={addbutton}><AddIcon/>
-                                </IconButton></TableCell>
-                                <TableCell style={table_heading} align="center">Thursday <IconButton size="small"
-                                                                                                     style={addbutton}><AddIcon/>
-                                </IconButton></TableCell>
-                                <TableCell style={table_heading} align="center">Friday <IconButton size="small"
-                                                                                                   style={addbutton}><AddIcon/>
-                                </IconButton></TableCell>
-                                <TableCell style={table_heading} align="center">Saturday <IconButton size="small"
-                                                                                                     style={addbutton}><AddIcon/>
-                                </IconButton></TableCell>
-                                <TableCell style={table_heading} align="center">Sunday <IconButton size="small"
-                                                                                                   style={addbutton}><AddIcon/>
-                                </IconButton></TableCell>
+                                {items}
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            <TableRow key={"weekdays"}>
-                                <TableCell align="center">
-                                    <div style={table_item}>
-                                        <div style={class_number_container}>
-                                            <div>
-                                                1
-                                            </div>
-                                        </div>
-                                        <div style={class_info_container}>
-                                            <div>
-                                                08:30 - 11:00
-                                            </div>
-                                            <div>
+                            {numbers.map((num) => (
+                                <TableRow key={"weekdays"}>
+                                    {this.weekdays.map((day, dayIdx) => (
+                                        <TableCell align="center">
+                                            <div style={table_item}>
                                                 <div>
-                                                    <div>
-                                                        Algebra
+                                                    <div style={class_number_container}>
+                                                        <div>
+                                                            {this.getScheduleByDayAndNumber(dayIdx, num)?.$class?.number}
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        Lection
+                                                    <div style={class_info_container}>
+                                                        <div>
+                                                            {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num)?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num)?.$class?.to)}
+                                                        </div>
+                                                        <div>
+                                                            <div>
+                                                                <div>
+                                                                    {this.getScheduleByDayAndNumber(dayIdx, num)?.subject.name}
+                                                                </div>
+                                                                <div>
+                                                                    {this.getScheduleByDayAndNumber(dayIdx, num)?.classtype?.typeName}
+                                                                </div>
+                                                                <div>
+                                                                    {this.getScheduleByDayAndNumber(dayIdx, num)?.teacher.surname} {this.getScheduleByDayAndNumber(dayIdx, num)?.teacher.name} {this.getScheduleByDayAndNumber(dayIdx, num)?.teacher.middle_name}
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        Korobova
+                                                    <div style={more_button}>
+                                                        <IconButton size="small"><MoreVertIcon/></IconButton>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div style={more_button}>
-                                            <IconButton size="small"><MoreVertIcon/></IconButton>
-                                        </div>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
+                                        </TableCell>
+                                    ))}
+
+
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -124,56 +144,27 @@ class Schedule extends Component {
     }
 }
 
-const addbutton =
-    {}
-const table_item =
-    {
-        display: 'flex',
-        justifyContent
-:
-'space-between'
+const addbutton = {}
+const table_item = {
+    display: 'flex',
+    justifyContent: 'space-between'
 }
 
-const more_button =
-    {
-        display: 'flex',
-        flexDirection
-:
-'column',
-    alignItems
-:
-'flex-end',
-    cursor
-:
-'pointer'
+const more_button = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    cursor: 'pointer'
 }
-const class_number_container =
-    {
-        display: 'flex',
-        flexDirection
-:
-'column',
-//  justifyContent: 'center'
-
+const class_number_container = {
+    display: 'flex',
+    flexDirection: 'column',
 }
-const row_style =
-    {
-        //  display:'flex'
-    }
-const class_info_container =
-    {
-        display: 'flex',
-        flexDirection
-:
-'column',
-    justifyContent
-:
-'center',
+const row_style = {}
+const class_info_container = {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
 }
-const table_heading =
-    {
-        // display: 'flex',
-        // alignItems: 'center',
-        // justifyContent: 'space-evenly'
-    }
+const table_heading = {}
 export default Schedule;

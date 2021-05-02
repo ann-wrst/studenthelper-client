@@ -208,9 +208,6 @@ class AddSchedule extends Component {
 
     showParity() {
         let radio;
-        console.log("par");
-        console.log(typeof this.state.parity);
-        console.log(typeof this.state.parityDependent);
         if (this.state.parityDependent) {
             radio = <div><FormLabel component="legend">Parity</FormLabel>
                 <RadioGroup aria-label="parity" name="parity" value={this.state.parity} onChange={this.handleParity}>
@@ -297,8 +294,6 @@ class AddSchedule extends Component {
                                onChange={(event) => this.setState({time_from: event.target.value})}
                     />
                     <br/>
-                        {console.log(this.props.subjects)}
-
                         <TextField style={dropdown_style}
                                    id="time"
                                    label="Date to"

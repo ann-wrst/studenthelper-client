@@ -32,8 +32,6 @@ class Schedule extends Component {
                 <Table className="table" aria-label="simple table">
                     <TableHead>
                         <TableRow style={row_style}>
-                            {console.log("in schedule")}
-                            {console.log(this.state.subjects_list)}
                             <TableCell style={table_heading} align="center">Monday <AddSchedule
                                 subjects={this.state.subjects_list} teachers={this.state.teachers_list}
                                 classtypes={this.state.classtypes_list} dayNumber={1} day="Monday"/></TableCell>

@@ -3,7 +3,7 @@ import './App.css';
 import Loginscreen from './components/Loginscreen'
 import Schedule from "./components/Schedule/Schedule";
 import Deadlines from "./components/Deadlines";
-import Notes from "./components/Notes";
+import Notes from "./components/Notes/Notes";
 import Configuration from "./components/Configuration/Configuration";
 import {
     Router,
@@ -11,8 +11,8 @@ import {
     Route
 } from "react-router-dom";
 import history from "./components/history";
-
 import Homepage from "./components/Homepage";
+import ScheduleTest from "./components/Schedule/ScheduleTest";
 
 class App extends Component {
     constructor(props) {
@@ -38,7 +38,7 @@ class App extends Component {
             <Router history={history}>
                 <Switch>
                     <Route exact path="/login"><Loginscreen/></Route>
-                    <Route exact path="/schedule"><Schedule/></Route>
+                    <Route exact path="/schedule"><ScheduleTest/></Route>
                     <Route exact path="/deadlines"><Deadlines/></Route>
                     <Route exact path="/notes"><Notes/></Route>
                     <Route exact path="/configuration"><Configuration/></Route>
