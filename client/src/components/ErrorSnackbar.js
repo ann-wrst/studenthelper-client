@@ -28,11 +28,7 @@ class ErrorSnackbar extends Component {
         console.log("here");
         return (
             <div>
-                <Snackbar open={this.state.open} autoHideDuration={6000} onClose={this.handleClose}>
-                    <MuiAlert elevation={6} variant="filled"  onClose={this.handleClose} severity="success">
-                        {this.props.message}
-                    </MuiAlert>
-                </Snackbar>
+                <Snackbar open={this.state.open} autoHideDuration={6000} onClose={this.handleClose} message={this.props.message} />
             </div>
         );
     }

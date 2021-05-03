@@ -249,9 +249,13 @@ class AddSchedule extends Component {
             async response => {
                 if (response.status === 403)
                     history.push('/login');
+                this.props.fetchSchedules();
                 return await response.json();
             }
         );
+
+        this.handleClose();
+
     }
 
     render() {
@@ -289,7 +293,7 @@ class AddSchedule extends Component {
                                    shrink: true,
                                }}
                                inputProps={{
-                                   step: 300, // 5 min
+                                   step: 300,
                                }}
                                onChange={(event) => this.setState({time_from: event.target.value})}
                     />

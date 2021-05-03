@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import './App.css';
 import Loginscreen from './components/Loginscreen'
-import Schedule from "./components/Schedule/Schedule";
-import Deadlines from "./components/Deadlines";
+import SubjectsEditor from "./components/Notes/SubjectsEditor";
+import  Deadlines from "./components/Deadlines";
 import Notes from "./components/Notes/Notes";
 import Configuration from "./components/Configuration/Configuration";
 import {
@@ -40,6 +40,7 @@ class App extends Component {
                     <Route exact path="/login"><Loginscreen/></Route>
                     <Route exact path="/schedule"><ScheduleTest/></Route>
                     <Route exact path="/deadlines"><Deadlines/></Route>
+                    <Route exact path="/notes/:id"><SubjectsEditor/></Route>
                     <Route exact path="/notes"><Notes/></Route>
                     <Route exact path="/configuration"><Configuration/></Route>
                     <Route exact path="/"><ScheduleTest/></Route>

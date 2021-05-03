@@ -47,7 +47,8 @@ class EditSubject extends Component {
                         {error_message: res?.error?.message}
                     )
                     console.log("here in edit");
-                    this.error = <ErrorSnackbar message={res?.error?.message}/>;
+                    console.log(res.error.message)
+                    this.error = <ErrorSnackbar open={true} message={res.error.message}/>;
                 }
                 this.props.fetchList();
             }

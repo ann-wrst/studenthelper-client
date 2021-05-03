@@ -21,6 +21,7 @@ class Schedule extends Component {
         this.state = {
             schedules_list: undefined
         }
+        this.fetchSchedules = this.fetchSchedules.bind(this);
     }
 
     componentDidMount() {
@@ -44,20 +45,26 @@ class Schedule extends Component {
                 if (res?.success) {
                     this.setState({schedules_list: res?.data})
                 }
+                console.log("in sched fetch");
+                console.log(this.state.schedules_list);
                 return res;
             }
         );
     }
 
-    getScheduleByDayAndNumber(weekday, number) {
+    getScheduleByDayAndNumber(weekday, number, parity = null) {
 
-        //if (this.schedules_list.length === 0) return null;
         if (!this.schedules_list[weekday]) return null;
-        let res;
-
-        for (let i = 0; i < this.schedules_list[weekday].length; i++) {
-            if (this.schedules_list[weekday][i]?.$class?.number === number) {
-                res = this?.schedules_list[weekday][i];
+        let res = [];
+        if (parity == null)
+            for (let i = 0; i < this.schedules_list[weekday].length; i++) {
+                if (this.schedules_list[weekday][i]?.$class?.number === number) {
+                    res.push(this?.schedules_list[weekday][i]);
+                }
+            }
+        else for (let i = 0; i < this.schedules_list[weekday].length; i++) {
+            if (this.schedules_list[weekday][i]?.$class?.number === number && this.schedules_list[weekday][i]?.parity === parity) {
+                res.push(this?.schedules_list[weekday][i]);
             }
         }
         return res;
@@ -67,16 +74,101 @@ class Schedule extends Component {
     schedules_list = []
 
     renderTime(from, to) {
-        if (typeof from !== 'undefined' && typeof to !== 'undefined')
+        if (typeof from !== 'undefined' && typeof to !== 'undefined') {
+            from = from.slice(0, -3);
+            to = to.slice(0, -3);
             return `${from} - ${to}`;
-        else return null;
+        } else return null;
     }
 
-    renderMoreButton(day, number) {
-        if (this.getScheduleByDayAndNumber(day, number))
+    renderMoreButton(day, number, parity) {
+        if (this.getScheduleByDayAndNumber(day, number, parity)[0])
             return (<div style={more_button}>
                 <IconButton size="small"><MoreVertIcon/></IconButton>
             </div>)
+    }
+
+    renderParityLabel(actualParity) {
+        if (actualParity)
+            return (<span>(even)</span>);
+        else if (!actualParity && typeof actualParity !== 'undefined') return (<span>(odd)</span>);
+        else return null;
+    }
+
+    renderDivider(a) {
+        if (a)
+            return <Divider/>
+    }
+
+    renderSchedule(num, day, dayIdx) {
+        let trfa = [1, 0];
+        if (!this.getScheduleByDayAndNumber(dayIdx, num)) {
+            return (
+                <div style={table_item}>
+                </div>
+            )
+        }
+        if (this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity == null)
+            return (
+                <div style={table_item}>
+                    <div style={class_info_container}>
+                        <div>
+                            <div>
+                                <div>
+                                    {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.name}
+                                </div>
+                                <div>
+                                    {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity}
+                                </div>
+                                <div>
+                                    {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype?.typeName}
+                                </div>
+                                <div>
+                                    {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.surname} {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.name}
+                                </div>
+                                <div>
+                                    {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.to)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {this.renderMoreButton(dayIdx, num)}
+                    <Divider orientation="vertical" flexItem/>
+                </div>
+            );
+        else return (
+            <div style={table_double_item}>
+                {trfa.map((tf) =>
+                    <div>
+                        <div style={inside_double}>
+                            <div style={class_info_container}>
+                                <div>
+                                    <div>
+                                        <div>
+                                            {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.subject?.name}
+                                        </div>
+                                        <div>
+                                            {this.renderParityLabel(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.parity)}
+                                        </div>
+                                        <div>
+                                            {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.classtype?.typeName}
+                                        </div>
+                                        <div>
+                                            {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher?.surname} {this.getScheduleByDayAndNumber(dayIdx, num, tf)?.teacher?.name}
+                                        </div>
+                                        <div>
+                                            {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num, tf)?.$class?.to)}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {this.renderMoreButton(dayIdx, num, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.parity)}
+                        </div>
+                        {this.renderDivider(tf)}
+                    </div>
+                )}
+            </div>
+        )
     }
 
     render() {
@@ -87,10 +179,9 @@ class Schedule extends Component {
         let elements = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         let items = []
-        let current;
         for (const [index, value] of elements.entries()) {
             items.push(<TableCell style={table_heading} align="center">{value} <AddSchedule
-                dayNumber={index + 1} day={value}/></TableCell>)
+                dayNumber={index + 1} fetchSchedules={this.fetchSchedules} day={value}/></TableCell>)
         }
         return (<div>
                 <SideNavigation/>
@@ -98,45 +189,24 @@ class Schedule extends Component {
                     <Table className="table" aria-label="simple table">
                         <TableHead>
                             <TableRow>
+                                <TableCell>
+
+                                </TableCell>
                                 {items}
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {numbers.map((num) => (
-                                <TableRow style={row_style} key={"weekdays"}>
+                                <TableRow style={row_style} key={num}>
+                                    <TableCell style={num_style}>
+                                        {num}
+                                    </TableCell>
                                     {this.weekdays.map((day, dayIdx) => (
-                                        // {current = this.getScheduleByDayAndNumber(dayIdx, num)}
                                         <TableCell align="center">
-                                            <div style={table_item}>
-                                                <div style={class_number_container}>
-                                                    <div>
-                                                        {this.getScheduleByDayAndNumber(dayIdx, num)?.$class?.number}
-                                                    </div>
-                                                </div>
-
-                                                <div style={class_info_container}>
-                                                    <div>
-                                                        {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num)?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num)?.$class?.to)}
-                                                    </div>
-                                                    <div>
-                                                        <div>
-                                                            <div>
-                                                                {this.getScheduleByDayAndNumber(dayIdx, num)?.subject.name}
-                                                            </div>
-                                                            <div>
-                                                                {this.getScheduleByDayAndNumber(dayIdx, num)?.classtype?.typeName}
-                                                            </div>
-                                                            <div>
-                                                                {this.getScheduleByDayAndNumber(dayIdx, num)?.teacher.surname} {this.getScheduleByDayAndNumber(dayIdx, num)?.teacher.name} {this.getScheduleByDayAndNumber(dayIdx, num)?.teacher.middle_name}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                {this.renderMoreButton(dayIdx, num)}
-                                                <Divider orientation="vertical" flexItem />
-                                            </div>
+                                            {this.renderSchedule(num, day, dayIdx)}
                                         </TableCell>
-                                    ))}
+                                    ))
+                                    }
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -147,24 +217,31 @@ class Schedule extends Component {
     }
 }
 
-const addbutton = {}
+const table_double_item = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'column'
+}
 const table_item = {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
 }
-
+const inside_double = {
+    display: 'flex'
+}
 const more_button = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-end',
     cursor: 'pointer'
 }
-const class_number_container = {
-    display: 'flex',
-    flexDirection: 'column',
+
+const num_style = {
+    fontWeight: 'bold',
+    fontSize: '18px'
 }
 const row_style = {
-    height:'133px'
+    height: '133px'
 }
 const class_info_container = {
     display: 'flex',

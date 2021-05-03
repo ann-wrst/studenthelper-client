@@ -12,6 +12,7 @@ import ListItemLink from '@material-ui/core/ListItem'
 import history from "../history";
 import TableCell from "@material-ui/core/TableCell";
 import AddSchedule from "../Schedule/AddSchedule";
+import Divider from "@material-ui/core/Divider";
 
 class Notes extends Component {
     constructor(props) {
@@ -20,6 +21,7 @@ class Notes extends Component {
             subjects_list: undefined
         }
     }
+
     componentDidMount() {
         this.fetchSubjectList();
     }
@@ -47,6 +49,7 @@ class Notes extends Component {
     render() {
         let subjects = this.state.subjects_list;
         if (typeof subjects === 'undefined') subjects = []
+        console.log(subjects);
 //[{"idSubject":"2fc6e720-dc2c-4d37-a514-e2f2afd9a97c","name":"subj1","userId":"675001c1-89c0-4e9b-b12e-054a22d909a7"},{"idSubject":"3605e454-c80c-4559-bcf6-4cee4210d07d","name":"subj2","userId":"675001c1-89c0-4e9b-b12e-054a22d909a7"}]
         let items = []
         // for (const [index, value] of elements.entries()) {
@@ -61,10 +64,12 @@ class Notes extends Component {
                         // <ListItemLink href={`/subjects/${subjects.idSubject}`}>
                         //     <ListItemText primary={subjects.name} />
                         // </ListItemLink>
-                        <ListItem button component={Link} to={`/subjects/${subjects.idSubject}`}>
-                            <ListItemText primary={subjects.name} key = {subjects.idSubject}/>
-                        </ListItem>
-
+                        <div>
+                            <ListItem alignItems="flex-center" button component={Link} to={`/notes/${subj.idSubject}`}>
+                                <ListItemText primary={subj.name} key={subj.idSubject}/>
+                            </ListItem>
+                            <Divider/>
+                        </div>
                     ))
                     }
 
