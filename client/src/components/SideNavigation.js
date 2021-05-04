@@ -20,7 +20,6 @@ class SideNavigation extends React.Component {
             error_message: ''
         }
         this.Logout = this.Logout.bind(this);
-        // this.props.handleSwitch = this.props.handleSwitch.bind(this);
     }
 
     showSettings(event) {
@@ -52,12 +51,6 @@ class SideNavigation extends React.Component {
         this.setState(
             {error_message: ""}
         )
-    }
-
-    handleChangeSwitch(event) {
-        this.setState({
-            showEven: event.target.checked
-        })
     }
 
     render() {

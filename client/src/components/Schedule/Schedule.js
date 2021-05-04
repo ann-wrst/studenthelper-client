@@ -15,6 +15,14 @@ import SideNavigation from "../SideNavigation";
 import Divider from '@material-ui/core/Divider';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import {DialogContentText} from "@material-ui/core";
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
 
 class Schedule extends Component {
     constructor(props) {
@@ -22,22 +30,17 @@ class Schedule extends Component {
         this.state = {
             schedules_list: undefined,
             showEven: true,
+            anchorEl: null,
+            open: false
         }
         this.fetchSchedules = this.fetchSchedules.bind(this);
-        this.handleChangeSwitch=this.handleChangeSwitch.bind(this);
+        this.handleChangeSwitch = this.handleChangeSwitch.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     componentDidMount() {
         this.fetchSchedules();
     }
-
-    // getCurrentWeekParity() {
-    //     let todaydate = new Date();
-    //     let oneJan = new Date(todaydate.getFullYear(), 0, 1);
-    //     let numberOfDays = Math.floor((todaydate - oneJan) / (24 * 60 * 60 * 1000));
-    //     let res = Math.ceil((todaydate.getDay() + 1 + numberOfDays) / 7);
-    //     return res % 2 === 0;
-    // }
 
     fetchSchedules() {
         fetch(API_BASE_URL + '/schedules', {
@@ -84,6 +87,7 @@ class Schedule extends Component {
     weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     schedules_list = []
 
+
     renderTime(from, to) {
         if (typeof from !== 'undefined' && typeof to !== 'undefined') {
             from = from.slice(0, -3);
@@ -98,11 +102,46 @@ class Schedule extends Component {
         })
     }
 
-    renderMoreButton(day, number) {
-        if (this.getScheduleByDayAndNumber(day, number)[0])
+    renderMoreButton(day, number, id) {
+        console.log(id);
+        let temp = this.getScheduleByDayAndNumber(day, number)[0];
+        if (temp) {
+            console.log("2");
+
             return (<div style={more_button}>
-                <IconButton size="small"><MoreVertIcon/></IconButton>
+                <IconButton size="small" aria-label="more"
+                            onClick={(event) => this.handleMoreButtonClick(event, id)}><MoreVertIcon/></IconButton>
+
             </div>)
+        }
+    }
+
+    deleteSchedule(id) {
+        fetch(API_BASE_URL + `/schedules/${id}`, {
+            credentials: 'include',
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(
+            async response => {
+                if (response.status === 403)
+                    history.push('/login');
+                let res = await response.json();
+                if (res?.success) {
+                    this.handleClose();
+                    this.fetchSchedules();
+                    this.setState({
+                        anchorEl: null
+                    })
+                }
+                return res;
+            }
+        );
+    }
+
+    handleDelete() {
+        this.setState({open: true});
     }
 
     renderParityLabel(actualParity) {
@@ -112,6 +151,21 @@ class Schedule extends Component {
         else return null;
     }
 
+    handleMoreButtonClick = (event, id) => {
+        this.currentIdToDelete = id;
+        this.setState({anchorEl: event.currentTarget});
+    };
+
+    handleClickOpen() {
+        this.setState({open: true});
+    };
+
+    handleClose = () => {
+        this.setState({open: false});
+    };
+    handleCloseMoreButton = () => {
+        this.setState({anchorEl: null});
+    };
 
     renderSchedule(num, day, dayIdx) {
         let trfa = [1, 0];
@@ -145,7 +199,7 @@ class Schedule extends Component {
                             </div>
                         </div>
                     </div>
-                    {this.renderMoreButton(dayIdx, num)}
+                    {this.renderMoreButton(dayIdx, num, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.idSchedule)}
                     <Divider orientation="vertical" flexItem/>
                 </div>
             );
@@ -175,14 +229,16 @@ class Schedule extends Component {
                                     </div>
                                 </div>
                             </div>
-                            {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.parity != null ? this.renderMoreButton(dayIdx, num) : ""}
-                            <Divider orientation="vertical" flexItem/>
+                            {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.parity != null ? this.renderMoreButton(dayIdx, num, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.idSchedule) : ""}
+
                         </div>
                     </div>
                 )}
             </div>
         )
     }
+
+    currentIdToDelete;
 
     render() {
         this.schedules_list = this.state.schedules_list;
@@ -217,31 +273,57 @@ class Schedule extends Component {
                                     </TableCell>
                                     {this.weekdays.map((day, dayIdx) => (
                                         <TableCell align="center">
-
                                             {this.renderSchedule(num, day, dayIdx, this.state.showEven)}
-
                                         </TableCell>
                                     ))
                                     }
                                 </TableRow>
                             ))}
+                            <Menu
+                                id="simple-menu"
+                                anchorEl={this.state.anchorEl}
+                                keepMounted
+                                open={Boolean(this.state.anchorEl)}
+                                onClose={this.handleCloseMoreButton}
+                            >
+                                <MenuItem style={menu_item} key="delete" selected={'Delete'}
+                                          onClick={this.handleDelete}>
+                                    Delete
+                                </MenuItem>
+                            </Menu>
+                            <Divider orientation="vertical" flexItem/>
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <Dialog open={this.state.open} onClose={() => this.handleClose()}
+                        aria-labelledby="form-dialog-title">
+                    <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
+                        Delete
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Do you want to delete schedule?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => this.handleClose()} color="primary">
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={() => this.deleteSchedule(this.currentIdToDelete)}
+                            color="primary">
+                            Done
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         );
     }
 }
 
-const table_double_item = {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    flexDirection: 'column',
-    alignItems: 'center'
-}
 const table_item = {
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-evenly',
 }
 const inside_double = {
     display: 'flex'
@@ -250,9 +332,11 @@ const more_button = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-end',
-    cursor: 'pointer'
+    boxShadow: 'none'
 }
-
+const menu_item = {
+    fontSize: '13px'
+}
 const num_style = {
     fontWeight: 'bold',
     fontSize: '18px'
