@@ -12,7 +12,7 @@ import {
 } from "react-router-dom";
 import history from "./components/history";
 import Homepage from "./components/Homepage";
-import ScheduleTest from "./components/Schedule/ScheduleTest";
+import ScheduleTest from "./components/Schedule/Schedule";
 
 class App extends Component {
     constructor(props) {

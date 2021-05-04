@@ -8,9 +8,10 @@ import {Link} from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ErrorSnackbar from "./ErrorSnackbar";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
+
 
 class SideNavigation extends React.Component {
     constructor(props) {
@@ -19,6 +20,7 @@ class SideNavigation extends React.Component {
             error_message: ''
         }
         this.Logout = this.Logout.bind(this);
+        // this.props.handleSwitch = this.props.handleSwitch.bind(this);
     }
 
     showSettings(event) {
@@ -46,33 +48,24 @@ class SideNavigation extends React.Component {
         history.push('/login');
     }
 
-    // setError() {
-    //     let alert_message;
-    //     if (this.state.error_message !== '') {
-    //         alert_message = <Alert severity="error"> {this.state.error_message} </Alert>;
-    //     } else alert_message = null;
-    //
-    //     return alert_message;
-    // }
-
     clearError() {
         this.setState(
             {error_message: ""}
         )
     }
 
+    handleChangeSwitch(event) {
+        this.setState({
+            showEven: event.target.checked
+        })
+    }
+
     render() {
-        // this.setError()
         console.log(this.state.error_message);
         return (
             <AppBar position="static">
                 <Toolbar>
-                    {/*<IconButton edge="start"  color="inherit" aria-label="menu">*/}
-                    {/*    <MenuIcon/>*/}
-                    {/*</IconButton>*/}
-                    {/*<Link to='/'>*/}
-                    {/*    <img src={process.env.PUBLIC_URL + '/Studenthelper.svg'} alt=''/>*/}
-                    {/*</Link>*/}
+
                     <div style={menu_style}>
                         <div style={item_styles}>
                             <Link style={items_styles} to='/schedule'>
@@ -99,15 +92,28 @@ class SideNavigation extends React.Component {
                             </Link>
                         </div>
                         <div style={item_styles}>
-                        <Link style={items_styles} to='/configuration'>
-                            <img src={process.env.PUBLIC_URL + '/settings.svg'} alt='' style={icon_styles}/>
-                            <Typography variant="h6" style={title_styles}>
-                                Configuration
-                            </Typography>
-                        </Link>
+                            <Link style={items_styles} to='/configuration'>
+                                <img src={process.env.PUBLIC_URL + '/settings.svg'} alt='' style={icon_styles}/>
+                                <Typography variant="h6" style={title_styles}>
+                                    Configuration
+                                </Typography>
+                            </Link>
+                        </div>
+                        <div style={item_styles}>
+                            {this.props.fromSchedule ?
+                                (<div><FormLabel
+                                    component="legend"
+                                    style={switch_label}>{this.props.showEven ? "Show even" : "Show odd"}</FormLabel>
+                                    <FormControlLabel
+                                        control={<Switch checked={this.props.showEven}
+                                                         onChange={this.props.handleSwitch} name="showEven"
+                                                         size="small" color="default"/>}
+                                        labelPlacement="start"
+                                        label=""/>
+                                </div>) : ""}
                         </div>
                         <div style={log_out_styles}>
-                    <Button color="inherit" onClick={this.Logout}>Logout</Button>
+                            <Button color="inherit" onClick={this.Logout}>Logout</Button>
                         </div>
                     </div>
                 </Toolbar>
@@ -121,13 +127,14 @@ const menu_style = {
     alignItems: 'center'
 }
 const item_styles = {
-    paddingRight:'20px'
+    paddingRight: '20px'
 }
 const log_out_styles = {
     position: 'absolute',
     right: '5px',
-    // padding: '2.5em 1.5em 0px',
-    // cursor: 'pointer'
+}
+const switch_label = {
+    color: 'white'
 }
 const icon_styles = {
     width: '20px',

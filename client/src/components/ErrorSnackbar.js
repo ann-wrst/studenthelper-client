@@ -1,8 +1,7 @@
 import React, {Component} from "react";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import IconButton from "@material-ui/core/IconButton";
+
 
 class ErrorSnackbar extends Component {
     constructor(props) {
@@ -12,9 +11,6 @@ class ErrorSnackbar extends Component {
         }
     }
 
-    Alert(props) {
-        return <MuiAlert elevation={6} variant="filled" {...props} />;
-    }
 
     handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -25,10 +21,14 @@ class ErrorSnackbar extends Component {
     };
 
     render() {
-        console.log("here");
         return (
             <div>
-                <Snackbar open={this.state.open} autoHideDuration={6000} onClose={this.handleClose} message={this.props.message} />
+                <Snackbar open={this.state.open} autoHideDuration={2000} onClose={this.handleClose}
+                          message={this.props.message}>
+                    <MuiAlert elevation={6} variant="filled" severity="error">
+                        {this.props.message}
+                    </MuiAlert>
+                </Snackbar>
             </div>
         );
     }

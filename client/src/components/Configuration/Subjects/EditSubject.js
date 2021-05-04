@@ -7,18 +7,22 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import ErrorSnackbar from "../../ErrorSnackbar";
+
 class EditSubject extends Component {
     constructor(props) {
         super(props);
         this.state = {
             open: false,
             new_name: undefined,
-            error_message: '',
         }
     }
 
+    componentDidMount() {
+        this.error = null;
+    }
+
     handleClickOpen() {
-        this.setState({new_name:this.props.name})
+        this.setState({new_name: this.props.name})
         this.setState({open: true});
     };
 
@@ -43,29 +47,21 @@ class EditSubject extends Component {
             async response => {
                 let res = await response.json();
                 if (!res?.success) {
-                    this.setState(
-                        {error_message: res?.error?.message}
-                    )
-                    console.log("here in edit");
-                    console.log(res.error.message)
                     this.error = <ErrorSnackbar open={true} message={res.error.message}/>;
                 }
+                this.setState({open: false});
                 this.props.fetchList();
             }
         );
-        this.setState({open: false});
     }
-    renderError() {
-        if(typeof this.error==='undefined') {
-            return null;
-        } else return this.error;
-    }
+
     render() {
         return (<div>
+                {this.error}
                 <Button style={edit_button} variant="outlined" color="primary" primary={true}
                         onClick={(event) => this.handleClickOpen()}>
                     Edit
-                </Button>   
+                </Button>
                 <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
 
                     <DialogTitle id="form-dialog-title">Edit</DialogTitle>
@@ -88,11 +84,8 @@ class EditSubject extends Component {
                         <Button onClick={() => this.editSubject(this.props.id)} color="primary">
                             Done
                         </Button>
-                        {console.log(this.error)}
-
                     </DialogActions>
                 </Dialog>
-                {this.renderError}
             </div>
         );
     }

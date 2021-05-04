@@ -13,19 +13,22 @@ import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import EmptyStub from "../EmptyStub";
 import history from "../../history";
+import ErrorSnackbar from "../../ErrorSnackbar";
 
 class Subjects extends Component {
     constructor(props) {
         super(props);
         this.state = {
             open: false,
-            error_message: '',
             subjects_list: []
         }
         this.fetchSubjectList = this.fetchSubjectList.bind(this);
     };
 
+    error;
+
     componentDidMount() {
+        this.error = null;
         this.fetchSubjectList();
     }
 
@@ -43,6 +46,8 @@ class Subjects extends Component {
                 let res = await response.json();
                 if (res?.success) {
                     this.setState({subjects_list: res?.data})
+                } else if (!res?.success) {
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 return res;
             }
@@ -57,6 +62,7 @@ class Subjects extends Component {
             this.rows = [];
         if (this.rows.length !== 0)
             return (<div style={page_style}>
+                {this.error}
                 <div style={heading_style}><Typography style={subjectsheading_style} variant="h6">
                     Subjects
                 </Typography>

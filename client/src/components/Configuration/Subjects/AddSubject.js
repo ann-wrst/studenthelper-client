@@ -7,6 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
+import ErrorSnackbar from "../../ErrorSnackbar";
 
 class AddSubject extends Component {
     constructor(props) {
@@ -14,8 +15,16 @@ class AddSubject extends Component {
         this.state = {
             open: false,
             new_name: undefined,
-            error_message: '',
+            error: null
         }
+    }
+
+    error;
+
+    componentDidMount() {
+        this.setState({
+            error: null
+        })
     }
 
     handleClickOpen() {
@@ -41,23 +50,24 @@ class AddSubject extends Component {
             async response => {
                 let res = await response.json();
                 if (!res?.success) {
-                    this.setState(
-                        {error_message: res?.error?.message}
-                    )
+                    this.setState({error: <ErrorSnackbar open={true} message={res?.error?.message}/>});
                 }
+                console.log(this.state.error);
+                this.setState({open: false});
                 this.props.fetchList();
             }
         );
-        this.setState({new_name:''})
-        this.setState({open: false});
+        this.setState({new_name: ''})
     }
 
     render() {
         return (<div>
+                {this.state.error}
                 <Button variant="outlined" color="primary" primary={true} startIcon={<AddIcon/>}
                         onClick={(event) => this.handleClickOpen()}>
                     Add
                 </Button>
+
                 <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
 
                     <DialogTitle id="form-dialog-title">Add</DialogTitle>

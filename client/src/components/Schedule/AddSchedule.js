@@ -128,13 +128,13 @@ class AddSchedule extends Component {
     };
     handleTeacher = (event) => {
         this.setState({teacher: event.target.value})
-    }
+    };
     handleClassType = (event) => {
         this.setState({class_type: event.target.value})
-    }
+    };
     handleParityDependent = (event) => {
         this.setState({parityDependent: event.target.checked})
-    }
+    };
 
     showSubjectsDropdown() {
         let dropdown;
