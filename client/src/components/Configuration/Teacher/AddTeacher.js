@@ -7,6 +7,8 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
+import ErrorSnackbar from "../../ErrorSnackbar";
+
 class AddTeacher extends Component {
     constructor(props) {
         super(props);
@@ -18,18 +20,22 @@ class AddTeacher extends Component {
             error_message: '',
         }
     }
+
     handleClickOpen() {
         this.setState({open: true});
     };
 
     handleClose = () => {
         this.setState({open: false});
+        this.error = null;
+
     };
+
     createTeacher() {
         const payload = {
             "surname": this.state.new_surname,
-            "name":this.state.new_name,
-            "middle_name":this.state.new_middle_name
+            "name": this.state.new_name,
+            "middle_name": this.state.new_middle_name
         };
         fetch(API_BASE_URL + '/teachers', {
             credentials: 'include',
@@ -42,20 +48,22 @@ class AddTeacher extends Component {
             async response => {
                 let res = await response.json();
                 if (!res?.success) {
-                    this.setState(
-                        {error_message: res?.error?.message}
-                    )
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 this.props.fetchList();
             }
         );
-        this.setState({new_name:''});
-        this.setState({new_surname:''});
-        this.setState({new_middle_name:''});
+        this.setState({new_name: ''});
+        this.setState({new_surname: ''});
+        this.setState({new_middle_name: ''});
         this.setState({open: false});
     }
+
+    error;
+
     render() {
         return (<div>
+            {this.error}
             <Button variant="outlined" color="primary" primary={true} startIcon={<AddIcon/>}
                     onClick={(event) => this.handleClickOpen()}>
                 Add
@@ -102,4 +110,5 @@ class AddTeacher extends Component {
         </div>);
     }
 }
+
 export default AddTeacher;

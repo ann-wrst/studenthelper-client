@@ -3,6 +3,8 @@ import {API_BASE_URL} from "../constants/api"
 import SideNavigation from "./SideNavigation";
 import history from './history'
 import Schedule from "./Schedule/Schedule";
+import ErrorSnackbar from "./ErrorSnackbar";
+
 class Homepage extends Component {
     constructor(props) {
         super(props);
@@ -28,18 +30,22 @@ class Homepage extends Component {
         });
 
         const json = await response.json();
-
+        if (!json?.success) {
+            this.error = <ErrorSnackbar open={true} message={json?.error?.message}/>;
+        }
         if (json.isAuthenticated) {
             this.setState({
                 isAuthenticated: true
             });
+
         }
 
     }
-
+    error;
 
     render() {
         return (<div>
+            {this.error}
             <SideNavigation/>
             <Schedule/>
         </div>);

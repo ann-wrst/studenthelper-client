@@ -23,6 +23,7 @@ import {DialogContentText} from "@material-ui/core";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
+import ErrorSnackbar from "../ErrorSnackbar";
 
 class Schedule extends Component {
     constructor(props) {
@@ -56,12 +57,14 @@ class Schedule extends Component {
                 let res = await response.json();
                 if (res?.success) {
                     this.setState({schedules_list: res?.data})
+                } else if (!res?.success) {
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 return res;
             }
         );
     }
-
+    error;
     getScheduleByDayAndNumber(weekday, number, parity = null) {
         if (!this.schedules_list[weekday]) return null;
         let res = [];
@@ -129,12 +132,14 @@ class Schedule extends Component {
                     history.push('/login');
                 let res = await response.json();
                 if (res?.success) {
-                    this.handleClose();
                     this.fetchSchedules();
                     this.setState({
                         anchorEl: null
                     })
+                } else if (!res?.success) {
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
+                this.handleClose();
                 return res;
             }
         );
@@ -253,6 +258,7 @@ class Schedule extends Component {
                 dayNumber={index + 1} fetchSchedules={this.fetchSchedules} day={value}/></TableCell>)
         }
         return (<div>
+                {this.error}
                 <SideNavigation fromSchedule={true} showEven={this.state.showEven}
                                 handleSwitch={this.handleChangeSwitch}/>
                 <TableContainer component={Paper}>
@@ -339,7 +345,7 @@ const menu_item = {
 }
 const num_style = {
     fontWeight: 'bold',
-    fontSize: '18px'
+    fontSize: '17px'
 }
 const row_style = {
     height: '133px'

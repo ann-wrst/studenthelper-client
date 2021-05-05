@@ -19,6 +19,7 @@ import {Link} from "react-router-dom";
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
+import ErrorSnackbar from "../ErrorSnackbar";
 
 class AddSchedule extends Component {
     constructor(props) {
@@ -53,6 +54,8 @@ class AddSchedule extends Component {
                 let res = await response.json();
                 if (res?.success) {
                     this.setState({subjects_list: res?.data})
+                } else if (!res?.success) {
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 return res;
             }
@@ -73,6 +76,8 @@ class AddSchedule extends Component {
                 let res = await response.json();
                 if (res?.success) {
                     this.setState({teachers_list: res?.data})
+                } else if (!res?.success) {
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 return res;
             }
@@ -93,6 +98,8 @@ class AddSchedule extends Component {
                 let res = await response.json();
                 if (res?.success) {
                     this.setState({classtypes_list: res?.data})
+                } else if (!res?.success) {
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 return res;
             }
@@ -118,11 +125,12 @@ class AddSchedule extends Component {
             teacher: '',
             class_type: '',
         });
+        this.error = null;
     };
     subjects_list = [];
     teachers_list = [];
     classtypes_list = [];
-
+    error;
     handleSubjects = (event) => {
         this.setState({subject: event.target.value})
     };
@@ -247,10 +255,15 @@ class AddSchedule extends Component {
             body: JSON.stringify(payload)
         }).then(
             async response => {
+                let res = await response.json();
+                if (!res?.success) {
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+                }
                 if (response.status === 403)
                     history.push('/login');
+
                 this.props.fetchSchedules();
-                return await response.json();
+                return res;
             }
         );
 
@@ -268,7 +281,7 @@ class AddSchedule extends Component {
             this.teachers_list = [];
         if (typeof this.state.classtypes_list == "undefined")
             this.classtypes_list = [];
-        return (<span><IconButton size="small" onClick={() => this.handleClickOpen()}><AddIcon/>
+        return (<span>{this.error}<IconButton size="small" onClick={() => this.handleClickOpen()}><AddIcon/>
                     </IconButton>
                     <Dialog open={this.state.open} onClose={() => this.handleClose()}
                             aria-labelledby="form-dialog-title">

@@ -9,22 +9,22 @@ import {Toolbar} from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import history from './history'
 import {login_styles} from './styles'
+import ErrorSnackbar from "./ErrorSnackbar";
 
 class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
-            password: '',
-            error_message: '',
-            isLoggedIn: false
+            email: "annwrst@gmail.com",
+            password: "password",
+            isLoggedIn: false,
+            error: null
         }
         this.handleClick = this.handleClick.bind(this);
     }
 
     handleClick() {
         const apiBaseUrl = API_BASE_URL;
-        const self = this;
         const payload = {
             "email": this.state.email.toLowerCase().trim(),
             "password": this.state.password
@@ -42,25 +42,13 @@ class Login extends Component {
                 async response => {
                     console.log(response);
                     let res = await response.json();
-                    this.clearError();
-                    if (response.status === 200) {
-                        if (!res.success) {
-                            this.setState(
-                                {error_message: res.error.message}
-                            )
-                        } else {
-                            this.setState({isLoggedIn: true});
-                        }
-                        //    const uploadScreen = [];
-                        //    uploadScreen.push(<Homepage appContext={self.props.appContext}/>)
-                        //     self.props.appContext.setState({loginPage: [], uploadScreen: uploadScreen})
-
+                    console.log(res?.error?.message);
+                    if (!res?.success) {
+                        this.setState({error: <ErrorSnackbar open={true} message={res?.error?.message}/>});
                     } else {
-                        if (typeof res.error.message !== "undefined")
-                            this.setState(
-                                {error_message: res.error.message}
-                            )
+                        this.setState({isLoggedIn: true});
                     }
+
                     if (this.state.isLoggedIn) history.push('/');
                 }
             )
@@ -69,34 +57,20 @@ class Login extends Component {
             });
     }
 
-    setError() {
-        let alert_message;
-        if (this.state.error_message !== '') {
-            alert_message = <Alert severity="error"> {this.state.error_message} </Alert>;
-        } else alert_message = null;
-
-        return alert_message;
-    }
-
-    clearError() {
-        this.setState(
-            {error_message: ""}
-        )
-    }
-
 
     render() {
+        console.log(this.state.error);
         return (
             <div>
                 <div>
                     <AppBar position="static">
+                        {this.state.error}
                         <Toolbar>
                             <Typography variant="h6">
                                 Login
                             </Typography>
                         </Toolbar>
                     </AppBar>
-                    {this.setError()}
                     <div style={login_styles}>
                         <TextField
                             style={style}

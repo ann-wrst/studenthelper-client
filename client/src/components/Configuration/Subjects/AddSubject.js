@@ -33,6 +33,7 @@ class AddSubject extends Component {
 
     handleClose = () => {
         this.setState({open: false});
+        this.error = null;
     };
 
     createSubject() {

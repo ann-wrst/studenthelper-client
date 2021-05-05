@@ -6,7 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
-import EditSubject from "../Subjects/EditSubject";
+import ErrorSnackbar from "../../ErrorSnackbar";
 
 class EditClassType extends Component {
     constructor(props) {
@@ -14,7 +14,6 @@ class EditClassType extends Component {
         this.state = {
             open: false,
             type: undefined,
-            error_message: '',
         }
     }
 
@@ -25,6 +24,7 @@ class EditClassType extends Component {
 
     handleClose = () => {
         this.setState({open: false});
+        this.error = null;
     };
 
     editClassType(id) {
@@ -42,9 +42,7 @@ class EditClassType extends Component {
             async response => {
                 let res = await response.json();
                 if (!res?.success) {
-                    this.setState(
-                        {error_message: res?.error?.message}
-                    )
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 this.props.fetchList();
             }
@@ -53,8 +51,11 @@ class EditClassType extends Component {
 
     }
 
+    error;
+
     render() {
         return (<div>
+                {this.error}
                 <Button style={edit_button} variant="outlined" color="primary" primary={true}
                         onClick={(event) => this.handleClickOpen()}>
                     Edit

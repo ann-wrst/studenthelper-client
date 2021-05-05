@@ -11,6 +11,9 @@ class ErrorSnackbar extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps: Readonly<P>, nextContext: any) {
+        this.setState({open: true})
+    }
 
     handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -21,9 +24,11 @@ class ErrorSnackbar extends Component {
     };
 
     render() {
+        console.log("in render");
+        console.log(this.state.open);
         return (
             <div>
-                <Snackbar open={this.state.open} autoHideDuration={2000} onClose={this.handleClose}
+                <Snackbar open={this.state.open} autoHideDuration={1500} onClose={this.handleClose}
                           message={this.props.message}>
                     <MuiAlert elevation={6} variant="filled" severity="error">
                         {this.props.message}

@@ -9,6 +9,7 @@ import history from "../history";
 import Divider from "@material-ui/core/Divider";
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import RadioButtonUncheckedSharpIcon from '@material-ui/icons/RadioButtonUncheckedSharp';
+import ErrorSnackbar from "../ErrorSnackbar";
 
 class Notes extends Component {
     constructor(props) {
@@ -36,11 +37,15 @@ class Notes extends Component {
                 let res = await response.json();
                 if (res?.success) {
                     this.setState({subjects_list: res?.data})
+                } else if (!res?.success) {
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 return res;
             }
         );
     }
+
+    error;
 
     render() {
         let subjects = this.state.subjects_list;
@@ -48,20 +53,31 @@ class Notes extends Component {
         console.log(subjects);
         return (
             <div>
+                {this.error}
                 <SideNavigation/>
                 <div>
                     {/*You can create notes by subjects here*/}
                     {subjects.map((subj) => (
                         <div>
-                            <ListItem style={item_style} alignItems="flex-center" button component={Link}
-                                      to={`/notes/${subj.idSubject}`}>
+                            <ListItem style={item_style} alignItems="flex-center" button>
                                 <div>
                                     <ListItemIcon>
-                                        <RadioButtonUncheckedSharpIcon size="small" light/>
+                                        <RadioButtonUncheckedSharpIcon style={icon_style} size="small" light/>
                                     </ListItemIcon>
                                 </div>
                                 <div>
-                                    <ListItemText primary={subj.name} key={subj.idSubject}/>
+                                    {/*<ListItemText primary={<Link to={{pathname: `/notes/${subj.idSubject}`,state: {*/}
+                                    {/*    fromNotifications: true*/}
+                                    {/*}}/>} key={subj.idSubject}>*/}
+                                    {/*</ListItemText>*/}
+                                    <ListItemText>
+                                        <Link
+                                            to={{
+                                                pathname: `/notes/${subj.idSubject}`,
+                                                state: {name: subj.name}
+                                            }}
+                                        >{subj.name}</Link>
+                                    </ListItemText>
                                 </div>
                             </ListItem>
                             <Divider/>
@@ -77,5 +93,8 @@ const item_style = {
     display: 'flex',
     alignItems: 'center'
 }
-
+const icon_style = {
+    width: '15px',
+    height: '15px'
+}
 export default Notes;

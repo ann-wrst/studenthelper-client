@@ -13,6 +13,7 @@ import DeleteClassType from "./DeleteClassType";
 import EditClassType from "./EditClassType";
 import EmptyStub from "../EmptyStub";
 import history from "../../history";
+import ErrorSnackbar from "../../ErrorSnackbar";
 
 class Classtypes extends Component {
     constructor(props) {
@@ -44,23 +45,25 @@ class Classtypes extends Component {
                 let res = await response.json();
                 if (res?.success) {
                     this.setState({classtypes_list: res?.data})
+                } else if (!res?.success) {
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 return res;
             }
         );
     }
 
-
+    error;
     rows = [];
 
     render() {
         this.rows = this.state.classtypes_list;
-        //so the page won't crash on map() function
         if (typeof this.rows === "undefined") {
             this.rows = [];
         }
         if (this.rows.length !== 0)
             return (<div style={page_style}>
+                {this.error}
                 <div style={heading_style}>
                     <Typography style={classtypesheading_style} variant="h6">
                         Class types

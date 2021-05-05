@@ -76,9 +76,5 @@ class Loginscreen extends Component {
 const style = {
     margin: 20,
 };
-const generalStyle = {
-    'display': 'flex',
-    'flex-direction': 'column',
 
-};
 export default Loginscreen;

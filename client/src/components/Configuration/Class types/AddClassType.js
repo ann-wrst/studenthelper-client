@@ -7,6 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
+import ErrorSnackbar from "../../ErrorSnackbar";
 
 class AddClassType extends Component {
     constructor(props) {
@@ -14,9 +15,10 @@ class AddClassType extends Component {
         this.state = {
             open: false,
             type: undefined,
-            error_message: '',
         }
     }
+
+    error;
 
     handleClickOpen() {
         this.setState({open: true});
@@ -24,6 +26,7 @@ class AddClassType extends Component {
 
     handleClose = () => {
         this.setState({open: false});
+        this.error = null;
     };
 
     createClassType() {
@@ -41,9 +44,7 @@ class AddClassType extends Component {
             async response => {
                 let res = await response.json();
                 if (!res?.success) {
-                    this.setState(
-                        {error_message: res?.error?.message}
-                    )
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 this.props.fetchList();
             }
@@ -54,6 +55,7 @@ class AddClassType extends Component {
 
     render() {
         return (<div>
+                {this.error}
                 <Button variant="outlined" color="primary" primary={true} startIcon={<AddIcon/>}
                         onClick={(event) => this.handleClickOpen()}>
                     Add
@@ -86,4 +88,5 @@ class AddClassType extends Component {
     }
 
 }
+
 export default AddClassType;

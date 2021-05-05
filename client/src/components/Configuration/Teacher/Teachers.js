@@ -12,15 +12,14 @@ import AddTeacher from "./AddTeacher";
 import EditTeacher from "./EditTeacher";
 import DeleteTeacher from "./DeleteTeacher";
 import EmptyStub from "../EmptyStub";
-import AddClassType from "../Class types/AddClassType";
 import history from './../../history'
+import ErrorSnackbar from "../../ErrorSnackbar";
 
 class Teachers extends Component {
     constructor(props) {
         super(props);
         this.state = {
             open: false,
-            error_message: '',
             teachers_list: []
         }
         this.fetchTeachersList = this.fetchTeachersList.bind(this);
@@ -39,11 +38,13 @@ class Teachers extends Component {
             },
         }).then(
             async response => {
-                if(response.status===403)
+                if (response.status === 403)
                     history.push('/login');
                 let res = await response.json();
                 if (res?.success) {
                     this.setState({teachers_list: res?.data})
+                } else if (!res?.success) {
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 return res;
             }
@@ -51,13 +52,14 @@ class Teachers extends Component {
     }
 
     rows = [];
-
+    error;
     render() {
         this.rows = this.state.teachers_list;
         if (typeof this.rows === "undefined")
             this.rows = [];
         if (this.rows.length !== 0)
             return (<div style={page_style}>
+                {this.error}
                 <div style={heading_style}><Typography style={teachersheading_style} variant="h6">
                     Teachers
                 </Typography>
@@ -91,13 +93,14 @@ class Teachers extends Component {
                                         <TableCell align="right">
                                             <div style={buttons_container}>
                                                 <div style={edit_button}>
-                                            <EditTeacher id={row.idTeacher} surname={row.surname} name={row.name}
-                                                         middle_name={row['middle name']}
-                                                         fetchList={this.fetchTeachersList}>
-                                            </EditTeacher>
+                                                    <EditTeacher id={row.idTeacher} surname={row.surname}
+                                                                 name={row.name}
+                                                                 middle_name={row['middle name']}
+                                                                 fetchList={this.fetchTeachersList}>
+                                                    </EditTeacher>
                                                 </div>
-                                            <DeleteTeacher id={row.idTeacher} fetchList={this.fetchTeachersList}>
-                                            </DeleteTeacher>
+                                                <DeleteTeacher id={row.idTeacher} fetchList={this.fetchTeachersList}>
+                                                </DeleteTeacher>
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -107,7 +110,7 @@ class Teachers extends Component {
                     </TableContainer>
                 </div>
             </div>)
-                else return (<div>
+        else return (<div>
                 <div style={heading_style}>
                     <Typography style={teachersheading_style} variant="h6">
                         Teachers

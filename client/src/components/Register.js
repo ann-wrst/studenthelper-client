@@ -10,6 +10,7 @@ import {API_BASE_URL} from '../constants/api'
 import {Toolbar} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import history from "./history";
+import ErrorSnackbar from "./ErrorSnackbar";
 
 class Register extends Component {
 
@@ -20,7 +21,7 @@ class Register extends Component {
             email: '',
             password: '',
             repeated_password: '',
-            error_message: '',
+            error: '',
             isLoggedIn: false
 
         }
@@ -28,16 +29,13 @@ class Register extends Component {
 
 
     handleClick() {
-        const apiBaseUrl = API_BASE_URL;
-        console.log("values", this.state.name, this.state.email, this.state.password, this.state.repeated_password);
-        const self = this;
         if (this.state.password === this.state.repeated_password) {
             const payload = {
                 "username": this.state.name,
                 "email": this.state.email.toLowerCase().trim(),
                 "password": this.state.password
             };
-            fetch(apiBaseUrl + '/register', {
+            fetch(API_BASE_URL + '/register', {
                 credentials: 'include',
                 method: 'POST',
                 headers: {
@@ -48,32 +46,16 @@ class Register extends Component {
                 async response => {
                     console.log(response);
                     let res = await response.json();
-                    this.clearError();
-                    if (response.status === 200) {
-                        if (!res.success) {
-                            this.setState(
-                                {error_message: res.error.message}
-                            )
-                        } else {
-                            this.setState({isLoggedIn: true});
-                        }
-                        const loginscreen = [];
-                        loginscreen.push(<Login parentContext={this}/>);
-                        const loginmessage = "Not Registered yet?";
-                        /*          self.props.parentContext.setState({
-                                      loginscreen: loginscreen,
-                                      loginmessage: loginmessage,
-                                      buttonLabel: "Register",
-                                      isLogin: true,
-                                  });*/
-                    } else {
-                        if (typeof res.error.message !== "undefined")
-                            this.setState(
-                                {error_message: res.error.message}
-                            )
+                    if (!res?.success) {
+                        this.setState({error: <ErrorSnackbar open={true} message={res?.error?.message}/>});
+                    } else if (response.status === 200) {
+                        this.setState({isLoggedIn: true});
                     }
-                    if (this.state.isLoggedIn) history.push('/');
+                    const loginscreen = [];
+                    loginscreen.push(<Login parentContext={this}/>);
+                    const loginmessage = "Not Registered yet?";
 
+                    if (this.state.isLoggedIn) history.push('/');
                 }
             ).catch(function (error) {
                 console.log(error);
@@ -81,29 +63,15 @@ class Register extends Component {
 
         } else {
             this.setState(
-                {error_message: "The passwords don't match"}
+                {error: <ErrorSnackbar open={true} message={"The passwords don't match"}/>}
             )
         }
-    }
-
-    setError() {
-        let alert_message;
-        if (this.state.error_message !== "") {
-            alert_message = <Alert severity="error"> {this.state.error_message} </Alert>;
-        } else alert_message = null;
-
-        return alert_message;
-    }
-
-    clearError() {
-        this.setState(
-            {error_message: ""}
-        )
     }
 
     render() {
         return (
             <div>
+                {this.state.error}
                 <div>
                     <AppBar position="static">
                         <Toolbar>
@@ -113,48 +81,48 @@ class Register extends Component {
                         </Toolbar>
                     </AppBar>
 
-                    {this.setError()}
                     <div style={login_styles}>
-                    <TextField
-                        hintText="Enter your name"
-                        label="Name"
-                        inputProps={{maxLength: 45}}
-                        onChange={(event) => this.setState({name: event.target.value})}
-                    />
-                    <br/>
-                    <TextField
-                        required
-                        hintText="Enter your Email"
-                        type="email"
-                        label="Email"
-                        inputProps={{maxLength: 255}}
+                        <TextField
+                            hintText="Enter your name"
+                            label="Name"
+                            inputProps={{maxLength: 45}}
+                            onChange={(event) => this.setState({name: event.target.value})}
+                        />
+                        <br/>
+                        <TextField
+                            required
+                            hintText="Enter your Email"
+                            type="email"
+                            label="Email"
+                            inputProps={{maxLength: 255}}
 
-                        onChange={(event) => this.setState({email: event.target.value})}
-                    />
-                    <br/>
-                    <TextField
-                        required
-                        type="password"
-                        hintText="Enter your Password"
-                        label="Password"
-                        inputProps={{maxLength: 70}}
-                        onChange={(event) => this.setState({password: event.target.value})}
-                    />
-                    <br/>
-                    <TextField
-                        required
-                        type="password"
-                        hintText="Enter your Password"
-                        label="Confirm Password"
-                        inputProps={{maxLength: 70}}
+                            onChange={(event) => this.setState({email: event.target.value})}
+                        />
+                        <br/>
+                        <TextField
+                            required
+                            type="password"
+                            hintText="Enter your Password"
+                            label="Password"
+                            inputProps={{maxLength: 70}}
+                            onChange={(event) => this.setState({password: event.target.value})}
+                        />
+                        <br/>
+                        <TextField
+                            required
+                            type="password"
+                            hintText="Enter your Password"
+                            label="Confirm Password"
+                            inputProps={{maxLength: 70}}
 
-                        onChange={(event) => this.setState({repeated_password: event.target.value})}
-                    />
-                    <br/>
-                    <Button primary={true} style={style} onClick={(event) => this.handleClick(event)} variant="outlined"
-                            color="primary">
-                        Submit
-                    </Button>
+                            onChange={(event) => this.setState({repeated_password: event.target.value})}
+                        />
+                        <br/>
+                        <Button primary={true} style={style} onClick={(event) => this.handleClick(event)}
+                                variant="outlined"
+                                color="primary">
+                            Submit
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -165,14 +133,5 @@ class Register extends Component {
 const style = {
     margin: 15,
 };
-// const appbar_style = {
-//     'display': 'flex',
-//     'align-content': 'stretch',
-//
-// }
-const generalStyle = {
-    'display': 'flex',
-    'flex-direction':'column',
-    'align-items':'center'
-};
+
 export default Register;

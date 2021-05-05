@@ -7,13 +7,13 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import {DialogContentText} from "@material-ui/core";
 import DialogActions from "@material-ui/core/DialogActions";
+import ErrorSnackbar from "../../ErrorSnackbar";
 
 class DeleteButton extends Component {
     constructor(props) {
         super(props);
         this.state = {
             open: false,
-            error_message: '',
         }
     }
 
@@ -23,8 +23,9 @@ class DeleteButton extends Component {
 
     handleClose = () => {
         this.setState({open: false});
+        this.error = null;
     };
-
+    error;
     handleDelete(id) {
         fetch(API_BASE_URL + `/subjects/${id}`, {
             credentials: 'include',
@@ -36,9 +37,7 @@ class DeleteButton extends Component {
             async response => {
                 let res = await response.json();
                 if (!res?.success) {
-                    this.setState(
-                        {error_message: res?.error?.message}
-                    )
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 this.props.fetchList();
             }
@@ -47,7 +46,9 @@ class DeleteButton extends Component {
     }
 
     render() {
-        return (<div>
+        return (
+            <div>
+                {this.error}
             <Button variant="outlined" size="small"
                     color="secondary" primary={true}
                     onClick={(event) => this.handleClickOpen()}>

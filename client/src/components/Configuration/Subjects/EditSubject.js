@@ -28,6 +28,8 @@ class EditSubject extends Component {
 
     handleClose = () => {
         this.setState({open: false});
+        this.error = null;
+
     };
 
     error;
@@ -47,7 +49,7 @@ class EditSubject extends Component {
             async response => {
                 let res = await response.json();
                 if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res.error.message}/>;
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 this.setState({open: false});
                 this.props.fetchList();
