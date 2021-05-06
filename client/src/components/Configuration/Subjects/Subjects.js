@@ -67,7 +67,6 @@ class Subjects extends Component {
                     Subjects
                 </Typography>
                     <AddSubject fetchList={this.fetchSubjectList}> </AddSubject>
-                    {console.log(this.state.subjects_list)}
                     <TableContainer component={Paper}>
                         <Table className="table" aria-label="simple table">
                             <TableHead>

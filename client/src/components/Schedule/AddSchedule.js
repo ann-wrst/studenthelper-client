@@ -361,8 +361,7 @@ class AddSchedule extends Component {
     }
 }
 
-const
-    dropdown_style = {
+const dropdown_style = {
         width: '552px',
         marginTop: '10px',
         marginBottom: '10px'

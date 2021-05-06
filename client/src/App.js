@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './App.css';
 import Loginscreen from './components/Loginscreen'
 import SubjectsEditor from "./components/Notes/SubjectsEditor";
-import  Deadlines from "./components/Deadlines";
+import  Deadlines from "./components/Deadlines/Deadlines";
 import Notes from "./components/Notes/Notes";
 import Configuration from "./components/Configuration/Configuration";
 import {

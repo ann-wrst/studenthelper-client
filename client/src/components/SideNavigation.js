@@ -17,7 +17,7 @@ class SideNavigation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            error_message: ''
+            error:null
         }
         this.Logout = this.Logout.bind(this);
     }
@@ -47,11 +47,6 @@ class SideNavigation extends React.Component {
         history.push('/login');
     }
 
-    clearError() {
-        this.setState(
-            {error_message: ""}
-        )
-    }
 
     render() {
         console.log(this.state.error_message);
@@ -72,7 +67,7 @@ class SideNavigation extends React.Component {
                             <Link style={items_styles} to='/deadlines'>
                                 <img src={process.env.PUBLIC_URL + '/deadline_icon.svg'} alt='' style={icon_styles}/>
                                 <Typography variant="h6" style={title_styles}>
-                                    Deadlines
+                                    Tasks & Deadlines
                                 </Typography>
                             </Link>
                         </div>

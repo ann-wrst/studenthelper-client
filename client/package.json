@@ -5,6 +5,8 @@
   "type": "module",
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^27.1.0",
+    "@date-io/date-fns": "^1.3.13",
+    "@date-io/moment": "^2.10.8",
     "@material-ui/core": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@testing-library/jest-dom": "^5.11.4",
@@ -13,6 +15,7 @@
     "@trendmicro/react-sidenav": "^0.5.0",
     "@zach.codes/react-calendar": "^0.1.0",
     "axios": "^0.21.1",
+    "ckeditor5": "^27.1.0",
     "connected-react-router": "^6.9.1",
     "date-fns": "^2.21.1",
     "fontsource-roboto": "^4.0.0",
@@ -58,8 +61,10 @@
   "devDependencies": {
     "@ckeditor/ckeditor5-react": "^3.0.2",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/pickers": "^3.3.10",
     "file-loader": "^6.2.0",
     "history": "^4.10.1",
+    "react-datepicker": "^3.8.0",
     "react-week-scheduler": "^0.1.13"
   }
 }

@@ -21,11 +21,6 @@ class AddSubject extends Component {
 
     error;
 
-    componentDidMount() {
-        this.setState({
-            error: null
-        })
-    }
 
     handleClickOpen() {
         this.setState({open: true});
