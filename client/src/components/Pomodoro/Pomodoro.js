@@ -1,8 +1,9 @@
 import React from 'react';
 // import '../ComponentStyles/App.css';
 import BreakInterval from './BreakInterval';
-import Timer from './Timer';
+import Timer from '../Timer';
 import SessionInterval from "./SessionInterval";
+import SideNavigation from "../SideNavigation";
 
 class Pomodoro extends React.Component {
     constructor() {
@@ -58,6 +59,7 @@ class Pomodoro extends React.Component {
     render() {
         return (
             <main className="App">
+                <SideNavigation/>
                 <section>
                     <h2 className="app-title">Pomodoro Clock</h2>
                     <section id="interval-container">

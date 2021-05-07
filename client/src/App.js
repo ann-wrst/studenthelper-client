@@ -11,8 +11,8 @@ import {
     Route
 } from "react-router-dom";
 import history from "./components/history";
-import Homepage from "./components/Homepage";
 import ScheduleTest from "./components/Schedule/Schedule";
+import Pomodoro from "./components/Pomodoro/Pomodoro";
 
 class App extends Component {
     constructor(props) {
@@ -43,6 +43,7 @@ class App extends Component {
                     <Route exact path="/notes/:id" component={SubjectsEditor}/>
                     <Route exact path="/notes"><Notes/></Route>
                     <Route exact path="/configuration"><Configuration/></Route>
+                    <Route exact path="/pomodoro"><Pomodoro/></Route>
                     <Route exact path="/"><ScheduleTest/></Route>
                 </Switch>
             </Router>

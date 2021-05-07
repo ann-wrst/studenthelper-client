@@ -88,6 +88,14 @@ class SideNavigation extends React.Component {
                             </Link>
                         </div>
                         <div style={item_styles}>
+                            <Link style={items_styles} to='/pomodoro'>
+                                <img src={process.env.PUBLIC_URL + '/pomodoro.svg'} alt='' style={icon_styles}/>
+                                <Typography variant="h6" style={title_styles}>
+                                    Pomodoro
+                                </Typography>
+                            </Link>
+                        </div>
+                        <div style={item_styles}>
                             {this.props.fromSchedule ?
                                 (<div><FormLabel
                                     component="legend"

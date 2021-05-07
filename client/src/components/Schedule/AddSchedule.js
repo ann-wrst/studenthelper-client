@@ -34,9 +34,9 @@ class AddSchedule extends Component {
             subject: undefined,
             teacher: undefined,
             class_type: undefined,
-            subjects_list: this.props.subjects,
-            teachers_list: this.props.teachers,
-            classtypes_list: this.props.classtypes
+            subjects_list: undefined,
+            teachers_list: undefined,
+            classtypes_list: undefined
         }
     }
 
@@ -362,8 +362,8 @@ class AddSchedule extends Component {
 }
 
 const dropdown_style = {
-        width: '552px',
-        marginTop: '10px',
-        marginBottom: '10px'
-    };
+    width: '552px',
+    marginTop: '10px',
+    marginBottom: '10px'
+};
 export default AddSchedule;
