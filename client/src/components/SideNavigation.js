@@ -49,7 +49,6 @@ class SideNavigation extends React.Component {
 
 
     render() {
-        console.log(this.state.error_message);
         return (
             <AppBar position="static">
                 <Toolbar>
