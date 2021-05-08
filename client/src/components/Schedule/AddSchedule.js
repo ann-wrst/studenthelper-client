@@ -258,7 +258,7 @@ class AddSchedule extends Component {
                 let res = await response.json();
                 if (!res?.success) {
                     this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
+                } else this.handleClose();
                 if (response.status === 403)
                     history.push('/login');
 
@@ -267,7 +267,7 @@ class AddSchedule extends Component {
             }
         );
 
-        this.handleClose();
+
 
     }
     error;
@@ -293,6 +293,7 @@ class AddSchedule extends Component {
                         autoFocus
                         margin="dense"
                         id="number"
+                        type="number"
                         label="Class number"
                         fullWidth
                         onChange={(event) => this.setState({class_number: event.target.value})}

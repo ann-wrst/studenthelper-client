@@ -122,9 +122,7 @@ class Deadlines extends Component {
                 if (response.status === 403)
                     history.push('/login');
                 let res = await response.json();
-                if (res?.success) {
-                    this.setState({subjects_list: res?.data});
-                } else if (!res?.success) {
+                if (!res?.success) {
                     this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
                 this.fetchDeadlines();
