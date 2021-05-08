@@ -107,6 +107,7 @@ class EditDeadline extends Component {
     render() {
         return (
             <div>
+                {this.error}
                 <MenuItem style={menu_item} key="delete" selected={'Delete'}
                           onClick={this.openEdit}>
                     Edit

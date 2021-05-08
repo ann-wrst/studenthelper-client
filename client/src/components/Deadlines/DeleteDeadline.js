@@ -27,6 +27,7 @@ class DeleteDeadline extends Component {
     handleClose = () => {
         this.setState({open: false});
     };
+
     error;
 
     deleteDeadline(id) {
@@ -59,6 +60,7 @@ class DeleteDeadline extends Component {
                           onClick={this.openDeleteModal}>
                     Delete
                 </MenuItem>
+                {this.error}
                 <Dialog open={this.state.open} onClose={() => this.handleClose()}
                         aria-labelledby="form-dialog-title">
                     <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
