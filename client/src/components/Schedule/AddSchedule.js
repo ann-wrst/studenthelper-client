@@ -270,7 +270,7 @@ class AddSchedule extends Component {
         this.handleClose();
 
     }
-
+    error;
     render() {
         this.subjects_list = this.state.subjects_list;
         this.teachers_list = this.state.teachers_list;
@@ -283,8 +283,9 @@ class AddSchedule extends Component {
             this.classtypes_list = [];
         return (<span>{this.error}<IconButton size="small" onClick={() => this.handleClickOpen()}><AddIcon/>
                     </IconButton>
-                    <Dialog open={this.state.open} onClose={() => this.handleClose()}
-                            aria-labelledby="form-dialog-title">
+            {this.error}
+            <Dialog open={this.state.open} onClose={() => this.handleClose()}
+                    aria-labelledby="form-dialog-title">
 
                     <DialogTitle id="form-dialog-title">Add ({this.props.day})</DialogTitle>
                     <DialogContent>

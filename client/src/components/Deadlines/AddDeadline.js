@@ -36,9 +36,10 @@ class AddDeadline extends Component {
     }
 
     error;
+    subjects_list = [];
 
     componentDidMount() {
-        this.fetchSubjectList();
+        //   this.fetchSubjectList();
     }
 
     handleClickOpen() {
@@ -82,9 +83,10 @@ class AddDeadline extends Component {
 
     addTask() {
         const payload = {
-            "deadline": this.state.task,
+            "task": this.state.task,
             "subjectId": this.state.subject,
             "date": this.state.date,
+            "isDone": false
         };
         fetch(API_BASE_URL + '/deadlines', {
             credentials: 'include',
@@ -102,17 +104,17 @@ class AddDeadline extends Component {
                 if (response.status === 403)
                     history.push('/login');
 
-                this.props.fetchSchedules();
+                this.props.fetchList();
                 return res;
             }
         );
 
-
     }
 
-    subjects_list = [];
 
     showSubjectsDropdown() {
+        this.subjects_list = this.props.subjects_list;
+        console.log(this.subjects_list)
         let dropdown;
         if (this.subjects_list.length === 0) {
             dropdown = <span><br/>No subjects. You can create subjects here <Link to='/configuration' target="_blank"
@@ -138,7 +140,7 @@ class AddDeadline extends Component {
                                  onClick={(event) => this.handleClickOpen(event)}><AddIcon/></IconButton>
             <div>
                 <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
-
+                    {this.error}
                     <DialogTitle id="form-dialog-title">Add</DialogTitle>
                     <DialogContent style={{width: '400px', height: '350px'}}>
                         <TextField

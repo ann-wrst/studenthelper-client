@@ -5,45 +5,49 @@ import AddDeadline from "./AddDeadline";
 import Typography from "@material-ui/core/Typography";
 import history from "../history";
 import ErrorSnackbar from "../ErrorSnackbar";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import IconButton from "@material-ui/core/IconButton";
+import Divider from "@material-ui/core/Divider";
 
 class Deadlines extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            deadlines_list: [{
-                date: "2021-05-26T11:11:00.000Z",
-                deadline: "`12345",
-                subjectId: "7f3eccfb-46ab-4d2b-a2f4-e321be3f6aad",
-                isDone: false
-            }, {
-                date: "2021-05-26T12:11:00.000Z",
-                deadline: "another",
-                subjectId: "blablaid",
-                isDone: false
-            }, {
-                date: "2021-05-28T12:11:00.000Z",
-                deadline: "another",
-                subjectId: "blablaid",
-                isDone: false
-            }
-            ]
+            deadlines_list: undefined,
+            checked: false,
+            subjects_list: []
         }
+        this.fetchDeadlines = this.fetchDeadlines.bind(this);
     }
 
     componentDidMount() {
         this.fetchDeadlines();
+        this.fetchSubjectList();
     }
 
-    sortByDate(a, b) {
-
-    }
+    // sortByDate() {
+    //     let result;
+    //     let sortedKeys = Object.keys(this.grouped_dates).sort((a, b) => new Date(a) - new Date(b));
+    //     sortedKeys.forEach((el) => {
+    //             result[el] = this.grouped_dates[el];
+    //         }
+    //     )
+    //     return result;
+    // }
 
     grouped_dates = [];
 
-    getDates() {
+    getDates(dates) {
         let keys = []
-        for (let k in this.grouped_dates) {
-            keys.push(k);
+        for (let k in dates) {
+            if (dates.hasOwnProperty(k))
+                keys.push(k);
         }
         return keys;
     }
@@ -58,11 +62,9 @@ class Deadlines extends Component {
         if (!(date in this.grouped_dates)) {
             this.grouped_dates[date] = [];
             for (let i in this.state.deadlines_list) {
-                let currentDate = this.removeTimeFromDate(this.state.deadlines_list[i]?.date);
+                let currentDate = new Date(this.state.deadlines_list[i]?.date);
                 if (currentDate.toISOString() === date.toISOString()) {
-                    console.log('here')
                     this.grouped_dates[date].push(this.state.deadlines_list[i]);
-                    console.log(this.grouped_dates[date]);
                 }
             }
             return this.grouped_dates[date];
@@ -82,7 +84,7 @@ class Deadlines extends Component {
                     history.push('/login');
                 let res = await response.json();
                 if (res?.success) {
-                    this.state.deadlines_list = res?.data;
+                    this.setState({deadlines_list: res?.data});
                 } else if (!res?.success) {
                     this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
@@ -91,21 +93,141 @@ class Deadlines extends Component {
         );
     }
 
-    render() {
-        this.grouped_dates = [];
-        for (let i = 0; i < this.state.deadlines_list?.length; i++) {
-            let currentDate = this.removeTimeFromDate(this.state.deadlines_list[i]?.date);
-            if (typeof this.groupByDate(currentDate) !== 'undefined')
-                this.grouped_dates.push(this.groupByDate(currentDate));
+    deadlines_list = []
+
+    async fetchSubjectList() {
+        fetch(API_BASE_URL + '/subjects', {
+            credentials: 'include',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(
+            async response => {
+
+                if (response.status === 403)
+                    history.push('/login');
+                let res = await response.json();
+                if (res?.success) {
+                    this.setState({subjects_list: res?.data});
+                } else if (!res?.success) {
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+                }
+                return res;
+            }
+        );
+    }
+
+    handleCheck(id, isDone) {
+        const payload = {
+            "isDone": isDone
         }
-        console.log(this.grouped_dates);
-        console.log(this.getDates());
+        fetch(API_BASE_URL + `/complete/${id}`, {
+            credentials: 'include',
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+        }).then(
+            async response => {
+                if (response.status === 403)
+                    history.push('/login');
+                let res = await response.json();
+                if (res?.success) {
+                    this.setState({subjects_list: res?.data});
+                } else if (!res?.success) {
+                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+                }
+                this.fetchDeadlines();
+            }
+        );
+    }
+
+    getSubjectName(id) {
+        for (let i = 0; i < this.state.subjects_list.length; i++) {
+            if (this.state.subjects_list[i].idSubject === id)
+                return this.state.subjects_list[i].name
+        }
+    }
+
+    renderList(keys, values) {
+        return (<div style={list_style}>{
+            keys.map((date) => (
+                <div>
+                    <div style={date_style}>
+                        {(new Date(this.grouped_dates[date][0].date)).toLocaleDateString('EN', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        })}
+                    </div>
+                    {this.grouped_dates[date].map((item) => (
+                        <List>
+                            <ListItem dense>
+                                <ListItemIcon>
+                                    <Checkbox
+                                        edge="start"
+                                        color="default"
+                                        checked={item.isDone}
+                                        tabIndex={-1}
+                                        disableRipple
+                                        onClick={() => this.handleCheck(item?.idDeadline, !item.isDone)}
+                                    />
+                                </ListItemIcon>
+                                {console.log(item.subjectId)}
+                                <ListItemText primary={item.task} secondary={this.getSubjectName(item.subjectId)}>
+                                </ListItemText>
+                                <ListItemSecondaryAction>
+                                    <IconButton edge="end" aria-label="comments">
+                                        <MoreVertIcon/>
+                                    </IconButton>
+                                </ListItemSecondaryAction>
+                            </ListItem>
+                        </List>
+                    ))}
+                    <Divider/>
+                </div>)
+            )
+        }</div>)
+    }
+
+    render() {
+        console.log(this.state.subjects_list);
+        this.deadlines_list = this.state.deadlines_list || [];
+        this.grouped_dates = [];
+        for (let i = 0; i < this.deadlines_list?.length; i++) {
+            let currentDate = this.deadlines_list[i]?.date;
+            let grouped = this.groupByDate(new Date(currentDate));
+            if (typeof grouped !== 'undefined')
+                this.grouped_dates.push(grouped);
+        }
+
+        let dates = [];
+        for (let i = 0; i < this.getDates(this.grouped_dates).length; i++) {
+            let current = this.getDates(this.grouped_dates)[i]
+            if (current.length > 4)
+                dates.push(current);
+        }
+        console.log(dates);
+        let info_for_render = [];
+        for (let i = 0; i < dates.length; i++) {
+            info_for_render.push(this.grouped_dates[dates[i]]);
+        }
+        console.log(info_for_render);
+        // for (const [index, value] of this.grouped_dates.entries()) {
+        //     console.log(this.grouped_dates[this.getDates(this.grouped_dates)[2]]);
+        //     console.log(index);
+        //     //console.log(value);
+        //     info_for_render.push();
+        // }
         return (<div style={page_style}><SideNavigation/>
             <div style={heading_style}>
                 <Typography variant="h6" style={subjectsheading_style}>
                     Tasks
                 </Typography>
-                <AddDeadline fetchList={this.fetchDeadlines}/></div>
+                <AddDeadline fetchList={this.fetchDeadlines} subjects_list={this.state.subjects_list}/></div>
+            {this.renderList(dates, info_for_render)}
         </div>);
     }
 }
@@ -114,13 +236,22 @@ const page_style = {
     'display': 'flex',
     'flex-direction': 'column',
 };
-const subjectsheading_style = {
-    'margin-left': '20px'
-};
+const subjectsheading_style = {};
 const heading_style = {
     'display': 'flex',
     'flex-direction': 'row',
     'flex-wrap': 'wrap',
-    'align-content': 'stretch'
+    'align-content': 'stretch',
+    'margin-left': '20px',
+    'margin-top': '10px',
+    'margin-bottom': '5px'
 };
+const date_style = {
+    fontFamily: "'Oswald', cursive",
+    fontSize: '18px',
+    color: '#3F51B5'
+};
+const list_style = {
+    'margin-left': '30px',
+}
 export default Deadlines;
