@@ -73,7 +73,7 @@ class Notes extends Component {
                                     <ListItemText>
                                         <Link
                                             to={{
-                                                pathname: `/notes/${subj.idSubject}`,
+                                                pathname: `/note/${subj.idSubject}`,
                                                 state: {name: subj.name}
                                             }}
                                         >{subj.name}</Link>

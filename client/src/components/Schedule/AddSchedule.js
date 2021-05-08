@@ -34,9 +34,9 @@ class AddSchedule extends Component {
             subject: undefined,
             teacher: undefined,
             class_type: undefined,
-            subjects_list: undefined,
-            teachers_list: undefined,
-            classtypes_list: undefined
+            subjects_list: [],
+            teachers_list: [],
+            classtypes_list: []
         }
     }
 

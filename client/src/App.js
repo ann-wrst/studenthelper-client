@@ -40,7 +40,7 @@ class App extends Component {
                     <Route exact path="/login"><Loginscreen/></Route>
                     <Route exact path="/schedule"><ScheduleTest/></Route>
                     <Route exact path="/deadlines"><Deadlines/></Route>
-                    <Route exact path="/notes/:id" component={SubjectsEditor}/>
+                    <Route exact path="/note/:id" component={SubjectsEditor}/>
                     <Route exact path="/notes"><Notes/></Route>
                     <Route exact path="/configuration"><Configuration/></Route>
                     <Route exact path="/pomodoro"><Pomodoro/></Route>

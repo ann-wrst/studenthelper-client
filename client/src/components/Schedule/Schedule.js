@@ -175,7 +175,6 @@ class Schedule extends Component {
     renderTeacher(surname, name, middleName) {
         let fullName = (name || '').concat(' ', middleName || '');
         return surname?.concat(' ', fullName.split(' ').map(x => x.charAt(0)).join('. ').toUpperCase());
-
     }
 
     renderSchedule(num, day, dayIdx) {
@@ -187,7 +186,6 @@ class Schedule extends Component {
             )
         }
         if (this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity == null) {
-            console.log(typeof this.getScheduleByDayAndNumber(dayIdx, num) !== 'undefined');
             return (
                 <div>
                     {
@@ -217,7 +215,7 @@ class Schedule extends Component {
                                             </div>
                                         </div>
                                         {this.renderMoreButton(dayIdx, num, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.idSchedule)}
-                                        <Divider orientation="vertical" flexItem/>
+                                        {/*<Divider orientation="vertical" flexItem/>*/}
                                     </div>
                                 </CardContent>
                             </Card>) : <div> </div>
