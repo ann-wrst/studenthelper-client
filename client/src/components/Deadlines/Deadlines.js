@@ -14,14 +14,17 @@ import Checkbox from '@material-ui/core/Checkbox';
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
+import Menu from "@material-ui/core/Menu";
+import DeleteDeadline from "./DeleteDeadline";
+import EditDeadline from "./EditDeadline";
 
 class Deadlines extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            deadlines_list: undefined,
-            checked: false,
-            subjects_list: []
+            deadlines_list: [],
+            subjects_list: [],
+            anchorEl: null
         }
         this.fetchDeadlines = this.fetchDeadlines.bind(this);
     }
@@ -31,15 +34,6 @@ class Deadlines extends Component {
         this.fetchSubjectList();
     }
 
-    // sortByDate() {
-    //     let result;
-    //     let sortedKeys = Object.keys(this.grouped_dates).sort((a, b) => new Date(a) - new Date(b));
-    //     sortedKeys.forEach((el) => {
-    //             result[el] = this.grouped_dates[el];
-    //         }
-    //     )
-    //     return result;
-    // }
 
     grouped_dates = [];
 
@@ -50,12 +44,6 @@ class Deadlines extends Component {
                 keys.push(k);
         }
         return keys;
-    }
-
-    removeTimeFromDate(curDate) {
-        let currentDate = new Date(curDate);
-        let [year, month, date] = [currentDate?.getFullYear(), currentDate?.getMonth(), currentDate?.getDate()]
-        return new Date(year, month, date);
     }
 
     groupByDate(date) {
@@ -122,7 +110,7 @@ class Deadlines extends Component {
         const payload = {
             "isDone": isDone
         }
-        fetch(API_BASE_URL + `/complete/${id}`, {
+        fetch(API_BASE_URL + `/deadlines/${id}`, {
             credentials: 'include',
             method: 'PATCH',
             headers: {
@@ -144,14 +132,28 @@ class Deadlines extends Component {
         );
     }
 
+    handleCloseMoreButton = () => {
+        this.setState({anchorEl: null});
+    };
+
     getSubjectName(id) {
-        for (let i = 0; i < this.state.subjects_list.length; i++) {
+        for (let i = 0; i < this.state.subjects_list?.length; i++) {
             if (this.state.subjects_list[i].idSubject === id)
                 return this.state.subjects_list[i].name
         }
     }
 
-    renderList(keys, values) {
+    currentId;
+    currentDate;
+    currentTask;
+    currentSubject;
+
+    handleMoreButton(event, id, date, task, subject) {
+        [this.currentId, this.currentDate, this.currentSubject, this.currentTask] = [id, date, subject, task];
+        this.setState({anchorEl: event.currentTarget});
+    }
+
+    renderList(keys) {
         return (<div style={list_style}>{
             keys.map((date) => (
                 <div>
@@ -175,11 +177,11 @@ class Deadlines extends Component {
                                         onClick={() => this.handleCheck(item?.idDeadline, !item.isDone)}
                                     />
                                 </ListItemIcon>
-                                {console.log(item.subjectId)}
                                 <ListItemText primary={item.task} secondary={this.getSubjectName(item.subjectId)}>
                                 </ListItemText>
                                 <ListItemSecondaryAction>
-                                    <IconButton edge="end" aria-label="comments">
+                                    <IconButton edge="end" aria-label="comments"
+                                                onClick={(event) => this.handleMoreButton(event, item.idDeadline, item.date, item.task, item.subjectId)}>
                                         <MoreVertIcon/>
                                     </IconButton>
                                 </ListItemSecondaryAction>
@@ -193,7 +195,6 @@ class Deadlines extends Component {
     }
 
     render() {
-        console.log(this.state.subjects_list);
         this.deadlines_list = this.state.deadlines_list || [];
         this.grouped_dates = [];
         for (let i = 0; i < this.deadlines_list?.length; i++) {
@@ -209,25 +210,27 @@ class Deadlines extends Component {
             if (current.length > 4)
                 dates.push(current);
         }
-        console.log(dates);
-        let info_for_render = [];
-        for (let i = 0; i < dates.length; i++) {
-            info_for_render.push(this.grouped_dates[dates[i]]);
-        }
-        console.log(info_for_render);
-        // for (const [index, value] of this.grouped_dates.entries()) {
-        //     console.log(this.grouped_dates[this.getDates(this.grouped_dates)[2]]);
-        //     console.log(index);
-        //     //console.log(value);
-        //     info_for_render.push();
-        // }
         return (<div style={page_style}><SideNavigation/>
             <div style={heading_style}>
                 <Typography variant="h6" style={subjectsheading_style}>
                     Tasks
                 </Typography>
                 <AddDeadline fetchList={this.fetchDeadlines} subjects_list={this.state.subjects_list}/></div>
-            {this.renderList(dates, info_for_render)}
+            {this.renderList(dates)}
+            <Menu
+                id="simple-menu"
+                anchorEl={this.state.anchorEl}
+                keepMounted
+                open={Boolean(this.state.anchorEl)}
+                onClose={this.handleCloseMoreButton}
+            >
+                <EditDeadline id={this.currentId} fetchList={this.fetchDeadlines}
+                              closeMenu={this.handleCloseMoreButton} subjects_list={this.state.subjects_list}
+                              task={this.currentTask} date={this.currentDate} subject={this.currentSubject}/>
+
+                <DeleteDeadline id={this.currentId} fetchList={this.fetchDeadlines}
+                                closeMenu={this.handleCloseMoreButton}/>
+            </Menu>
         </div>);
     }
 }
@@ -253,5 +256,8 @@ const date_style = {
 };
 const list_style = {
     'margin-left': '30px',
+};
+const menu_item = {
+    fontSize: '13px'
 }
 export default Deadlines;
