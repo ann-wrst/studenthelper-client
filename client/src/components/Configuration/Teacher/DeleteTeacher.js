@@ -24,7 +24,6 @@ class DeleteTeacher extends Component {
 
     handleClose = () => {
         this.setState({open: false});
-        this.error = null;
     };
 
     handleDelete(id) {

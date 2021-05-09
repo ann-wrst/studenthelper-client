@@ -23,7 +23,6 @@ class DeleteButton extends Component {
 
     handleClose = () => {
         this.setState({open: false});
-        this.error = null;
     };
     error;
     handleDelete(id) {

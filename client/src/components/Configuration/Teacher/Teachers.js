@@ -119,7 +119,6 @@ class Teachers extends Component {
                 </div>
                 <EmptyStub name={"teachers"}/>
             </div>
-
         );
     }
 }

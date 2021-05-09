@@ -1,9 +1,7 @@
 import React from 'react';
 import {API_BASE_URL} from '../constants/api'
-import {scaleDown as Menu} from 'react-burger-menu'
 import Typography from "@material-ui/core/Typography";
 import history from './history'
-import Alert from "@material-ui/lab/Alert";
 import {Link} from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -11,7 +9,6 @@ import Button from '@material-ui/core/Button';
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import ErrorSnackbar from "./ErrorSnackbar";
 
 
 class SideNavigation extends React.Component {

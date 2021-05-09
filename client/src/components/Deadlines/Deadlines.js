@@ -17,6 +17,9 @@ import Divider from "@material-ui/core/Divider";
 import Menu from "@material-ui/core/Menu";
 import DeleteDeadline from "./DeleteDeadline";
 import EditDeadline from "./EditDeadline";
+import EmptyStub from "../Configuration/EmptyStub";
+import {FormControlLabel} from "@material-ui/core";
+import Switch from "@material-ui/core/Switch";
 
 class Deadlines extends Component {
     constructor(props) {
@@ -24,9 +27,11 @@ class Deadlines extends Component {
         this.state = {
             deadlines_list: [],
             subjects_list: [],
-            anchorEl: null
+            anchorEl: null,
+            hideOld: true
         }
         this.fetchDeadlines = this.fetchDeadlines.bind(this);
+        this.handleHideOld = this.handleHideOld.bind(this);
     }
 
     componentDidMount() {
@@ -151,7 +156,14 @@ class Deadlines extends Component {
         this.setState({anchorEl: event.currentTarget});
     }
 
+    checkIsTaskNew(date) {
+        let today = new Date();
+        return new Date(date) > today;
+    }
+
     renderList(keys) {
+        if (this.state.hideOld)
+            keys = keys.filter((value) => this.checkIsTaskNew(value));
         return (<div style={list_style}>{
             keys.map((date) => (
                 <div>
@@ -192,6 +204,10 @@ class Deadlines extends Component {
         }</div>)
     }
 
+    handleHideOld(event) {
+        this.setState({hideOld: event.target.checked});
+    }
+
     render() {
         this.deadlines_list = this.state.deadlines_list || [];
         this.grouped_dates = [];
@@ -208,27 +224,42 @@ class Deadlines extends Component {
             if (current.length > 4)
                 dates.push(current);
         }
-        return (<div style={page_style}><SideNavigation/>
+        if (dates.length !== 0) {
+            return (<div style={page_style}><SideNavigation/>
+                <div style={heading_style}>
+                    <Typography variant="h5">
+                        Tasks
+                    </Typography>
+                    <AddDeadline fetchList={this.fetchDeadlines} subjects_list={this.state.subjects_list}/></div>
+
+                <FormControlLabel style={switch_style}
+                                  control={<Switch checked={this.state.hideOld}
+                                                   onChange={this.handleHideOld} name="hideOld"
+                                                   size="small" color="primary"/>}
+                                  label="Hide old"/>
+                {this.renderList(dates)}
+                <Menu
+                    id="simple-menu"
+                    anchorEl={this.state.anchorEl}
+                    keepMounted
+                    open={Boolean(this.state.anchorEl)}
+                    onClose={this.handleCloseMoreButton}
+                >
+                    <EditDeadline id={this.currentId} fetchList={this.fetchDeadlines}
+                                  closeMenu={this.handleCloseMoreButton} subjects_list={this.state.subjects_list}
+                                  task={this.currentTask} date={this.currentDate} subject={this.currentSubject}/>
+
+                    <DeleteDeadline id={this.currentId} fetchList={this.fetchDeadlines}
+                                    closeMenu={this.handleCloseMoreButton}/>
+                </Menu>
+            </div>);
+        } else return (<div style={page_style}><SideNavigation/>
             <div style={heading_style}>
                 <Typography variant="h5">
                     Tasks
                 </Typography>
                 <AddDeadline fetchList={this.fetchDeadlines} subjects_list={this.state.subjects_list}/></div>
-            {this.renderList(dates)}
-            <Menu
-                id="simple-menu"
-                anchorEl={this.state.anchorEl}
-                keepMounted
-                open={Boolean(this.state.anchorEl)}
-                onClose={this.handleCloseMoreButton}
-            >
-                <EditDeadline id={this.currentId} fetchList={this.fetchDeadlines}
-                              closeMenu={this.handleCloseMoreButton} subjects_list={this.state.subjects_list}
-                              task={this.currentTask} date={this.currentDate} subject={this.currentSubject}/>
-
-                <DeleteDeadline id={this.currentId} fetchList={this.fetchDeadlines}
-                                closeMenu={this.handleCloseMoreButton}/>
-            </Menu>
+            <EmptyStub name={"tasks"}/>
         </div>);
     }
 }
@@ -247,6 +278,10 @@ const heading_style = {
     'margin-bottom': '15px',
     alignItems: 'center'
 };
+const switch_style = {
+    marginLeft: '15px',
+    marginBottom:'15px'
+};
 const date_style = {
     fontFamily: "'Oswald', cursive",
     fontSize: '18px',
@@ -255,7 +290,5 @@ const date_style = {
 const list_style = {
     'margin-left': '30px',
 };
-const menu_item = {
-    fontSize: '13px'
-}
+
 export default Deadlines;

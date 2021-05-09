@@ -153,7 +153,7 @@ class AddDeadline extends Component {
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker
                                 disableToolbar
-                                disablePast
+                                // disablePast
                                 required
                                 format="dd/MM/yyyy"
                                 margin="normal"

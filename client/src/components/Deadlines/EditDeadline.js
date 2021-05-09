@@ -90,15 +90,14 @@ class EditDeadline extends Component {
             body: JSON.stringify(payload)
         }).then(
             async response => {
-                if (response.status === 403)
-                    history.push('/login');
                 let res = await response.json();
                 if (res?.success) {
-                    this.setState({subjects_list: res?.data});
                     this.handleClose();
                 } else if (!res?.success) {
                     this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
                 }
+                if (response.status === 403)
+                    history.push('/login');
                 this.props.fetchList();
             }
         );
@@ -107,13 +106,12 @@ class EditDeadline extends Component {
     render() {
         return (
             <div>
-                {this.error}
                 <MenuItem style={menu_item} key="delete" selected={'Edit'}
                           onClick={this.openEdit}>
                     Edit
                 </MenuItem>
-                {this.error}
                 <Dialog open={this.state.open} onClose={() => this.handleClose()}>
+                    {this.error}
                     <DialogTitle id="form-dialog-title">Edit</DialogTitle>
                     <DialogContent style={{width: '400px', height: '350px'}}>
                         <TextField

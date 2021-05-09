@@ -24,7 +24,6 @@ class DeleteClassType extends Component {
 
     handleClose = () => {
         this.setState({open: false});
-        this.error = null;
     };
 
     handleDelete(id) {
@@ -51,13 +50,14 @@ class DeleteClassType extends Component {
     error;
 
     render() {
+        console.log(this.error)
         return (<div>
-            {this.error}
             <Button variant="outlined" size="small"
                     color="secondary" primary={true}
                     onClick={(event) => this.handleClickOpen()}>
                 Delete
             </Button>
+            {this.error}
             <Dialog open={this.state.open} onClose={() => this.handleClose()}
                     aria-labelledby="form-dialog-title">
                 <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
