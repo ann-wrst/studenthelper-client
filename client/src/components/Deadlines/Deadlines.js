@@ -210,7 +210,7 @@ class Deadlines extends Component {
         }
         return (<div style={page_style}><SideNavigation/>
             <div style={heading_style}>
-                <Typography variant="h6" style={subjectsheading_style}>
+                <Typography variant="h5">
                     Tasks
                 </Typography>
                 <AddDeadline fetchList={this.fetchDeadlines} subjects_list={this.state.subjects_list}/></div>
@@ -237,7 +237,6 @@ const page_style = {
     'display': 'flex',
     'flex-direction': 'column',
 };
-const subjectsheading_style = {};
 const heading_style = {
     'display': 'flex',
     'flex-direction': 'row',
@@ -245,7 +244,8 @@ const heading_style = {
     'align-content': 'stretch',
     'margin-left': '20px',
     'margin-top': '10px',
-    'margin-bottom': '5px'
+    'margin-bottom': '15px',
+    alignItems: 'center'
 };
 const date_style = {
     fontFamily: "'Oswald', cursive",

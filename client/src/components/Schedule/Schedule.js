@@ -24,7 +24,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import ErrorSnackbar from "../ErrorSnackbar";
-import {string} from "prop-types";
+import EditSchedule from "./EditSchedule";
 
 class Schedule extends Component {
     constructor(props) {
@@ -108,12 +108,23 @@ class Schedule extends Component {
         })
     }
 
-    renderMoreButton(day, number, id) {
+    currentId;
+    currentNum;
+    currentWeekday;
+    currentSubject;
+    currentParity;
+    currentTeacher;
+    currentClassType;
+    currentFrom;
+    currentTo;
+
+    renderMoreButton(day, number, id, subject, parity, teacher, classtype, from, to) {
+        [this.currentId, this.currentClassType, this.currentFrom, this.currentTo, this.currentNum, this.currentTeacher, this.currentSubject, this.currentWeekday, this.currentParity] = [id, classtype, from, to, number, teacher, subject, day, parity];
         let temp = this.getScheduleByDayAndNumber(day, number)[0];
         if (temp) {
             return (<div style={more_button}>
                 <IconButton size="small" aria-label="more"
-                            onClick={(event) => this.handleMoreButtonClick(event, id)}><MoreVertIcon/></IconButton>
+                            onClick={(event) => this.handleMoreButtonClick(event, day, number, id, subject, parity, teacher, classtype, from, to)}><MoreVertIcon/></IconButton>
 
             </div>)
         }
@@ -156,8 +167,8 @@ class Schedule extends Component {
         else return null;
     }
 
-    handleMoreButtonClick = (event, id) => {
-        this.currentIdToDelete = id;
+    handleMoreButtonClick = (event, day, number, id, subject, parity, teacher, classtype, from, to) => {
+        this.currentId = id;
         this.setState({anchorEl: event.currentTarget});
     };
 
@@ -186,10 +197,11 @@ class Schedule extends Component {
             )
         }
         if (this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity == null) {
+            console.log(this.getScheduleByDayAndNumber(dayIdx, num));
             return (
                 <div>
                     {
-                        typeof this.getScheduleByDayAndNumber(dayIdx, num) !== 'undefined' ?
+                        this.getScheduleByDayAndNumber(dayIdx, num)?.length > 0 ?
                             (<Card>
                                 <CardContent>
                                     <div style={table_item}>
@@ -214,11 +226,11 @@ class Schedule extends Component {
                                                 </div>
                                             </div>
                                         </div>
-                                        {this.renderMoreButton(dayIdx, num, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.idSchedule)}
+                                        {this.renderMoreButton(dayIdx, num, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.idSchedule, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.idSubject, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher.idTeacher, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype.idClassType, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class.from, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class.to)}
                                         {/*<Divider orientation="vertical" flexItem/>*/}
                                     </div>
                                 </CardContent>
-                            </Card>) : <div> </div>
+                            </Card>) : <div></div>
                     }
                 </div>
             );
@@ -262,7 +274,6 @@ class Schedule extends Component {
         )
     }
 
-    currentIdToDelete;
     weekdayAbbreviation = {
         "Monday": "MON",
         "Tuesday": "TUE",
@@ -279,7 +290,6 @@ class Schedule extends Component {
             this.schedules_list = []
         }
         let elements = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         let items = []
         for (const [index, value] of elements.entries()) {
             items.push(<TableCell style={table_heading} align="center"> {this.weekdayAbbreviation[value.toString()]}
@@ -301,7 +311,7 @@ class Schedule extends Component {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {numbers.map((num) => (
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
                                 <TableRow style={row_style} key={num}>
                                     <TableCell style={num_style}>
                                         {num}
@@ -321,7 +331,8 @@ class Schedule extends Component {
                                 open={Boolean(this.state.anchorEl)}
                                 onClose={this.handleCloseMoreButton}
                             >
-                                <MenuItem style={menu_item} key="delete" selected={'Delete'}
+                                <EditSchedule />
+                                <MenuItem style={menu_item} key="delete"
                                           onClick={this.handleDelete}>
                                     Delete
                                 </MenuItem>
@@ -345,7 +356,7 @@ class Schedule extends Component {
                             Cancel
                         </Button>
                         <Button
-                            onClick={() => this.deleteSchedule(this.currentIdToDelete)}
+                            onClick={() => this.deleteSchedule(this.currentId)}
                             color="primary">
                             Done
                         </Button>

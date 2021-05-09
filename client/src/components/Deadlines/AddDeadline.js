@@ -38,10 +38,6 @@ class AddDeadline extends Component {
     error;
     subjects_list = [];
 
-    componentDidMount() {
-        //   this.fetchSubjectList();
-    }
-
     handleClickOpen() {
         this.setState({open: true});
     };
@@ -136,7 +132,7 @@ class AddDeadline extends Component {
     }
 
     render() {
-        return (<div><IconButton size="small" aria-label="more"
+        return (<div><IconButton size="medium" aria-label="more"
                                  onClick={(event) => this.handleClickOpen(event)}><AddIcon/></IconButton>
             <div>
                 <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">

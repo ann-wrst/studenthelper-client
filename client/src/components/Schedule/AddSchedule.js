@@ -130,7 +130,6 @@ class AddSchedule extends Component {
     subjects_list = [];
     teachers_list = [];
     classtypes_list = [];
-    error;
     handleSubjects = (event) => {
         this.setState({subject: event.target.value})
     };

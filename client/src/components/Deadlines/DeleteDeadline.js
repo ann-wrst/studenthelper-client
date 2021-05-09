@@ -56,7 +56,7 @@ class DeleteDeadline extends Component {
     render() {
         return (
             <div>
-                <MenuItem style={menu_item} key="delete" selected={'Delete'}
+                <MenuItem style={menu_item} key="delete"
                           onClick={this.openDeleteModal}>
                     Delete
                 </MenuItem>

@@ -1,1 +1,1 @@
-export const API_BASE_URL="http://meinlix.tk:4000/api";
+export const API_BASE_URL="http://studenthelper.tk:4000/api";

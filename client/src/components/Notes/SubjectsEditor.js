@@ -6,13 +6,16 @@ import Button from "@material-ui/core/Button";
 import {API_BASE_URL} from "../../constants/api";
 import ErrorSnackbar from "../ErrorSnackbar";
 import {Prompt} from "react-router";
+import {IconButton, Typography} from "@material-ui/core";
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import history from "../history";
 
 class SubjectsEditor extends Component {
     constructor(props) {
         super(props);
         this.state = {
             idSubject: this.props.match.params.id,
-            name: this.props.location.state.name,
+            name: this.props.location.state?.name,
             data: '',
             label: ''
         }
@@ -44,8 +47,8 @@ class SubjectsEditor extends Component {
                 if (!res?.success) {
                     this.setState({error: <ErrorSnackbar open={true} message={res?.error?.message}/>});
                 } else {
-                    this.currentContent = res?.data;
-                    this.setState({data: res?.data});
+                    this.currentContent = res?.data?.content || '';
+                    this.setState({data: res?.data?.content || ''});
                 }
             }
         );
@@ -70,7 +73,10 @@ class SubjectsEditor extends Component {
                     this.setState({error: <ErrorSnackbar open={true} message={res?.error?.message}/>, label: ''});
                 } else if (res?.success) {
                     this.setState({label: "Saved"});
+                    console.log(this.currentContent);
+                    console.log(data);
                     this.currentContent = data;
+                    this.forceUpdate();
                 }
             }
         );
@@ -85,6 +91,7 @@ class SubjectsEditor extends Component {
     }
 
     data;
+    error;
 
     render() {
         this.data = this.state.data;
@@ -97,10 +104,18 @@ class SubjectsEditor extends Component {
                 {
                     <div onKeyDown={(event) => this.handleKeyDown(event, this.data)}>
                         <SideNavigation/>
-
+                        <div style={heading_style}>
+                            <div style={{paddingRight: '10px'}}>
+                                <IconButton onClick={history.goBack}><ArrowBackIosIcon/></IconButton>
+                            </div>
+                            <div>
+                                <Typography variant="h5">{this.state.name}</Typography>
+                            </div>
+                        </div>
+                        {this.state.error}
                         <CKEditor
                             editor={ClassicEditor}
-                            data={this.state.data}
+                            data={this.state.data || ''}
                             onChange={(event, editor) => {
                                 this.data = editor.getData();
                                 this.setState({data: this.data})
@@ -117,7 +132,7 @@ class SubjectsEditor extends Component {
                             {this.state.label}
                             <Button variant="outlined" color="primary" primary={true}
                                     onClick={(event) => this.saveData(event, this.data)}>
-                                Save
+                                Save changes
                             </Button>
                         </div>
                     </div>
@@ -125,10 +140,19 @@ class SubjectsEditor extends Component {
             </>
         );
     }
+
 }
 
+export default SubjectsEditor;
 const button_style = {
     paddingLeft: '10px',
     paddingTop: '15px'
 }
-export default SubjectsEditor;
+
+const heading_style = {
+    'margin-left': '20px',
+    'margin-top': '10px',
+    'margin-bottom': '15px',
+    display: 'flex',
+    alignItems: 'center'
+}

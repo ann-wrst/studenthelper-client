@@ -81,7 +81,7 @@ class AddTeacher extends Component {
                         onChange={(event) => this.setState({new_surname: event.target.value})}
                     />
                     <TextField
-                        autoFocus
+
                         margin="dense"
                         id="name"
                         label="Teacher name"
@@ -89,7 +89,7 @@ class AddTeacher extends Component {
                         onChange={(event) => this.setState({new_name: event.target.value})}
                     />
                     <TextField
-                        autoFocus
+
                         margin="dense"
                         id="name"
                         label="Teacher middle name"
