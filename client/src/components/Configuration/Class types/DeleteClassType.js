@@ -8,6 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import {DialogContentText} from "@material-ui/core";
 import DialogActions from "@material-ui/core/DialogActions";
 import ErrorSnackbar from "../../ErrorSnackbar";
+import history from "../../history";
 
 class DeleteClassType extends Component {
     constructor(props) {
@@ -35,6 +36,8 @@ class DeleteClassType extends Component {
             },
         }).then(
             async response => {
+                if (response.status === 403)
+                    history.push('/login');
                 let res = await response.json();
                 if (!res?.success) {
                     this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;

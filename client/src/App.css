@@ -1,6 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@1,200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@1,200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Karla&family=Open+Sans:@1&display=swap');
+
 .App {
   text-align: center;
 }

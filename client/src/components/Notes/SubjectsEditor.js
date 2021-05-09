@@ -9,6 +9,7 @@ import {Prompt} from "react-router";
 import {IconButton, Typography} from "@material-ui/core";
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import history from "../history";
+import MySnackBar from "../MySnackBar";
 
 class SubjectsEditor extends Component {
     constructor(props) {
@@ -17,7 +18,8 @@ class SubjectsEditor extends Component {
             idSubject: this.props.match.params.id,
             name: this.props.location.state?.name,
             data: '',
-            label: ''
+            label: '',
+            open: false
         }
     }
 
@@ -35,6 +37,7 @@ class SubjectsEditor extends Component {
     currentContent = '';
 
     getData() {
+
         fetch(API_BASE_URL + `/notes/${this.state.idSubject}`, {
             credentials: 'include',
             method: 'GET',
@@ -43,9 +46,11 @@ class SubjectsEditor extends Component {
             },
         }).then(
             async response => {
+                if (response.status === 403)
+                    history.push('/login');
                 let res = await response.json();
                 if (!res?.success) {
-                    this.setState({error: <ErrorSnackbar open={true} message={res?.error?.message}/>});
+                    this.setState({error: <ErrorSnackbar open={true} message={res?.error?.message || res?.message}/>});
                 } else {
                     this.currentContent = res?.data?.content || '';
                     this.setState({data: res?.data?.content || ''});
@@ -54,8 +59,15 @@ class SubjectsEditor extends Component {
         );
     }
 
+    handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        this.setState({open: false});
+
+    };
+
     saveData(event, data) {
-        this.setState({label: "Saving..."});
         const payload = {
             "content": data
         };
@@ -68,15 +80,21 @@ class SubjectsEditor extends Component {
             body: JSON.stringify(payload)
         }).then(
             async response => {
+                if (response.status === 403)
+                    history.push('/login');
                 let res = await response.json();
                 if (!res?.success) {
                     this.setState({error: <ErrorSnackbar open={true} message={res?.error?.message}/>, label: ''});
                 } else if (res?.success) {
-                    this.setState({label: "Saved"});
-                    console.log(this.currentContent);
-                    console.log(data);
+                    this.setState({
+                        open: true,
+                        label: <MySnackBar open={true} message="Note saved"/>
+                    });
                     this.currentContent = data;
+                    this.setState({open: false});
+
                     this.forceUpdate();
+
                 }
             }
         );
@@ -104,6 +122,7 @@ class SubjectsEditor extends Component {
                 {
                     <div onKeyDown={(event) => this.handleKeyDown(event, this.data)}>
                         <SideNavigation/>
+                        {this.state.label}
                         <div style={heading_style}>
                             <div style={{paddingRight: '10px'}}>
                                 <IconButton onClick={history.goBack}><ArrowBackIosIcon/></IconButton>
@@ -115,26 +134,34 @@ class SubjectsEditor extends Component {
                         {this.state.error}
                         <CKEditor
                             editor={ClassicEditor}
+                            config={{
+                                toolbar: [
+                                    'heading', '|',
+                                    'bold', 'italic', 'strikethrough', 'underline', 'subscript', 'superscript', '|',
+                                    'link', '|',
+                                    'bulletedList', 'numberedList', 'todoList', '|',
+                                    'insertTable', '|',
+                                    'blockQuote', '|',
+                                    'undo', 'redo'
+                                ]
+                            }}
                             data={this.state.data || ''}
                             onChange={(event, editor) => {
                                 this.data = editor.getData();
                                 this.setState({data: this.data})
                             }}
-                            onBlur={(event, editor) => {
-                                console.log('Blur.', editor);
-                            }}
-                            onFocus={(event, editor) => {
-                                console.log('Focus.', editor);
-                            }}
                         />
 
                         <div style={button_style}>
-                            {this.state.label}
-                            <Button variant="outlined" color="primary" primary={true}
-                                    onClick={(event) => this.saveData(event, this.data)}>
-                                Save changes
-                            </Button>
+                            <div>
+                                <Button variant="outlined" color="primary" primary={true}
+                                        onClick={(event) => this.saveData(event, this.data)}>
+                                    Save changes
+                                </Button>
+
+                            </div>
                         </div>
+
                     </div>
                 }
             </>
@@ -144,15 +171,19 @@ class SubjectsEditor extends Component {
 }
 
 export default SubjectsEditor;
+
 const button_style = {
     paddingLeft: '10px',
-    paddingTop: '15px'
+    paddingTop: '15px',
+    display: 'flex',
+    flexDirection: 'column'
 }
 
-const heading_style = {
-    'margin-left': '20px',
-    'margin-top': '10px',
-    'margin-bottom': '15px',
-    display: 'flex',
-    alignItems: 'center'
-}
+const heading_style =
+    {
+        marginLeft: '20px',
+        'margin-top': '10px',
+        'margin-bottom': '15px',
+        display: 'flex',
+        alignItems: 'center'
+    }

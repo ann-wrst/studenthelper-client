@@ -8,6 +8,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import ErrorSnackbar from "../../ErrorSnackbar";
+import history from "../../history";
 
 class AddClassType extends Component {
     constructor(props) {
@@ -42,6 +43,8 @@ class AddClassType extends Component {
             body: JSON.stringify(payload)
         }).then(
             async response => {
+                if (response.status === 403)
+                    history.push('/login');
                 let res = await response.json();
                 if (!res?.success) {
                     this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;

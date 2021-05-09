@@ -1,7 +1,7 @@
 import React from 'react';
 // import '../ComponentStyles/App.css';
 import BreakInterval from './BreakInterval';
-import Timer from '../Timer';
+import Timer from './Timer';
 import SessionInterval from "./SessionInterval";
 import SideNavigation from "../SideNavigation";
 
@@ -61,8 +61,17 @@ class Pomodoro extends React.Component {
             <main className="App">
                 <SideNavigation/>
                 <section>
-                    <h2 className="app-title">Pomodoro Clock</h2>
-                    <section id="interval-container">
+                    <h2 style={title}>Pomodoro Clock</h2>
+
+                    <Timer
+                        sessionInterval={this.state.sessionInterval}
+                        timerMinute={this.state.timerMinute}
+                        onTimerMinuteChange={this.onTimerMinuteChange}
+                        breakInterval={this.state.breakInterval}
+                        onPlayChange={this.onPlayChange}
+                        resetTimer={this.onResetTimer}
+                    />
+                    <section style={interval_container}>
                         <BreakInterval
                             onBreakIntervalChange={this.onBreakIntervalChange}
                             breakInterval={this.state.breakInterval}
@@ -74,14 +83,6 @@ class Pomodoro extends React.Component {
                             isPlay={this.state.isPlay}
                         />
                     </section>
-                    <Timer
-                        sessionInterval={this.state.sessionInterval}
-                        timerMinute={this.state.timerMinute}
-                        onTimerMinuteChange={this.onTimerMinuteChange}
-                        breakInterval={this.state.breakInterval}
-                        onPlayChange={this.onPlayChange}
-                        resetTimer={this.onResetTimer}
-                    />
                 </section>
             </main>
         )
@@ -89,3 +90,16 @@ class Pomodoro extends React.Component {
 }
 
 export default Pomodoro;
+
+const interval_container = {
+    marginTop: '25px'
+};
+
+const title = {
+    fontSize: '3rem',
+    fontWeight: '400',
+    letterSpacing: '2px',
+    color: '#263646',
+    marginBottom: 0,
+    fontFamily: "'Raleway', sans-serif"
+}

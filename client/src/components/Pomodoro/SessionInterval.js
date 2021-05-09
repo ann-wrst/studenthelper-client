@@ -1,4 +1,8 @@
 import React from 'react';
+import RemoveIcon from "@material-ui/icons/Remove";
+import {Button} from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+
 // import '../ComponentStyles/SessionInterval.css';
 
 function SessionInterval(props) {
@@ -23,21 +27,36 @@ function SessionInterval(props) {
     }
 
     return (
-        <section id="session-interval-container">
-            <h4>Session Length</h4>
-            <section id="session-interval">
-                <button
-                    disabled = {props.isPlay ? "disabled" : ""}
-                    onClick = {decreaseCounter}
-                    className="counter-btn">Down</button>
-                <p className="session-time">{props.sessionInterval}</p>
-                <button
-                    disabled = {props.isPlay ? "disabled" : ""}
-                    onClick = {increaseCounter}
-                    className="counter-btn">Up</button>
+        <section style={session_interval}>
+            <span style={text_style}>Session Length</span>
+            <section style={counter_style}>
+                <Button disabled={props.isPlay ? "disabled" : ""}
+                        onClick={decreaseCounter}>
+                    <RemoveIcon/>
+                </Button>
+
+                <p style={text_style}>{props.sessionInterval}</p>
+                <Button disabled={props.isPlay ? "disabled" : ""}
+                        onClick={increaseCounter}>
+                    <AddIcon/>
+                </Button>
             </section>
         </section>
     )
 }
 
 export default SessionInterval;
+
+const session_interval = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection:'column'
+};
+const counter_style = {
+    display:'flex'
+};
+const text_style = {
+    fontFamily: "'Open Sans', sans-serif",
+    fontWeight: '700'
+}

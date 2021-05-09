@@ -1,5 +1,7 @@
 import React from 'react';
-// import '../ComponentStyles/BreakInterval.css';
+import {Button} from "@material-ui/core";
+import RemoveIcon from '@material-ui/icons/Remove';
+import AddIcon from '@material-ui/icons/Add';
 
 function BreakInterval(props) {
     function increaseCounter() {
@@ -17,24 +19,37 @@ function BreakInterval(props) {
     }
 
     return (
-        <section id="break-interval-container">
-            <h4>Break Length</h4>
-            <section id="break-time-interval">
-                <button
-                    disabled={props.isPlay ? "disabled" : ""}
-                    onClick={decreaseCounter}
-                    className='counter-btn'
-                >Down
-                </button>
-                <p className="break-time">{props.breakInterval}</p>
-                <button
-                    disabled={props.isPlay ? "disabled" : ""}
-                    onClick={increaseCounter}
-                    className="counter-btn">Up
-                </button>
+        <section style={break_interval}>
+            <span style={text_style}>Break Length</span>
+            <section style={counter_style}>
+                <Button disabled={props.isPlay ? "disabled" : ""}
+                        onClick={decreaseCounter}>
+                    <RemoveIcon/>
+                </Button>
+
+                <p style={text_style}>{props.breakInterval}</p>
+                <Button disabled={props.isPlay ? "disabled" : ""}
+                        onClick={increaseCounter}>
+                    <AddIcon/>
+                </Button>
             </section>
         </section>
     )
 }
 
 export default BreakInterval;
+
+const break_interval = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection:'column'
+
+};
+const counter_style = {
+    display:'flex'
+}
+const text_style = {
+    fontFamily: "'Open Sans', sans-serif",
+    fontWeight: '700'
+}

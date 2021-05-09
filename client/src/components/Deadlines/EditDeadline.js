@@ -121,6 +121,7 @@ class EditDeadline extends Component {
                             id="name"
                             label="Task/deadline"
                             fullWidth
+                            required
                             multiline
                             defaultValue={this.state.task}
                             onChange={(event) => this.setState({task: event.target.value})}
@@ -129,6 +130,7 @@ class EditDeadline extends Component {
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker
                                 disableToolbar
+                                required
                                 disablePast
                                 format="dd/MM/yyyy"
                                 margin="normal"

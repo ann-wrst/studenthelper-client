@@ -1,9 +1,7 @@
 import React, {Component} from "react";
 import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
 
-
-class ErrorSnackbar extends Component {
+class MySnackBar extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -28,13 +26,10 @@ class ErrorSnackbar extends Component {
             <div>
                 <Snackbar open={this.state.open} autoHideDuration={1500} onClose={this.handleClose}
                           message={this.props.message}>
-                    <MuiAlert elevation={6} variant="filled" severity="error">
-                        {this.props.message}
-                    </MuiAlert>
                 </Snackbar>
             </div>
         );
     }
 }
 
-export default ErrorSnackbar;
+export default MySnackBar;

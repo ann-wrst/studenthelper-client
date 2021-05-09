@@ -141,6 +141,7 @@ class AddDeadline extends Component {
                     <DialogContent style={{width: '400px', height: '350px'}}>
                         <TextField
                             autoFocus
+                            required
                             margin="dense"
                             id="name"
                             label="Task/deadline"
@@ -153,6 +154,7 @@ class AddDeadline extends Component {
                             <KeyboardDatePicker
                                 disableToolbar
                                 disablePast
+                                required
                                 format="dd/MM/yyyy"
                                 margin="normal"
                                 id="date-picker-inline"
