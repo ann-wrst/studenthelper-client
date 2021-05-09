@@ -11,19 +11,41 @@ import Button from '@material-ui/core/Button';
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import ErrorSnackbar from "./ErrorSnackbar";
 
 
 class SideNavigation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            error:null
+            error: null,
+            email: '',
+            name: ''
         }
         this.Logout = this.Logout.bind(this);
     }
 
-    showSettings(event) {
-        event.preventDefault();
+    componentDidMount() {
+        this.fetchUserInfo();
+    }
+
+    fetchUserInfo() {
+        fetch(API_BASE_URL + '/me', {
+            credentials: 'include',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(
+            async response => {
+                if (response.status === 403)
+                    history.push('/login');
+                let res = await response.json();
+                this.setState({name: res?.username});
+                this.setState({email: res?.email});
+
+            }
+        );
     }
 
     Logout() {
@@ -107,6 +129,11 @@ class SideNavigation extends React.Component {
                                         label=""/>
                                 </div>) : ""}
                         </div>
+                        <div style={userinfo_styles}>
+                            {console.log(this.state.name)}
+                            {this.state.name}<br/>
+                            {this.state.email}
+                        </div>
                         <div style={log_out_styles}>
                             <Button color="inherit" onClick={this.Logout}>Logout</Button>
                         </div>
@@ -116,7 +143,10 @@ class SideNavigation extends React.Component {
         );
     }
 }
-
+const userinfo_styles = {
+    position: 'absolute',
+    right: '7em',
+}
 const menu_style = {
     display: 'flex',
     alignItems: 'center'
