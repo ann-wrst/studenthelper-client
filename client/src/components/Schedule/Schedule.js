@@ -264,10 +264,8 @@ class Schedule extends Component {
     }
 
     render() {
-        this.schedules_list = this.state.schedules_list;
-        if (typeof this.state.schedules_list === 'undefined') {
-            this.schedules_list = []
-        }
+        this.schedules_list = this.state.schedules_list || [];
+
         let elements = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         let items = [];
         for (const [index, value] of elements.entries()) {
@@ -296,7 +294,7 @@ class Schedule extends Component {
                                         {num}
                                     </TableCell>
                                     {this.weekdays.map((day, dayIdx) => (
-                                        <TableCell align="center">
+                                        <TableCell width="14.286%" align="center">
                                             <div
                                                 onContextMenu={(event) => this.handleContextClick(event, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.idSchedule, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype?.idClassType, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.to, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.number, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.idTeacher, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.idSubject, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.weekday, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity)}
                                                 style={{cursor: 'context-menu'}}>
