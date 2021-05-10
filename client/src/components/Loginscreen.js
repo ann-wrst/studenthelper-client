@@ -14,7 +14,7 @@ class Loginscreen extends Component {
             loginscreen: [],
             loginmessage: '',
             buttonLabel: 'Register',
-            isLogin: false
+            isLogin: true
         }
     }
 
@@ -44,7 +44,7 @@ class Loginscreen extends Component {
         } else {
             loginscreen = [];
             loginscreen.push(<Login parentContext={this}/>);
-            loginmessage = "Not Registered yet?";
+            loginmessage = "Not registered yet?";
             this.setState({
                 loginscreen: loginscreen,
                 loginmessage: loginmessage,

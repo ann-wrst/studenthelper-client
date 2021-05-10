@@ -6,7 +6,6 @@ import React, {Component} from 'react'
 import {API_BASE_URL} from '../constants/api'
 import 'fontsource-roboto';
 import {Toolbar} from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
 import history from './history'
 import {login_styles} from './styles'
 import ErrorSnackbar from "./ErrorSnackbar";
@@ -24,13 +23,12 @@ class Login extends Component {
     }
 
     handleClick() {
-        const apiBaseUrl = API_BASE_URL;
         const payload = {
             "email": this.state.email.toLowerCase().trim(),
             "password": this.state.password
         };
 
-        fetch(apiBaseUrl + '/login', {
+        fetch(API_BASE_URL + '/login', {
             credentials: 'include',
             method: 'POST',
             headers: {
@@ -57,9 +55,7 @@ class Login extends Component {
             });
     }
 
-
     render() {
-        console.log(this.state.error);
         return (
             <div>
                 <div>

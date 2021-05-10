@@ -61,6 +61,9 @@ class EditDeadline extends Component {
                 value={this.state.subject}
                 onChange={this.handleSubjects}
             >
+                <MenuItem value={null}>
+                    <em>None</em>
+                </MenuItem>
                 {this.subjects_list.map((subj) => (
                     <MenuItem value={subj.idSubject}>{subj.name}</MenuItem>
                 ))}
@@ -129,7 +132,7 @@ class EditDeadline extends Component {
                             <KeyboardDatePicker
                                 disableToolbar
                                 required
-                                disablePast
+                                // disablePast
                                 format="dd/MM/yyyy"
                                 margin="normal"
                                 id="date-picker-inline"

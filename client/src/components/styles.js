@@ -1,9 +1,7 @@
 const generalStyle = {
     'display': 'flex',
-    //  'align-content': 'center',
+    marginTop: '15px',
     'flex-direction':'column',
-    // 'justify-content':'center',
-    //  'align-self':'center',
     'align-items':'center',
 };
 module.exports.login_styles = generalStyle;

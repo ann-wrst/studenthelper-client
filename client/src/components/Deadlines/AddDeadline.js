@@ -123,6 +123,9 @@ class AddDeadline extends Component {
                 value={this.state.subject}
                 onChange={this.handleSubjects}
             >
+                <MenuItem value="">
+                    <em>None</em>
+                </MenuItem>
                 {this.subjects_list.map((subj) => (
                     <MenuItem value={subj.idSubject}>{subj.name}</MenuItem>
                 ))}
@@ -153,7 +156,7 @@ class AddDeadline extends Component {
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker
                                 disableToolbar
-                                // disablePast
+                                disablePast
                                 required
                                 format="dd/MM/yyyy"
                                 margin="normal"

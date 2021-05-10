@@ -2,9 +2,7 @@ import React, {Component} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Alert from '@material-ui/lab/Alert';
 import {login_styles} from './styles'
-
 import Login from './Login';
 import {API_BASE_URL} from '../constants/api'
 import {Toolbar} from "@material-ui/core";
@@ -23,7 +21,6 @@ class Register extends Component {
             repeated_password: '',
             error: '',
             isLoggedIn: false
-
         }
     }
 
@@ -53,7 +50,7 @@ class Register extends Component {
                     }
                     const loginscreen = [];
                     loginscreen.push(<Login parentContext={this}/>);
-                    const loginmessage = "Not Registered yet?";
+                    // const loginmessage = "Not Registered yet?";
 
                     if (this.state.isLoggedIn) history.push('/');
                 }

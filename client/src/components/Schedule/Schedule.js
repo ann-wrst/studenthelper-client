@@ -6,23 +6,11 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import IconButton from '@material-ui/core/IconButton';
 import AddSchedule from "./AddSchedule";
 import {API_BASE_URL} from "../../constants/api";
 import history from "../history";
 import SideNavigation from "../SideNavigation";
-import Divider from '@material-ui/core/Divider';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import {DialogContentText} from "@material-ui/core";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
 import ErrorSnackbar from "../ErrorSnackbar";
 import EditSchedule from "./EditSchedule";
 import DeleteSchedule from "./DeleteSchedule";
@@ -122,17 +110,6 @@ class Schedule extends Component {
     currentFrom;
     currentTo;
 
-    // renderMoreButton(day, number, id, subject, parity, teacher, classtype, from, to) {
-    //     [this.currentId, this.currentClassType, this.currentFrom, this.currentTo, this.currentNum, this.currentTeacher, this.currentSubject, this.currentWeekday, this.currentParity] = [id, classtype, from, to, number, teacher, subject, day, parity];
-    //     let temp = this.getScheduleByDayAndNumber(day, number)[0];
-    //     if (temp) {
-    //         return (<div style={more_button}>
-    //             <IconButton size="small" aria-label="more"
-    //                         onClick={(event) => this.handleMoreButtonClick(event, day, number, id, subject, parity, teacher, classtype, from, to)}><MoreVertIcon/></IconButton>
-    //
-    //         </div>)
-    //     }
-    // }
 
     handleDelete() {
         this.setState({open: true});
@@ -160,8 +137,9 @@ class Schedule extends Component {
     };
 
     renderTeacher(surname, name, middleName) {
-        let fullName = (name || '').concat(' ', middleName || '');
-        return surname?.concat(' ', fullName.split(' ').map(x => x.charAt(0)).join('. ').toUpperCase());
+        let nameLetter = name ? name.charAt(0)?.concat(". ") : '';
+        let middleNameLetter = middleName ? middleName.charAt(0)?.concat(". ") : '';
+        return surname?.concat(' ', nameLetter, middleNameLetter);
     }
 
     renderSchedule(num, day, dayIdx) {
