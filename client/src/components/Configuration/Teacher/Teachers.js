@@ -68,9 +68,9 @@ class Teachers extends Component {
                         <Table className="table" aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Surname</TableCell>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell>Middle Name</TableCell>
+                                    <TableCell><b>Surname</b></TableCell>
+                                    <TableCell><b>Name</b></TableCell>
+                                    <TableCell><b>Middle Name</b></TableCell>
                                     <TableCell align="right"> </TableCell>
                                     <TableCell align="left"> </TableCell>
                                 </TableRow>

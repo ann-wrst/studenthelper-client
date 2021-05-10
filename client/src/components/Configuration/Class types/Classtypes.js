@@ -74,7 +74,7 @@ class Classtypes extends Component {
                         <Table className="table" aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Type</TableCell>
+                                    <TableCell><b>Type</b></TableCell>
                                     <TableCell align="right"> </TableCell>
                                     <TableCell align="left"> </TableCell>
                                 </TableRow>

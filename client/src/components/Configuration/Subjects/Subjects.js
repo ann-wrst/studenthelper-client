@@ -71,7 +71,7 @@ class Subjects extends Component {
                         <Table className="table" aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Name</TableCell>
+                                    <TableCell><b>Name</b></TableCell>
                                     <TableCell align="right"> </TableCell>
                                     <TableCell align="right"> </TableCell>
                                 </TableRow>
