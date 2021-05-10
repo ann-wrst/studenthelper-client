@@ -58,9 +58,8 @@ class DeleteTeacher extends Component {
                     onClick={(event) => this.handleClickOpen()}>
                 Delete
             </Button>
-            <Dialog open={this.state.open} onClose={() => this.handleClose()}
-                    aria-labelledby="form-dialog-title">
-                <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
+            <Dialog open={this.state.open} onClose={() => this.handleClose()}>
+                <DialogTitle style={{cursor: 'move'}} id="dialog-title">
                     Delete
                 </DialogTitle>
                 <DialogContent>

@@ -266,10 +266,10 @@ class AddSchedule extends Component {
             }
         );
 
-
-
     }
+
     error;
+
     render() {
         this.subjects_list = this.state.subjects_list;
         this.teachers_list = this.state.teachers_list;

@@ -71,7 +71,6 @@ class SideNavigation extends React.Component {
         return (
             <AppBar position="static">
                 <Toolbar>
-
                     <div style={menu_style}>
                         <div style={item_styles}>
                             <Link style={items_styles} to='/schedule'>
@@ -127,7 +126,6 @@ class SideNavigation extends React.Component {
                                 </div>) : ""}
                         </div>
                         <div style={userinfo_styles}>
-                            {console.log(this.state.name)}
                             {this.state.name}<br/>
                             {this.state.email}
                         </div>

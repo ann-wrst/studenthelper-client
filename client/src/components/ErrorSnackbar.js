@@ -26,7 +26,7 @@ class ErrorSnackbar extends Component {
     render() {
         return (
             <div>
-                <Snackbar open={this.state.open} autoHideDuration={2000} onClose={this.handleClose}
+                <Snackbar open={this.state.open} autoHideDuration={2500} onClose={this.handleClose}
                           message={this.props.message}>
                     <MuiAlert elevation={6} variant="filled" severity="error">
                         {this.props.message}

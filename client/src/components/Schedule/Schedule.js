@@ -25,6 +25,7 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import ErrorSnackbar from "../ErrorSnackbar";
 import EditSchedule from "./EditSchedule";
+import DeleteSchedule from "./DeleteSchedule";
 
 class Schedule extends Component {
     constructor(props) {
@@ -33,11 +34,14 @@ class Schedule extends Component {
             schedules_list: undefined,
             showEven: true,
             anchorEl: null,
-            open: false
+            open: false,
+            mouseX: null,
+            mouseY: null,
         }
         this.fetchSchedules = this.fetchSchedules.bind(this);
         this.handleChangeSwitch = this.handleChangeSwitch.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleContextClick = this.handleContextClick.bind(this);
     }
 
     componentDidMount() {
@@ -118,43 +122,17 @@ class Schedule extends Component {
     currentFrom;
     currentTo;
 
-    renderMoreButton(day, number, id, subject, parity, teacher, classtype, from, to) {
-        [this.currentId, this.currentClassType, this.currentFrom, this.currentTo, this.currentNum, this.currentTeacher, this.currentSubject, this.currentWeekday, this.currentParity] = [id, classtype, from, to, number, teacher, subject, day, parity];
-        let temp = this.getScheduleByDayAndNumber(day, number)[0];
-        if (temp) {
-            return (<div style={more_button}>
-                <IconButton size="small" aria-label="more"
-                            onClick={(event) => this.handleMoreButtonClick(event, day, number, id, subject, parity, teacher, classtype, from, to)}><MoreVertIcon/></IconButton>
-
-            </div>)
-        }
-    }
-
-    deleteSchedule(id) {
-        fetch(API_BASE_URL + `/schedules/${id}`, {
-            credentials: 'include',
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.fetchSchedules();
-                    this.setState({
-                        anchorEl: null
-                    })
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                this.handleClose();
-                return res;
-            }
-        );
-    }
+    // renderMoreButton(day, number, id, subject, parity, teacher, classtype, from, to) {
+    //     [this.currentId, this.currentClassType, this.currentFrom, this.currentTo, this.currentNum, this.currentTeacher, this.currentSubject, this.currentWeekday, this.currentParity] = [id, classtype, from, to, number, teacher, subject, day, parity];
+    //     let temp = this.getScheduleByDayAndNumber(day, number)[0];
+    //     if (temp) {
+    //         return (<div style={more_button}>
+    //             <IconButton size="small" aria-label="more"
+    //                         onClick={(event) => this.handleMoreButtonClick(event, day, number, id, subject, parity, teacher, classtype, from, to)}><MoreVertIcon/></IconButton>
+    //
+    //         </div>)
+    //     }
+    // }
 
     handleDelete() {
         this.setState({open: true});
@@ -167,11 +145,6 @@ class Schedule extends Component {
         else return null;
     }
 
-    handleMoreButtonClick = (event, day, number, id, subject, parity, teacher, classtype, from, to) => {
-        this.currentId = id;
-        this.setState({anchorEl: event.currentTarget});
-    };
-
     handleClickOpen() {
         this.setState({open: true});
     };
@@ -179,8 +152,11 @@ class Schedule extends Component {
     handleClose = () => {
         this.setState({open: false});
     };
-    handleCloseMoreButton = () => {
-        this.setState({anchorEl: null});
+    handleCloseMenu = () => {
+        this.setState({
+            mouseX: null,
+            mouseY: null,
+        });
     };
 
     renderTeacher(surname, name, middleName) {
@@ -197,78 +173,66 @@ class Schedule extends Component {
             )
         }
         if (this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity == null) {
-            console.log(this.getScheduleByDayAndNumber(dayIdx, num));
             return (
                 <div>
                     {
-                        this.getScheduleByDayAndNumber(dayIdx, num)?.length > 0 ?
-                            (<Card>
-                                <CardContent>
-                                    <div style={table_item}>
-                                        <div style={class_info_container}>
-                                            <div>
-                                                <div>
-                                                    <div>
-                                                        {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.name}
-                                                    </div>
-                                                    <div>
-                                                        {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity}
-                                                    </div>
-                                                    <div>
-                                                        {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype?.typeName}
-                                                    </div>
-                                                    <div>
-                                                        {this.renderTeacher(this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.surname, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.name, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher['middle name'])}
-                                                    </div>
-                                                    <div>
-                                                        {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.to)}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {this.renderMoreButton(dayIdx, num, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.idSchedule, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.idSubject, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher.idTeacher, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype.idClassType, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class.from, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class.to)}
-                                        {/*<Divider orientation="vertical" flexItem/>*/}
-                                    </div>
-                                </CardContent>
-                            </Card>) : <div></div>
+                        // this.getScheduleByDayAndNumber(dayIdx, num)?.length > 0 ?
+                        //     (<Card>
+                        //         <CardContent>
+                        <div style={table_item}>
+                            <div style={class_info_container}>
+                                <div>
+                                    {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.name}
+                                </div>
+                                <div>
+                                    {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity}
+                                </div>
+                                <div>
+                                    {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype?.typeName}
+                                </div>
+                                <div>
+                                    {this.renderTeacher(this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.surname, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.name, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher['middle name'])}
+                                </div>
+                                <div>
+                                    {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.to)}
+                                </div>
+                            </div>
+                            {/*{this.renderMoreButton(dayIdx, num, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.idSchedule, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.idSubject, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher.idTeacher, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype.idClassType, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class.from, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class.to)}*/}
+                        </div>
+                        //     </CardContent>
+                        // </Card>) : <div/>
                     }
                 </div>
             );
         } else return (
             <div>
                 {
-                    typeof this.getScheduleByDayAndNumber(dayIdx, num) !== 'undefined' ?
-                        <div style={table_item}>
-                            {trfa.map((tf) =>
+                    // this.getScheduleByDayAndNumber(dayIdx, num)?.length > 0 ?
+                    // <Card>
+                    //     <CardContent>
+                    <div>
+                        {trfa.map((tf) =>
+                            <div style={class_info_container}>
                                 <div>
-                                    <div style={inside_double}>
-                                        <div style={class_info_container}>
-                                            <div>
-                                                <div>
-                                                    <div>
-                                                        {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.subject?.name}
-                                                    </div>
-                                                    <div>
-                                                        {this.renderParityLabel(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.parity)}
-                                                    </div>
-                                                    <div>
-                                                        {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.classtype?.typeName}
-                                                    </div>
-                                                    <div>
-                                                        {this.renderTeacher(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher?.surname, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher?.name, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher['middle name'])}
-                                                    </div>
-                                                    <div>
-                                                        {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.$class?.to)}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.parity != null ? this.renderMoreButton(dayIdx, num, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.idSchedule) : ""}
-
-                                    </div>
+                                    {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.subject?.name}
                                 </div>
-                            )}
-                        </div> : null
+                                <div>
+                                    {this.renderParityLabel(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.parity)}
+                                </div>
+                                <div>
+                                    {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.classtype?.typeName}
+                                </div>
+                                <div>
+                                    {this.renderTeacher(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher?.surname, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher?.name, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher['middle name'])}
+                                </div>
+                                <div>
+                                    {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.$class?.to)}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    //     </CardContent>
+                    // </Card> : null
                 }
             </div>
         )
@@ -284,13 +248,28 @@ class Schedule extends Component {
         "Sunday": "SUN"
     }
 
+    handleContextClick(event, id, classtype, from, to, number, teacher, subject, day, parity) {
+        [this.currentId, this.currentClassType, this.currentFrom, this.currentTo, this.currentNum, this.currentTeacher, this.currentSubject, this.currentWeekday, this.currentParity] = [id, classtype, from, to, number, teacher, subject, day, parity];
+        event.preventDefault();
+        this.setState({
+            mouseX: event.clientX - 2,
+            mouseY: event.clientY - 4,
+        });
+    }
+
+    removeSeconds(time) {
+        if (typeof time !== 'undefined') {
+            return time.slice(0, -3);
+        }
+    }
+
     render() {
         this.schedules_list = this.state.schedules_list;
         if (typeof this.state.schedules_list === 'undefined') {
             this.schedules_list = []
         }
-        let elements = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        let items = []
+        let elements = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        let items = [];
         for (const [index, value] of elements.entries()) {
             items.push(<TableCell style={table_heading} align="center"> {this.weekdayAbbreviation[value.toString()]}
                 <AddSchedule
@@ -318,50 +297,40 @@ class Schedule extends Component {
                                     </TableCell>
                                     {this.weekdays.map((day, dayIdx) => (
                                         <TableCell align="center">
-                                            {this.renderSchedule(num, day, dayIdx, this.state.showEven)}
+                                            <div
+                                                onContextMenu={(event) => this.handleContextClick(event, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.idSchedule, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype?.idClassType, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.to, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.number, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.idTeacher, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.idSubject, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.weekday, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity)}
+                                                style={{cursor: 'context-menu'}}>
+                                                {this.renderSchedule(num, day, dayIdx, this.state.showEven)}
+                                            </div>
                                         </TableCell>
                                     ))
                                     }
                                 </TableRow>
                             ))}
                             <Menu
-                                id="simple-menu"
-                                anchorEl={this.state.anchorEl}
+                                anchorPosition={
+                                    this.state.mouseY !== null && this.state.mouseX !== null
+                                        ? {top: this.state.mouseY, left: this.state.mouseX}
+                                        : undefined
+                                }
                                 keepMounted
-                                open={Boolean(this.state.anchorEl)}
-                                onClose={this.handleCloseMoreButton}
+                                open={this.state.mouseY !== null}
+                                onClose={this.handleCloseMenu}
+                                anchorReference="anchorPosition"
                             >
-                                <EditSchedule />
-                                <MenuItem style={menu_item} key="delete"
-                                          onClick={this.handleDelete}>
-                                    Delete
-                                </MenuItem>
+                                <EditSchedule id={this.currentId} fetchList={this.fetchSchedules}
+                                              closeMenu={this.handleCloseMenu} classNumber={this.currentNum}
+                                              weekday={this.currentWeekday} subject={this.currentSubject}
+                                              classType={this.currentClassType} teacher={this.currentTeacher}
+                                              from={this.removeSeconds(this.currentFrom)}
+                                              to={this.removeSeconds(this.currentTo)} parity={this.currentParity}/>
+
+                                <DeleteSchedule id={this.currentId} fetchList={this.fetchSchedules}
+                                                closeMenu={this.handleCloseMenu}/>
                             </Menu>
-                            <Divider orientation="vertical" flexItem/>
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <Dialog open={this.state.open} onClose={() => this.handleClose()}
-                        aria-labelledby="form-dialog-title">
-                    <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
-                        Delete
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Do you want to delete schedule?
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => this.handleClose()} color="primary">
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={() => this.deleteSchedule(this.currentId)}
-                            color="primary">
-                            Done
-                        </Button>
-                    </DialogActions>
-                </Dialog>
             </div>
         );
     }
@@ -373,15 +342,6 @@ const table_item = {
 }
 const inside_double = {
     display: 'flex'
-}
-const more_button = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    boxShadow: 'none'
-}
-const menu_item = {
-    fontSize: '13px'
 }
 const num_style = {
     fontWeight: 'bold',

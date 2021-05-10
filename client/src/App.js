@@ -29,7 +29,7 @@ class App extends Component {
         this.setState({
             loginPage: loginPage
         })
-
+        document.title="Student helper"
     }
 
     render() {
