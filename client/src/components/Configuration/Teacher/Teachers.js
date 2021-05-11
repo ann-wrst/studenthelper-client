@@ -14,6 +14,7 @@ import DeleteTeacher from "./DeleteTeacher";
 import EmptyStub from "../EmptyStub";
 import history from './../../history'
 import ErrorSnackbar from "../../ErrorSnackbar";
+import TeacherServices from "../../../services/TeacherServices";
 
 class Teachers extends Component {
     constructor(props) {
@@ -30,33 +31,19 @@ class Teachers extends Component {
     }
 
     async fetchTeachersList() {
-        fetch(API_BASE_URL + '/teachers', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.setState({teachers_list: res?.data})
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+        let res = await TeacherServices.fetchTeachersList();
+        if (res?.success) {
+            this.setState({teachers_list: res?.data})
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
 
     rows = [];
     error;
+
     render() {
-        this.rows = this.state.teachers_list;
-        if (typeof this.rows === "undefined")
-            this.rows = [];
+        this.rows = this.state.teachers_list || [];
         if (this.rows.length !== 0)
             return (<div style={page_style}>
                 {this.error}
@@ -99,7 +86,8 @@ class Teachers extends Component {
                                                                  fetchList={this.fetchTeachersList}>
                                                     </EditTeacher>
                                                 </div>
-                                                <DeleteTeacher id={row.idTeacher} fetchList={this.fetchTeachersList}>
+                                                <DeleteTeacher id={row.idTeacher}
+                                                               fetchList={this.fetchTeachersList}>
                                                 </DeleteTeacher>
                                             </div>
                                         </TableCell>
@@ -123,25 +111,30 @@ class Teachers extends Component {
     }
 }
 
-const page_style = {
-    'display': 'flex',
-    'flex-direction': 'column',
-};
+const
+    page_style = {
+        'display': 'flex',
+        'flex-direction': 'column',
+    };
 
-const heading_style = {
-    'display': 'flex',
-    'flex-direction': 'row',
-    'flex-wrap': 'wrap',
-    'align-content': 'stretch'
-};
-const teachersheading_style = {
-    'margin-right': '20px'
-}
-const buttons_container = {
-    'display': 'flex',
-    justifyContent: 'flex-end'
-}
-const edit_button = {
-    paddingRight: '5px'
-}
+const
+    heading_style = {
+        'display': 'flex',
+        'flex-direction': 'row',
+        'flex-wrap': 'wrap',
+        'align-content': 'stretch'
+    };
+const
+    teachersheading_style = {
+        'margin-right': '20px'
+    }
+const
+    buttons_container = {
+        'display': 'flex',
+        justifyContent: 'flex-end'
+    }
+const
+    edit_button = {
+        paddingRight: '5px'
+    }
 export default Teachers;

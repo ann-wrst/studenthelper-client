@@ -1,8 +1,7 @@
 import React, {Component} from "react";
 import EditSubject from "./EditSubject";
 import Typography from "@material-ui/core/Typography";
-import DeleteButton from "./DeleteButton";
-import {API_BASE_URL} from "../../../constants/api"
+import DeleteSubject from "./DeleteSubject";
 import AddSubject from "./AddSubject";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -12,7 +11,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import EmptyStub from "../EmptyStub";
-import history from "../../history";
+import SubjectServices from "../../../services/SubjectServices";
 import ErrorSnackbar from "../../ErrorSnackbar";
 
 class Subjects extends Component {
@@ -33,33 +32,18 @@ class Subjects extends Component {
     }
 
     async fetchSubjectList() {
-        fetch(API_BASE_URL + '/subjects', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.setState({subjects_list: res?.data})
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+        let res = await SubjectServices.fetchSubjectList();
+        if (res?.success) {
+            this.setState({subjects_list: res?.data})
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
 
     rows = [];
 
     render() {
-        this.rows = this.state.subjects_list;
-        if (typeof this.rows === "undefined")
-            this.rows = [];
+        this.rows = this.state.subjects_list || [];
         if (this.rows.length !== 0)
             return (<div style={page_style}>
                 {this.error}
@@ -93,8 +77,8 @@ class Subjects extends Component {
                                                                  fetchList={this.fetchSubjectList}>
                                                     </EditSubject>
                                                 </div>
-                                                <DeleteButton id={row.idSubject} fetchList={this.fetchSubjectList}>
-                                                </DeleteButton>
+                                                <DeleteSubject id={row.idSubject} fetchList={this.fetchSubjectList}>
+                                                </DeleteSubject>
                                             </div>
                                         </TableCell>
                                     </TableRow>

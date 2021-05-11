@@ -1,4 +1,3 @@
-import {API_BASE_URL} from "../../../constants/api"
 import React, {Component} from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -6,8 +5,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
+import SubjectServices from "../../../services/SubjectServices";
 import ErrorSnackbar from "../../ErrorSnackbar";
-import history from "../../history";
 
 class EditSubject extends Component {
     constructor(props) {
@@ -29,42 +28,24 @@ class EditSubject extends Component {
 
     handleClose = () => {
         this.setState({open: false});
-        this.error = null;
-
     };
 
     error;
 
-    editSubject(id) {
-        const payload = {
-            "name": this.state.new_name
-        };
-        fetch(API_BASE_URL + `/subjects/${id}`, {
-            credentials: 'include',
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message || res?.message}/>;
-                }
-                this.setState({open: false});
-                this.props.fetchList();
-            }
-        );
+    async editSubject(id) {
+        let res = await SubjectServices.editSubject(id, this.state.new_name);
+        if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message || res?.message}/>;
+        }
+        this.handleClose();
+        this.props.fetchList();
     }
 
     render() {
         return (<div>
                 {this.error}
                 <Button style={edit_button} variant="outlined" color="primary" primary={true}
-                        onClick={(event) => this.handleClickOpen()}>
+                        onClick={() => this.handleClickOpen()}>
                     Edit
                 </Button>
                 <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">

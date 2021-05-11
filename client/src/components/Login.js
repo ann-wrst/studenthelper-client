@@ -38,9 +38,7 @@ class Login extends Component {
         })
             .then(
                 async response => {
-                    console.log(response);
                     let res = await response.json();
-                    console.log(res?.error?.message);
                     if (!res?.success) {
                         this.setState({error: <ErrorSnackbar open={true} message={res?.error?.message}/>});
                     } else {
@@ -51,7 +49,7 @@ class Login extends Component {
                 }
             )
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 

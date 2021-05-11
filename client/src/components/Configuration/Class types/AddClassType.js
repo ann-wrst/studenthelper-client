@@ -1,4 +1,3 @@
-import {API_BASE_URL} from "../../../constants/api"
 import React, {Component} from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -7,8 +6,8 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
+import ClassTypeServices from "../../../services/ClassTypeServices";
 import ErrorSnackbar from "../../ErrorSnackbar";
-import history from "../../history";
 
 class AddClassType extends Component {
     constructor(props) {
@@ -27,44 +26,25 @@ class AddClassType extends Component {
 
     handleClose = () => {
         this.setState({open: false});
-        this.error = null;
     };
 
-    createClassType() {
-        const payload = {
-            "typeName": this.state.type
-        };
-        fetch(API_BASE_URL + '/classtypes', {
-            credentials: 'include',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                this.props.fetchList();
-            }
-        );
+    async createClassType() {
+        let res = await ClassTypeServices.createClassType(this.state.type);
+        if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
+        this.props.fetchList();
         this.setState({type: ''})
-        this.setState({open: false});
+        this.handleClose();
     }
 
     render() {
         return (<div>
-                {this.error}
                 <Button variant="outlined" color="primary" primary={true} startIcon={<AddIcon/>}
-                        onClick={(event) => this.handleClickOpen()}>
+                        onClick={() => this.handleClickOpen()}>
                     Add
                 </Button>
                 <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
-
                     <DialogTitle id="form-dialog-title">Add</DialogTitle>
                     <DialogContent>
                         <TextField
@@ -86,6 +66,8 @@ class AddClassType extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
+                {this?.error}
+
             </div>
         );
     }

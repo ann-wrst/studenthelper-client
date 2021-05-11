@@ -59,7 +59,6 @@ class DeleteSchedule extends Component {
     error;
 
     render() {
-        console.log(this.props.id)
         return (
             <>
                 <MenuItem style={menu_item} key="delete"

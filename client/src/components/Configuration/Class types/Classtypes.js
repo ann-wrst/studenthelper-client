@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import Typography from "@material-ui/core/Typography";
-import {API_BASE_URL} from "../../../constants/api"
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
@@ -12,7 +11,7 @@ import AddClassType from "./AddClassType";
 import DeleteClassType from "./DeleteClassType";
 import EditClassType from "./EditClassType";
 import EmptyStub from "../EmptyStub";
-import history from "../../history";
+import ClassTypeServices from "../../../services/ClassTypeServices";
 import ErrorSnackbar from "../../ErrorSnackbar";
 
 class Classtypes extends Component {
@@ -20,37 +19,22 @@ class Classtypes extends Component {
         super(props);
         this.state = {
             open: false,
-            error_message: '',
             classtypes_list: [],
-            isLoading: false
         }
         this.fetchClassTypesList = this.fetchClassTypesList.bind(this);
     }
 
-    componentDidMount() {
-        this.fetchClassTypesList();
+    async componentDidMount() {
+        await this.fetchClassTypesList();
     }
 
     async fetchClassTypesList() {
-        fetch(API_BASE_URL + '/classtypes', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.setState({classtypes_list: res?.data})
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+        let res = await ClassTypeServices.fetchClassTypesList();
+        if (res?.success) {
+            this.setState({classtypes_list: res?.data})
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
 
     error;

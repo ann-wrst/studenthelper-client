@@ -1,4 +1,3 @@
-import {API_BASE_URL} from "../../../constants/api"
 import React, {Component} from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -6,8 +5,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
+import ClassTypeServices from "../../../services/ClassTypeServices";
 import ErrorSnackbar from "../../ErrorSnackbar";
-import history from "../../history";
 
 class EditClassType extends Component {
     constructor(props) {
@@ -25,33 +24,15 @@ class EditClassType extends Component {
 
     handleClose = () => {
         this.setState({open: false});
-        this.error = null;
     };
 
-    editClassType(id) {
-        const payload = {
-            "typeName": this.state.type
-        };
-        fetch(API_BASE_URL + `/classtypes/${id}`, {
-            credentials: 'include',
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                this.props.fetchList();
-            }
-        );
-        this.setState({open: false});
-
+    async editClassType(id) {
+        let res = await ClassTypeServices.editClassType(id, this.state.type);
+        if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
+        this.props.fetchList();
+        this.handleClose();
     }
 
     error;
@@ -60,11 +41,10 @@ class EditClassType extends Component {
         return (<div>
                 {this.error}
                 <Button style={edit_button} variant="outlined" color="primary" primary={true}
-                        onClick={(event) => this.handleClickOpen()}>
+                        onClick={() => this.handleClickOpen()}>
                     Edit
                 </Button>
                 <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
-                    {console.log(this.props.type)}
                     <DialogTitle id="form-dialog-title">Edit</DialogTitle>
                     <DialogContent>
                         <TextField

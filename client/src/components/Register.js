@@ -41,7 +41,6 @@ class Register extends Component {
                 body: JSON.stringify(payload)
             }).then(
                 async response => {
-                    console.log(response);
                     let res = await response.json();
                     if (!res?.success) {
                         this.setState({error: <ErrorSnackbar open={true} message={res?.error?.message}/>});
@@ -54,7 +53,6 @@ class Register extends Component {
                     if (this.state.isLoggedIn) history.push('/');
                 }
             ).catch(function (error) {
-                console.log(error);
             })
 
         } else {

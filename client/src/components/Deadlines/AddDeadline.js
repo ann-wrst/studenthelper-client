@@ -114,7 +114,6 @@ class AddDeadline extends Component {
 
     showSubjectsDropdown() {
         this.subjects_list = this.props.subjects_list || [];
-        console.log(this.subjects_list)
         let dropdown;
         if (this.subjects_list?.length === 0) {
             dropdown = <span><br/>No subjects. You can create subjects here <Link to='/configuration' target="_blank"

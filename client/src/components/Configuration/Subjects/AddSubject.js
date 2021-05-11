@@ -7,6 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
+import SubjectServices from "../../../services/SubjectServices";
 import ErrorSnackbar from "../../ErrorSnackbar";
 
 class AddSubject extends Component {
@@ -19,48 +20,29 @@ class AddSubject extends Component {
         }
     }
 
-    error;
-
-
     handleClickOpen() {
         this.setState({open: true});
     };
 
     handleClose = () => {
         this.setState({open: false});
-        this.error = null;
     };
 
-    createSubject() {
-        const payload = {
-            "name": this.state.new_name
-        };
-        fetch(API_BASE_URL + '/subjects', {
-            credentials: 'include',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        }).then(
-            async response => {
-                let res = await response.json();
-                if (!res?.success) {
-                    this.setState({error: <ErrorSnackbar open={true} message={res?.error?.message}/>});
-                }
-                console.log(this.state.error);
-                this.setState({open: false});
-                this.props.fetchList();
-            }
-        );
-        this.setState({new_name: ''})
+    async createSubject() {
+        let res = await SubjectServices.createSubject(this.state.new_name);
+        if (!res?.success) {
+            this.setState({error: <ErrorSnackbar open={true} message={res?.error?.message}/>});
+        }
+        this.handleClose();
+        this.props.fetchList();
+        this.setState({new_name: ''});
     }
 
     render() {
         return (<div>
                 {this.state.error}
                 <Button variant="outlined" color="primary" primary={true} startIcon={<AddIcon/>}
-                        onClick={(event) => this.handleClickOpen()}>
+                        onClick={() => this.handleClickOpen()}>
                     Add
                 </Button>
 

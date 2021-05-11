@@ -1,4 +1,3 @@
-import {API_BASE_URL} from "../../../constants/api"
 import React, {Component} from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -6,6 +5,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
+import TeacherServices from "../../../services/TeacherServices";
 import ErrorSnackbar from "../../ErrorSnackbar";
 
 class EditTeacher extends Component {
@@ -18,48 +18,34 @@ class EditTeacher extends Component {
             new_middle_name: undefined,
         }
     }
-     handleClickOpen() {
-        this.setState({new_surname:this.props.surname});
-        this.setState({new_name:this.props.name});
-        this.setState({new_middle_name:this.props.middle_name});
+
+    handleClickOpen() {
+        this.setState({new_surname: this.props.surname});
+        this.setState({new_name: this.props.name});
+        this.setState({new_middle_name: this.props.middle_name});
         this.setState({open: true});
     };
 
     handleClose = () => {
         this.setState({open: false});
-        this.error = null;
     };
 
-    editTeacher(id) {
-        const payload = {
-            "surname": this.state.new_surname,
-            "name": this.state.new_name,
-            "middle_name": this.state.new_middle_name,
-        };
-        fetch(API_BASE_URL + `/teachers/${id}`, {
-            credentials: 'include',
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        }).then(
-            async response => {
-                let res = await response.json();
-                if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                this.props.fetchList();
-            }
-        );
+    async editTeacher(id) {
+        let res = await TeacherServices.editTeacher(id, this.state.new_surname, this.state.new_name, this.state.new_middle_name);
+        if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
+        this.props.fetchList();
         this.handleClose();
     }
+
     error;
+
     render() {
         return (<div>
                 {this.error}
                 <Button style={edit_button} variant="outlined" color="primary" primary={true}
-                        onClick={(event) => this.handleClickOpen()}>
+                        onClick={() => this.handleClickOpen()}>
                     Edit
                 </Button>
                 <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">

@@ -1,4 +1,3 @@
-import {API_BASE_URL} from "../../../constants/api"
 import React, {Component} from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -7,6 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
+import TeacherServices from "../../../services/TeacherServices";
 import ErrorSnackbar from "../../ErrorSnackbar";
 
 class AddTeacher extends Component {
@@ -27,36 +27,18 @@ class AddTeacher extends Component {
 
     handleClose = () => {
         this.setState({open: false});
-        this.error = null;
-
     };
 
-    createTeacher() {
-        const payload = {
-            "surname": this.state.new_surname,
-            "name": this.state.new_name,
-            "middle_name": this.state.new_middle_name
-        };
-        fetch(API_BASE_URL + '/teachers', {
-            credentials: 'include',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        }).then(
-            async response => {
-                let res = await response.json();
-                if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                this.props.fetchList();
-            }
-        );
+    async createTeacher() {
+        let res = await TeacherServices.addTeacher(this.state.new_surname, this.state.new_name, this.state.new_middle_name);
+        if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
+        this.props.fetchList();
         this.setState({new_name: ''});
         this.setState({new_surname: ''});
         this.setState({new_middle_name: ''});
-        this.setState({open: false});
+        this.handleClose();
     }
 
     error;
@@ -65,7 +47,7 @@ class AddTeacher extends Component {
         return (<div>
             {this.error}
             <Button variant="outlined" color="primary" primary={true} startIcon={<AddIcon/>}
-                    onClick={(event) => this.handleClickOpen()}>
+                    onClick={() => this.handleClickOpen()}>
                 Add
             </Button>
             <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">

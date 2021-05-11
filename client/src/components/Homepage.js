@@ -17,7 +17,6 @@ class Homepage extends Component {
 
     async componentDidMount() {
         await this.isUserAuthenticated();
-        console.log(this.state.isAuthenticated);
         if (!this.state.isAuthenticated) {
             history.push('/login');
         }

@@ -225,7 +225,6 @@ class EditSchedule extends Component {
         let newParity = Boolean(this.props.parity).toString();
         if (this.props.parity === null) {
             this.setState({parityDependent: false});
-            console.log("hewe")
         } else {
             this.setState({parity: newParity, parityDependent: true});
         }

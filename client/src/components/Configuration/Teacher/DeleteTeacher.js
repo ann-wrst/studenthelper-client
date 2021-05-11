@@ -1,14 +1,13 @@
 import Button from "@material-ui/core/Button";
 import React from "react";
-import {API_BASE_URL} from "../../../constants/api"
 import {Component} from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import {DialogContentText} from "@material-ui/core";
 import DialogActions from "@material-ui/core/DialogActions";
+import TeacherServices from "../../../services/TeacherServices";
 import ErrorSnackbar from "../../ErrorSnackbar";
-import history from "../../history";
 
 class DeleteTeacher extends Component {
     constructor(props) {
@@ -26,26 +25,13 @@ class DeleteTeacher extends Component {
         this.setState({open: false});
     };
 
-    handleDelete(id) {
-        fetch(API_BASE_URL + `/teachers/${id}`, {
-            credentials: 'include',
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                this.handleClose();
-                this.props.fetchList();
-            }
-        );
-
+    async handleDelete(id) {
+        let res = await TeacherServices.deleteTeacher(id);
+        if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
+        this.handleClose();
+        this.props.fetchList();
     }
 
     error;
@@ -55,7 +41,7 @@ class DeleteTeacher extends Component {
             {this.error}
             <Button variant="outlined" size="small"
                     color="secondary" primary={true}
-                    onClick={(event) => this.handleClickOpen()}>
+                    onClick={() => this.handleClickOpen()}>
                 Delete
             </Button>
             <Dialog open={this.state.open} onClose={() => this.handleClose()}>
