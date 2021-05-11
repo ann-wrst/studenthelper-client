@@ -43,7 +43,11 @@ class AddDeadline extends Component {
     };
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({
+            open: false, task: '',
+            subject: undefined,
+            date: new Date(),
+        });
         this.error = null;
     };
 

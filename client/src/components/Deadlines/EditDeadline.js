@@ -24,12 +24,17 @@ class EditDeadline extends Component {
             task: this.props.task,
             subject: this.props.subject,
             date: this.props.date,
+            isDone: this.props.isDone
         }
         this.openEdit = this.openEdit.bind(this);
     }
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({
+            open: false, task: '',
+            subject: undefined,
+            date: new Date(),
+        });
         this.error = null;
     };
 
@@ -39,6 +44,7 @@ class EditDeadline extends Component {
             task: this.props.task,
             subject: this.props.subject,
             date: this.props.date,
+            isDone: this.props.isDone
         });
         this.props.closeMenu();
     }
@@ -83,7 +89,9 @@ class EditDeadline extends Component {
             "task": this.state.task,
             "subjectId": this.state.subject,
             "date": this.state.date,
+            "isDone": this.state.isDone
         };
+
         fetch(API_BASE_URL + `/deadlines/${this.props.id}`, {
             credentials: 'include',
             method: 'PATCH',

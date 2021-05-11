@@ -107,7 +107,7 @@ class AddSchedule extends Component {
     }
 
     async handleClickOpen() {
-        this.setState({open: true, time_from: "08:30", time_to: "10:35"});
+        this.setState({open: true, time_from: "08:40", time_to: "10:15"});
         await this.fetchClassTypesList();
         await this.fetchSubjectList();
         await this.fetchTeachersList()
@@ -302,7 +302,7 @@ class AddSchedule extends Component {
                                id="time"
                                label="Date from"
                                type="time"
-                               defaultValue="08:30"
+                               defaultValue="08:40"
                                InputLabelProps={{
                                    shrink: true,
                                }}
@@ -316,7 +316,7 @@ class AddSchedule extends Component {
                                    id="time"
                                    label="Date to"
                                    type="time"
-                                   defaultValue="10:35"
+                                   defaultValue="10:15"
                                    InputLabelProps={{
                                        shrink: true,
                                    }}

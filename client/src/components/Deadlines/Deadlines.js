@@ -150,9 +150,10 @@ class Deadlines extends Component {
     currentDate;
     currentTask;
     currentSubject;
+    currentIsDone;
 
-    handleMoreButton(event, id, date, task, subject) {
-        [this.currentId, this.currentDate, this.currentSubject, this.currentTask] = [id, date, subject, task];
+    handleMoreButton(event, id, date, task, subject, isDone) {
+        [this.currentId, this.currentDate, this.currentSubject, this.currentTask, this.currentIsDone] = [id, date, subject, task, isDone];
         this.setState({anchorEl: event.currentTarget});
     }
 
@@ -191,7 +192,7 @@ class Deadlines extends Component {
                                 </ListItemText>
                                 <ListItemSecondaryAction>
                                     <IconButton edge="end" aria-label="comments"
-                                                onClick={(event) => this.handleMoreButton(event, item.idDeadline, item.date, item.task, item.subjectId)}>
+                                                onClick={(event) => this.handleMoreButton(event, item.idDeadline, item.date, item.task, item.subjectId, item.isDone)}>
                                         <MoreVertIcon/>
                                     </IconButton>
                                 </ListItemSecondaryAction>
@@ -247,7 +248,7 @@ class Deadlines extends Component {
                 >
                     <EditDeadline id={this.currentId} fetchList={this.fetchDeadlines}
                                   closeMenu={this.handleCloseMoreButton} subjects_list={this.state.subjects_list}
-                                  task={this.currentTask} date={this.currentDate} subject={this.currentSubject}/>
+                                  task={this.currentTask} date={this.currentDate} isDone={this.currentIsDone} subject={this.currentSubject}/>
 
                     <DeleteDeadline id={this.currentId} fetchList={this.fetchDeadlines}
                                     closeMenu={this.handleCloseMoreButton}/>
@@ -280,7 +281,7 @@ const heading_style = {
 };
 const switch_style = {
     marginLeft: '15px',
-    marginBottom:'15px'
+    marginBottom: '15px'
 };
 const date_style = {
     fontFamily: "'Oswald', cursive",

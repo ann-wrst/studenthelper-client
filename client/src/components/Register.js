@@ -50,7 +50,6 @@ class Register extends Component {
                     }
                     const loginscreen = [];
                     loginscreen.push(<Login parentContext={this}/>);
-                    // const loginmessage = "Not Registered yet?";
 
                     if (this.state.isLoggedIn) history.push('/');
                 }

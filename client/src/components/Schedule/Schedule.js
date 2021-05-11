@@ -117,8 +117,8 @@ class Schedule extends Component {
 
     renderParityLabel(actualParity) {
         if (actualParity)
-            return (<i>even week</i>);
-        else if (!actualParity && typeof actualParity !== 'undefined') return (<i>odd week</i>);
+            return (<i>even</i>);
+        else if (!actualParity && typeof actualParity !== 'undefined') return (<i>odd</i>);
         else return null;
     }
 
@@ -143,7 +143,6 @@ class Schedule extends Component {
     }
 
     renderSchedule(num, day, dayIdx) {
-        let trfa = [1, 0];
         if (!this.getScheduleByDayAndNumber(dayIdx, num)) {
             return (
                 <div style={table_item}>
@@ -152,65 +151,60 @@ class Schedule extends Component {
         }
         if (this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity == null) {
             return (
-                <div>
+                <div
+                    onContextMenu={(event) => this.handleContextClick(event, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.idSchedule, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype?.idClassType, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.to, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.number, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.idTeacher, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.idSubject, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.weekday, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity)}
+                    style={{cursor: 'context-menu',}}>
                     {
-                        // this.getScheduleByDayAndNumber(dayIdx, num)?.length > 0 ?
-                        //     (<Card>
-                        //         <CardContent>
-                        <div style={table_item}>
-                            <div style={class_info_container}>
-                                <div>
-                                    {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.name}
+                        this.getScheduleByDayAndNumber(dayIdx, num)?.length > 0 ?
+                            <div style={table_item}>
+                                <div style={class_info_container}>
+                                    <div style={subject_style}>
+                                        {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.name}
+                                    </div>
+                                    <div>
+                                        {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype?.typeName}
+                                    </div>
+                                    <div style={teacher_style}>
+                                        {this.renderTeacher(this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.surname, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.name, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher['middle name'])}
+                                    </div>
+                                    <div>
+                                        {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.to)}
+                                    </div>
                                 </div>
-                                <div>
-                                    {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity}
-                                </div>
-                                <div>
-                                    {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype?.typeName}
-                                </div>
-                                <div>
-                                    {this.renderTeacher(this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.surname, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.name, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher['middle name'])}
-                                </div>
-                                <div>
-                                    {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.to)}
-                                </div>
-                            </div>
-                            {/*{this.renderMoreButton(dayIdx, num, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.idSchedule, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.idSubject, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher.idTeacher, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype.idClassType, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class.from, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class.to)}*/}
-                        </div>
-                        //     </CardContent>
-                        // </Card>) : <div/>
+                            </div> : null
                     }
                 </div>
             );
         } else return (
             <div>
                 {
-                    // this.getScheduleByDayAndNumber(dayIdx, num)?.length > 0 ?
-                    // <Card>
-                    //     <CardContent>
                     <div>
-                        {trfa.map((tf) =>
-                            <div style={class_info_container}>
-                                <div>
-                                    {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.subject?.name}
-                                </div>
-                                <div>
-                                    {this.renderParityLabel(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.parity)}
-                                </div>
-                                <div>
-                                    {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.classtype?.typeName}
-                                </div>
-                                <div>
-                                    {this.renderTeacher(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher?.surname, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher?.name, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher['middle name'])}
-                                </div>
-                                <div>
-                                    {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.$class?.to)}
-                                </div>
-                            </div>
+                        {[1, 0].map((tf) =>
+                            this.getScheduleByDayAndNumber(dayIdx, num, tf)?.length > 0 ?
+                                <div
+                                    onContextMenu={(event) => this.handleContextClick(event, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.idSchedule, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.classtype?.idClassType, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.$class?.to, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.$class?.number, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher?.idTeacher, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.subject?.idSubject, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.weekday, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.parity)}
+                                    style={{cursor: 'context-menu',}}>
+                                    <div style={class_info_container}>
+                                        <div>
+                                            {this.renderParityLabel(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.parity)}
+                                        </div>
+                                        <div style={subject_style}>
+                                            {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.subject?.name}
+                                        </div>
+
+                                        <div>
+                                            {this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.classtype?.typeName}
+                                        </div>
+                                        <div>
+                                            {this.renderTeacher(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher?.surname, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher?.name, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.teacher['middle name'])}
+                                        </div>
+                                        <div>
+                                            {this.renderTime(this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num, tf)[0]?.$class?.to)}
+                                        </div>
+                                    </div>
+                                </div> : null
                         )}
                     </div>
-                    //     </CardContent>
-                    // </Card> : null
                 }
             </div>
         )
@@ -273,11 +267,7 @@ class Schedule extends Component {
                                     </TableCell>
                                     {this.weekdays.map((day, dayIdx) => (
                                         <TableCell width="14.286%" align="center">
-                                            <div
-                                                onContextMenu={(event) => this.handleContextClick(event, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.idSchedule, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype?.idClassType, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.from, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.to, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.$class?.number, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.idTeacher, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.idSubject, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.weekday, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.parity)}
-                                                style={{cursor: 'context-menu'}}>
-                                                {this.renderSchedule(num, day, dayIdx, this.state.showEven)}
-                                            </div>
+                                            {this.renderSchedule(num, day, dayIdx, this.state.showEven)}
                                         </TableCell>
                                     ))
                                     }
@@ -312,31 +302,35 @@ class Schedule extends Component {
     }
 }
 
-const table_item = {
-    display: 'flex',
-    justifyContent: 'space-evenly',
-}
-const inside_double = {
-    display: 'flex'
-}
+const table_item = {}
+
 const num_style = {
     fontWeight: 'bold',
     fontSize: '17px'
 }
 const row_style = {
-    height: '133px'
+    height: '133px',
+    backgroundColor: '#FBFBFF',
 }
 const class_info_container = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     fontFamily: "'Montserrat', sans-serif",
-    fontWeight: '400'
-}
+    fontWeight: '500',
+    boxShadow: '0 2px 2px rgba(0,0,0,0.3)',
+    borderRadius: '5px',
+    backgroundColor: 'white',
+    padding: '10px',
+    minHeight: '150px'
+};
 
 const table_heading = {
     fontFamily: "'Montserrat', sans-serif",
     fontWeight: '600'
-
-}
+};
+const subject_style = {
+    fontWeight: '600'
+};
+const teacher_style = {};
 export default Schedule;
