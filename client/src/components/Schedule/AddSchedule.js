@@ -164,6 +164,12 @@ class AddSchedule extends Component {
         return dropdown;
     }
 
+    getInitials(surname, name, middleName) {
+        let nameLetter = name ? name.charAt(0)?.concat(". ") : '';
+        let middleNameLetter = middleName ? middleName.charAt(0)?.concat(". ") : '';
+        return surname?.concat(' ', nameLetter, middleNameLetter);
+    }
+
     showTeachersDropdown() {
         let dropdown;
         if (this.teachers_list.length === 0) {
@@ -179,7 +185,8 @@ class AddSchedule extends Component {
                 onChange={this.handleTeacher}
             >
                 {this.teachers_list.map((teach) => (
-                    <MenuItem value={teach.idTeacher}>{teach?.surname + ' '}</MenuItem>
+                    <MenuItem
+                        value={teach.idTeacher}>{this.getInitials(teach?.surname, teach?.name, teach['middle name'])}</MenuItem>
                 ))}
             </Select>
         </FormControl>;
@@ -321,7 +328,7 @@ class AddSchedule extends Component {
                                        shrink: true,
                                    }}
                                    inputProps={{
-                                       step: 300, // 5 min
+                                       step: 300,
                                    }}
                                    onChange={(event) => this.setState({time_to: event.target.value})}
                         />

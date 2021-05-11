@@ -144,6 +144,12 @@ class EditSchedule extends Component {
         return dropdown;
     }
 
+    getInitials(surname, name, middleName) {
+        let nameLetter = name ? name.charAt(0)?.concat(". ") : '';
+        let middleNameLetter = middleName ? middleName.charAt(0)?.concat(". ") : '';
+        return surname?.concat(' ', nameLetter, middleNameLetter);
+    }
+
     showTeachersDropdown() {
         let dropdown;
         if (this.state.teachers_list.length === 0) {
@@ -159,7 +165,8 @@ class EditSchedule extends Component {
                 onChange={this.handleTeacher}
             >
                 {this.state.teachers_list.map((teach) => (
-                    <MenuItem value={teach.idTeacher}>{teach?.surname + ' '}</MenuItem>
+                    <MenuItem
+                        value={teach.idTeacher}>{this.getInitials(teach?.surname, teach?.name, teach['middle name'])}</MenuItem>
                 ))}
             </Select>
         </FormControl>;
