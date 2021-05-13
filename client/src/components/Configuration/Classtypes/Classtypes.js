@@ -46,10 +46,10 @@ class Classtypes extends Component {
             this.rows = [];
         }
         if (this.rows.length !== 0)
-            return (<div style={page_style}>
+            return (<div style={ClassTypesPage}>
                 {this.error}
-                <div style={heading_style}>
-                    <Typography style={classtypesheading_style} variant="h6">
+                <div style={GeneralHeading}>
+                    <Typography style={ClassTypesHeading} variant="h6">
                         Class types
                     </Typography>
                     <AddClassType fetchList={this.fetchClassTypesList}> </AddClassType>
@@ -75,8 +75,8 @@ class Classtypes extends Component {
                                         </TableCell>
 
                                         <TableCell align="right">
-                                            <div style={buttons_container}>
-                                                <div style={edit_button}>
+                                            <div style={ButtonsContainer}>
+                                                <div style={EditButton}>
                                                     <EditClassType id={row.idClassType} type={row.typeName}
                                                                    fetchList={this.fetchClassTypesList}>
                                                     </EditClassType>
@@ -94,8 +94,8 @@ class Classtypes extends Component {
                 </div>
             </div>);
         else return (<div>
-            <div style={heading_style}>
-                <Typography style={classtypesheading_style} variant="h6">
+            <div style={GeneralHeading}>
+                <Typography style={ClassTypesHeading} variant="h6">
                     Class types
                 </Typography>
                 <AddClassType fetchList={this.fetchClassTypesList}> </AddClassType>
@@ -106,25 +106,24 @@ class Classtypes extends Component {
     }
 }
 
-const page_style = {
+const ClassTypesPage = {
     'display': 'flex',
     'flex-direction': 'column',
 };
-
-const heading_style = {
+const GeneralHeading = {
     'display': 'flex',
     'flex-direction': 'row',
     'flex-wrap': 'wrap',
     'align-content': 'stretch'
 };
-const classtypesheading_style = {
+const ClassTypesHeading = {
     'margin-right': '20px'
 }
-const buttons_container = {
+const ButtonsContainer = {
     'display': 'flex',
     justifyContent: 'flex-end'
 }
-const edit_button = {
+const EditButton = {
     paddingRight: '5px'
 }
 export default Classtypes;
