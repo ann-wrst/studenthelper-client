@@ -41,10 +41,7 @@ class Classtypes extends Component {
     rows = [];
 
     render() {
-        this.rows = this.state.classtypes_list;
-        if (typeof this.rows === "undefined") {
-            this.rows = [];
-        }
+        this.rows = this.state.classtypes_list || [];
         if (this.rows.length !== 0)
             return (<div style={ClassTypesPage}>
                 {this.error}
