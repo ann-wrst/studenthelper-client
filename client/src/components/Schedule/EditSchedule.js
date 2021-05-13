@@ -1,7 +1,5 @@
 import React, {Component} from "react";
 import {MenuItem} from "@material-ui/core";
-import {API_BASE_URL} from "../../constants/api";
-import history from "../history";
 import ErrorSnackbar from "../ErrorSnackbar";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -18,6 +16,10 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormLabel from "@material-ui/core/FormLabel";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
+import SubjectServices from "../../services/SubjectServices";
+import TeacherServices from "../../services/TeacherServices";
+import ClassTypeServices from "../../services/ClassTypeServices";
+import ScheduleServices from "../../services/ScheduleServices";
 
 class EditSchedule extends Component {
     constructor(props) {
@@ -39,78 +41,40 @@ class EditSchedule extends Component {
         this.handleParityDependent = this.handleParityDependent.bind(this);
     }
 
-    error;
-
-    componentDidMount() {
-        this.fetchClassTypesList();
-        this.fetchSubjectList();
-        this.fetchTeachersList();
+    async componentDidMount() {
+        await Promise.all(
+            [
+                this.fetchClassTypesList(),
+                this.fetchSubjectList(),
+                this.fetchTeachersList()
+            ]);
     }
 
     async fetchSubjectList() {
-        fetch(API_BASE_URL + '/subjects', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.setState({subjects_list: res?.data})
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+        let res = await SubjectServices.fetchSubjectList();
+        if (res?.success) {
+            this.setState({subjects_list: res?.data})
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
 
     async fetchTeachersList() {
-        fetch(API_BASE_URL + '/teachers', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.setState({teachers_list: res?.data})
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+        let res = await TeacherServices.fetchTeachersList();
+        if (res?.success) {
+            this.setState({teachers_list: res?.data})
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
 
     async fetchClassTypesList() {
-        fetch(API_BASE_URL + '/classtypes', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.setState({classtypes_list: res?.data})
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+        let res = await ClassTypeServices.fetchClassTypesList();
+        if (res?.success) {
+            this.setState({classtypes_list: res?.data})
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
 
     handleSubjects = (event) => {
@@ -198,17 +162,15 @@ class EditSchedule extends Component {
 
     async handleClickOpen() {
         this.setState({open: true,});
-        await this.fetchClassTypesList();
-        await this.fetchSubjectList();
-        await this.fetchTeachersList()
     };
 
     handleClose = () => {
         this.setState({
             open: false,
         });
-        this.error = null;
     };
+
+    error;
 
     openEdit() {
         this.setState({
@@ -238,48 +200,20 @@ class EditSchedule extends Component {
         }
     }
 
-    editSchedule() {
+    async editSchedule() {
         let parity;
         if (!this.state.parityDependent) parity = null;
         else {
             if (this.state.parity === 'true') parity = true;
             if (this.state.parity === 'false') parity = false;
         }
+        let res = await ScheduleServices.editSchedule(this.props.id, this.state.class_number, this.state.time_from, this.state.time_to, this.state.subject, this.state.teacher, this.state.class_type, parity, this.props.weekday?.idWeekday);
 
-        const payload = {
-            "$class": {
-                "number": this.state.class_number,
-                "from": this.state.time_from,
-                "to": this.state.time_to,
-            },
-            "subjectId": this.state.subject,
-            "teacherId": this.state.teacher,
-            "classtypeId": this.state.class_type,
-            "parity": parity,
-            "weekdayId": this.props.weekday?.idWeekday
-        };
+        if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        } else this.handleClose();
 
-        fetch(API_BASE_URL + `/schedules/${this.props.id}`, {
-            credentials: 'include',
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        }).then(
-            async response => {
-                let res = await response.json();
-                if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                } else this.handleClose();
-                if (response.status === 403)
-                    history.push('/login');
-
-                this.props.fetchList();
-                return res;
-            }
-        );
-
+        this.props.fetchList();
     }
 
     handleParity = event => {
@@ -303,8 +237,8 @@ class EditSchedule extends Component {
         return (<><MenuItem style={menu_item} selected={'Edit'} onClick={(event) => this.openEdit(event)}>
                 Edit
             </MenuItem>
-                {this.error}
                 <Dialog open={this.state.open} onClose={() => this.handleClose()}>
+                    {this.error}
                     <DialogTitle>Edit ({this.props.weekday?.Weekday})</DialogTitle>
                     <DialogContent>
                         <TextField

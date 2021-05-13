@@ -1,17 +1,14 @@
-import {API_BASE_URL} from "../../constants/api"
 import React, {Component} from "react";
 import SideNavigation from "../SideNavigation";
 import {CKEditor} from '@ckeditor/ckeditor5-react/';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import {Link} from 'react-router-dom'
-import history from "../history";
 import Divider from "@material-ui/core/Divider";
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import RadioButtonUncheckedSharpIcon from '@material-ui/icons/RadioButtonUncheckedSharp';
 import ErrorSnackbar from "../ErrorSnackbar";
 import {Typography} from "@material-ui/core";
 import EmptyStub from "../Configuration/EmptyStub";
+import SubjectServices from "../../services/SubjectServices";
 
 class Notes extends Component {
     constructor(props) {
@@ -26,25 +23,12 @@ class Notes extends Component {
     }
 
     async fetchSubjectList() {
-        fetch(API_BASE_URL + '/subjects', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.setState({subjects_list: res?.data})
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+        let res = await SubjectServices.fetchSubjectList();
+        if (res?.success) {
+            this.setState({subjects_list: res?.data})
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
 
     error;

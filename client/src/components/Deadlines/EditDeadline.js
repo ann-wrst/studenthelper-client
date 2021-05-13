@@ -12,9 +12,8 @@ import {Link} from "react-router-dom";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import {API_BASE_URL} from "../../constants/api";
-import history from "../history";
 import ErrorSnackbar from "../ErrorSnackbar";
+import DeadlineServices from "../../services/DeadlineServices";
 
 class EditDeadline extends Component {
     constructor(props) {
@@ -84,34 +83,14 @@ class EditDeadline extends Component {
 
     error;
 
-    editTask() {
-        const payload = {
-            "task": this.state.task,
-            "subjectId": this.state.subject,
-            "date": this.state.date,
-            "isDone": this.state.isDone
-        };
-
-        fetch(API_BASE_URL + `/deadlines/${this.props.id}`, {
-            credentials: 'include',
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        }).then(
-            async response => {
-                let res = await response.json();
-                if (res?.success) {
-                    this.handleClose();
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                if (response.status === 403)
-                    history.push('/login');
-                this.props.fetchList();
-            }
-        );
+    async editTask() {
+        let res = await DeadlineServices.editTask(this.props.id, this.state.task, this.state.subject, this.state.date, this.state.isDone);
+        if (res?.success) {
+            this.handleClose();
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
+        this.props.fetchList();
     }
 
     render() {
@@ -140,7 +119,6 @@ class EditDeadline extends Component {
                             <KeyboardDatePicker
                                 disableToolbar
                                 required
-                                // disablePast
                                 format="dd/MM/yyyy"
                                 margin="normal"
                                 id="date-picker-inline"
@@ -170,7 +148,6 @@ class EditDeadline extends Component {
     }
 }
 
-export default EditDeadline;
 const menu_item = {
     fontSize: '13px'
 };
@@ -179,3 +156,4 @@ const dropdown_style = {
     marginTop: '10px',
     marginBottom: '10px'
 };
+export default EditDeadline;

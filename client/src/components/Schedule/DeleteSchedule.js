@@ -6,9 +6,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MenuItem from "@material-ui/core/MenuItem";
-import {API_BASE_URL} from "../../constants/api";
-import history from "../history";
 import ErrorSnackbar from "../ErrorSnackbar";
+import ScheduleServices from "../../services/ScheduleServices";
 
 class DeleteSchedule extends Component {
     constructor(props) {
@@ -20,28 +19,16 @@ class DeleteSchedule extends Component {
         this.handleClickOpen = this.handleClickOpen.bind(this);
     }
 
-    deleteSchedule(id) {
-        fetch(API_BASE_URL + `/schedules/${id}`, {
-            credentials: 'include',
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.props.fetchList();
-                    this.handleClose();
-                    this.props.closeMenu();
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message || res?.message}/>;
-                }
-                return res;
-            }
-        );
+    async deleteSchedule(id) {
+        let res = await ScheduleServices.deleteSchedule(id);
+        if (res?.success) {
+            this.props.fetchList();
+            this.handleClose();
+            this.props.closeMenu();
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message || res?.message}/>;
+        }
+        return res;
     }
 
     handleClickOpen() {

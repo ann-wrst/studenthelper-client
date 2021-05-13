@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import Login from './Login';
 import Register from './Register';
-import {login_styles} from './styles'
+import {login_styles} from '../styles'
 import Button from '@material-ui/core/Button';
-import history from './history'
+import history from '../history'
 
 class Loginscreen extends Component {
     constructor(props) {

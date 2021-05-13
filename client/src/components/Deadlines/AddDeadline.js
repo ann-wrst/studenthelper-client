@@ -19,9 +19,9 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import {API_BASE_URL} from "../../constants/api";
-import history from "../history";
 import ErrorSnackbar from "../ErrorSnackbar";
+import SubjectServices from "../../services/SubjectServices";
+import DeadlineServices from "../../services/DeadlineServices";
 
 class AddDeadline extends Component {
     constructor(props) {
@@ -48,7 +48,6 @@ class AddDeadline extends Component {
             subject: undefined,
             date: new Date(),
         });
-        this.error = null;
     };
 
     handleDateChange = (date) => {
@@ -56,61 +55,26 @@ class AddDeadline extends Component {
     }
 
     async fetchSubjectList() {
-        fetch(API_BASE_URL + '/subjects', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.subjects_list = res?.data;
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+        let res = await SubjectServices.fetchSubjectList();
+        if (res?.success) {
+            this.subjects_list = res?.data;
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
+
 
     handleSubjects = (event) => {
         this.setState({subject: event.target.value})
     };
 
-    addTask() {
-        const payload = {
-            "task": this.state.task,
-            "subjectId": this.state.subject,
-            "date": this.state.date,
-            "isDone": false
-        };
-        fetch(API_BASE_URL + '/deadlines', {
-            credentials: 'include',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        }).then(
-            async response => {
-                let res = await response.json();
-                if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                } else this.handleClose();
-                if (response.status === 403)
-                    history.push('/login');
-
-                this.props.fetchList();
-                return res;
-            }
-        );
-
+    async addTask() {
+        let res = await DeadlineServices.addTask(this.state.task, this.state.subject, this.state.date);
+        if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        } else this.handleClose();
+        this.props.fetchList();
     }
-
 
     showSubjectsDropdown() {
         this.subjects_list = this.props.subjects_list || [];

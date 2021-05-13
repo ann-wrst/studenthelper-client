@@ -2,13 +2,13 @@ import React, {Component} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import {login_styles} from './styles'
+import {login_styles} from '../styles'
 import Login from './Login';
-import {API_BASE_URL} from '../constants/api'
+import {API_BASE_URL} from '../../constants/api'
 import {Toolbar} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import history from "./history";
-import ErrorSnackbar from "./ErrorSnackbar";
+import history from "../history";
+import ErrorSnackbar from "../ErrorSnackbar";
 
 class Register extends Component {
 

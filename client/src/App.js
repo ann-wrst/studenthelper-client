@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
-import Loginscreen from './components/Loginscreen'
+import Loginscreen from './components/Login/Loginscreen'
 import SubjectsEditor from "./components/Notes/SubjectsEditor";
 import  Deadlines from "./components/Deadlines/Deadlines";
 import Notes from "./components/Notes/Notes";

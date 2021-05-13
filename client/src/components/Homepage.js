@@ -36,9 +36,7 @@ class Homepage extends Component {
             this.setState({
                 isAuthenticated: true
             });
-
         }
-
     }
     error;
 

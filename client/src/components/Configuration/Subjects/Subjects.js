@@ -26,9 +26,9 @@ class Subjects extends Component {
 
     error;
 
-    componentDidMount() {
+    async componentDidMount() {
         this.error = null;
-        this.fetchSubjectList();
+        await this.fetchSubjectList();
     }
 
     async fetchSubjectList() {

@@ -1,15 +1,13 @@
 import React, {Component} from "react";
 import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import {DialogContentText} from "@material-ui/core";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
-import {API_BASE_URL} from "../../constants/api";
-import history from "../history";
 import ErrorSnackbar from "../ErrorSnackbar";
+import DeadlineServices from "../../services/DeadlineServices";
 
 class DeleteDeadline extends Component {
     constructor(props) {
@@ -30,27 +28,15 @@ class DeleteDeadline extends Component {
 
     error;
 
-    deleteDeadline(id) {
-        fetch(API_BASE_URL + `/deadlines/${id}`, {
-            credentials: 'include',
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                } else {
-                    this.handleClose();
-                    this.props.fetchList();
-                    this.props.closeMenu();
-                }
-            }
-        );
+    async deleteDeadline(id) {
+        let res = await DeadlineServices.deleteDeadlines(id);
+        if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        } else {
+            this.handleClose();
+            this.props.fetchList();
+            this.props.closeMenu();
+        }
     }
 
     render() {

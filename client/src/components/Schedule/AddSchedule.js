@@ -13,13 +13,15 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import {API_BASE_URL} from "../../constants/api";
-import history from "../history";
 import {Link} from "react-router-dom";
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import ErrorSnackbar from "../ErrorSnackbar";
+import SubjectServices from "../../services/SubjectServices";
+import TeacherServices from "../../services/TeacherServices";
+import ClassTypeServices from "../../services/ClassTypeServices";
+import ScheduleServices from "../../services/ScheduleServices";
 
 class AddSchedule extends Component {
     constructor(props) {
@@ -41,69 +43,30 @@ class AddSchedule extends Component {
     }
 
     async fetchSubjectList() {
-        fetch(API_BASE_URL + '/subjects', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.setState({subjects_list: res?.data})
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+        let res = await SubjectServices.fetchSubjectList();
+        if (res?.success) {
+            this.setState({subjects_list: res?.data})
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
 
     async fetchTeachersList() {
-        fetch(API_BASE_URL + '/teachers', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.setState({teachers_list: res?.data})
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+        let res = await TeacherServices.fetchTeachersList();
+        if (res?.success) {
+            this.setState({teachers_list: res?.data})
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
 
     async fetchClassTypesList() {
-        fetch(API_BASE_URL + '/classtypes', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.setState({classtypes_list: res?.data})
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+        let res = await ClassTypeServices.fetchClassTypesList();
+        if (res?.success) {
+            this.setState({classtypes_list: res?.data})
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
 
     async handleClickOpen() {
@@ -232,62 +195,27 @@ class AddSchedule extends Component {
         return radio;
     }
 
-    addSchedule() {
+    async addSchedule() {
         let parity;
         if (!this.state.parityDependent) parity = null;
         else {
             if (this.state.parity === 'true') parity = true;
             if (this.state.parity === 'false') parity = false;
         }
-        const payload = {
-            "$class": {
-                "number": this.state.class_number,
-                "from": this.state.time_from,
-                "to": this.state.time_to,
-            },
-            "subjectId": this.state.subject,
-            "teacherId": this.state.teacher,
-            "classtypeId": this.state.class_type,
-            "parity": parity,
-            "weekdayId": this.props.dayNumber
-        };
-
-        fetch(API_BASE_URL + '/schedules', {
-            credentials: 'include',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        }).then(
-            async response => {
-                let res = await response.json();
-                if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                } else this.handleClose();
-                if (response.status === 403)
-                    history.push('/login');
-
-                this.props.fetchSchedules();
-                return res;
-            }
-        );
-
+        let res = await ScheduleServices.addSchedule(this.state.class_number, this.state.time_from, this.state.time_to, this.state.subject, this.state.teacher, this.state.class_type, parity, this.props.dayNumber);
+        if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        } else this.handleClose();
+        this.props.fetchSchedules();
     }
 
     error;
 
     render() {
-        this.subjects_list = this.state.subjects_list;
-        this.teachers_list = this.state.teachers_list;
-        this.classtypes_list = this.state.classtypes_list;
-        if (typeof this.state.subjects_list == "undefined")
-            this.subjects_list = [];
-        if (typeof this.state.teachers_list == "undefined")
-            this.teachers_list = [];
-        if (typeof this.state.classtypes_list == "undefined")
-            this.classtypes_list = [];
-        return (<span>{this.error}<IconButton size="small" onClick={() => this.handleClickOpen()}><AddIcon/>
+        this.subjects_list = this.state.subjects_list || [];
+        this.teachers_list = this.state.teachers_list || [];
+        this.classtypes_list = this.state.classtypes_list || [];
+        return (<span><IconButton size="small" onClick={() => this.handleClickOpen()}><AddIcon/>
                     </IconButton>
             {this.error}
             <Dialog open={this.state.open} onClose={() => this.handleClose()}

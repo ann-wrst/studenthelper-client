@@ -3,12 +3,12 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, {Component} from 'react'
-import {API_BASE_URL} from '../constants/api'
+import {API_BASE_URL} from '../../constants/api'
 import 'fontsource-roboto';
 import {Toolbar} from "@material-ui/core";
-import history from './history'
-import {login_styles} from './styles'
-import ErrorSnackbar from "./ErrorSnackbar";
+import history from '../history'
+import {login_styles} from '../styles'
+import ErrorSnackbar from "../ErrorSnackbar";
 
 class Login extends Component {
     constructor(props) {

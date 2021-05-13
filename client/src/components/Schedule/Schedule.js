@@ -7,13 +7,12 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import AddSchedule from "./AddSchedule";
-import {API_BASE_URL} from "../../constants/api";
-import history from "../history";
 import SideNavigation from "../SideNavigation";
 import Menu from '@material-ui/core/Menu';
 import ErrorSnackbar from "../ErrorSnackbar";
 import EditSchedule from "./EditSchedule";
 import DeleteSchedule from "./DeleteSchedule";
+import ScheduleServices from "../../services/ScheduleServices";
 
 class Schedule extends Component {
     constructor(props) {
@@ -28,34 +27,20 @@ class Schedule extends Component {
         }
         this.fetchSchedules = this.fetchSchedules.bind(this);
         this.handleChangeSwitch = this.handleChangeSwitch.bind(this);
-        this.handleDelete = this.handleDelete.bind(this);
         this.handleContextClick = this.handleContextClick.bind(this);
     }
 
-    componentDidMount() {
-        this.fetchSchedules();
+    async componentDidMount() {
+        await this.fetchSchedules();
     }
 
-    fetchSchedules() {
-        fetch(API_BASE_URL + '/schedules', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.setState({schedules_list: res?.data})
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+    async fetchSchedules() {
+        let res = await ScheduleServices.fetchSchedules();
+        if (res?.success) {
+            this.setState({schedules_list: res?.data})
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
 
     error;
@@ -85,7 +70,6 @@ class Schedule extends Component {
     weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     schedules_list = []
 
-
     renderTime(from, to) {
         if (typeof from !== 'undefined' && typeof to !== 'undefined') {
             from = from.slice(0, -3);
@@ -110,10 +94,6 @@ class Schedule extends Component {
     currentFrom;
     currentTo;
 
-
-    handleDelete() {
-        this.setState({open: true});
-    }
 
     renderParityLabel(actualParity) {
         if (actualParity)

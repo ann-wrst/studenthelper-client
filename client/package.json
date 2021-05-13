@@ -69,6 +69,7 @@
     "file-loader": "^6.2.0",
     "history": "^4.10.1",
     "react-datepicker": "^3.8.0",
+    "react-tabs": "^3.2.2",
     "react-week-scheduler": "^0.1.13"
   }
 }

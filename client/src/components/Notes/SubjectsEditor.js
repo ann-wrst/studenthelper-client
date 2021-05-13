@@ -37,7 +37,6 @@ class SubjectsEditor extends Component {
     currentContent = '';
 
     getData() {
-
         fetch(API_BASE_URL + `/notes/${this.state.idSubject}`, {
             credentials: 'include',
             method: 'GET',
@@ -170,8 +169,6 @@ class SubjectsEditor extends Component {
 
 }
 
-export default SubjectsEditor;
-
 const button_style = {
     paddingLeft: '10px',
     paddingTop: '15px',
@@ -179,11 +176,12 @@ const button_style = {
     flexDirection: 'column'
 }
 
-const heading_style =
-    {
-        marginLeft: '20px',
-        'margin-top': '10px',
-        'margin-bottom': '15px',
-        display: 'flex',
-        alignItems: 'center'
-    }
+const heading_style = {
+    marginLeft: '20px',
+    'margin-top': '10px',
+    'margin-bottom': '15px',
+    display: 'flex',
+    alignItems: 'center'
+}
+export default SubjectsEditor;
+

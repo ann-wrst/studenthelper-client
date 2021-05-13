@@ -1,9 +1,7 @@
-import {API_BASE_URL} from "../../constants/api"
 import React, {Component} from "react";
 import SideNavigation from "../SideNavigation";
 import AddDeadline from "./AddDeadline";
 import Typography from "@material-ui/core/Typography";
-import history from "../history";
 import ErrorSnackbar from "../ErrorSnackbar";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -20,6 +18,8 @@ import EditDeadline from "./EditDeadline";
 import EmptyStub from "../Configuration/EmptyStub";
 import {FormControlLabel} from "@material-ui/core";
 import Switch from "@material-ui/core/Switch";
+import SubjectServices from "../../services/SubjectServices";
+import DeadlineServices from "../../services/DeadlineServices";
 
 class Deadlines extends Component {
     constructor(props) {
@@ -34,9 +34,9 @@ class Deadlines extends Component {
         this.handleHideOld = this.handleHideOld.bind(this);
     }
 
-    componentDidMount() {
-        this.fetchDeadlines();
-        this.fetchSubjectList();
+    async componentDidMount() {
+        await this.fetchDeadlines();
+        await this.fetchSubjectList();
     }
 
 
@@ -64,75 +64,32 @@ class Deadlines extends Component {
         }
     }
 
-    fetchDeadlines() {
-        fetch(API_BASE_URL + '/deadlines', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.setState({deadlines_list: res?.data});
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+    async fetchDeadlines() {
+        let res = await DeadlineServices.fetchDeadlines();
+        if (res?.success) {
+            this.setState({deadlines_list: res?.data});
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
 
     deadlines_list = []
 
     async fetchSubjectList() {
-        fetch(API_BASE_URL + '/subjects', {
-            credentials: 'include',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(
-            async response => {
-
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (res?.success) {
-                    this.setState({subjects_list: res?.data});
-                } else if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                return res;
-            }
-        );
+        let res = await SubjectServices.fetchSubjectList();
+        if (res?.success) {
+            this.setState({subjects_list: res?.data});
+        } else if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
+        }
     }
 
-    handleCheck(id, isDone) {
-        const payload = {
-            "isDone": isDone
+    async handleCheck(id, isDone) {
+        let res = await DeadlineServices.handleCheck(id, isDone);
+        if (!res?.success) {
+            this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
         }
-        fetch(API_BASE_URL + `/deadlines/${id}`, {
-            credentials: 'include',
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        }).then(
-            async response => {
-                if (response.status === 403)
-                    history.push('/login');
-                let res = await response.json();
-                if (!res?.success) {
-                    this.error = <ErrorSnackbar open={true} message={res?.error?.message}/>;
-                }
-                this.fetchDeadlines();
-            }
-        );
+        await this.fetchDeadlines();
     }
 
     handleCloseMoreButton = () => {
@@ -248,7 +205,8 @@ class Deadlines extends Component {
                 >
                     <EditDeadline id={this.currentId} fetchList={this.fetchDeadlines}
                                   closeMenu={this.handleCloseMoreButton} subjects_list={this.state.subjects_list}
-                                  task={this.currentTask} date={this.currentDate} isDone={this.currentIsDone} subject={this.currentSubject}/>
+                                  task={this.currentTask} date={this.currentDate} isDone={this.currentIsDone}
+                                  subject={this.currentSubject}/>
 
                     <DeleteDeadline id={this.currentId} fetchList={this.fetchDeadlines}
                                     closeMenu={this.handleCloseMoreButton}/>
@@ -291,5 +249,4 @@ const date_style = {
 const list_style = {
     'margin-left': '30px',
 };
-
 export default Deadlines;

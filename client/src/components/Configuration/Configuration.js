@@ -3,8 +3,8 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import Subjects from "./Subjects/Subjects";
 import SideNavigation from "../SideNavigation";
-import Teachers from "./Teacher/Teachers";
-import Classtypes from "./Class types/Classtypes";
+import Teachers from "./Teachers/Teachers";
+import Classtypes from "./Classtypes/Classtypes";
 
 class Configuration extends Component {
     constructor(props) {

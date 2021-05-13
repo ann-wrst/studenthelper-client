@@ -1,6 +1,5 @@
 import {API_BASE_URL} from "../constants/api"
 import history from "../components/history";
-import ErrorSnackbar from "../components/ErrorSnackbar";
 import React from "react";
 
 const ClassTypeServices = {
