@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import Typography from "@material-ui/core/Typography";
-import {API_BASE_URL} from "../../../constants/api"
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
@@ -12,9 +11,9 @@ import AddTeacher from "./AddTeacher";
 import EditTeacher from "./EditTeacher";
 import DeleteTeacher from "./DeleteTeacher";
 import EmptyStub from "../EmptyStub";
-import history from './../../history'
 import ErrorSnackbar from "../../ErrorSnackbar";
 import TeacherServices from "../../../services/TeacherServices";
+import configurationStyles from "../configurationStyles";
 
 class Teachers extends Component {
     constructor(props) {
@@ -45,11 +44,12 @@ class Teachers extends Component {
     render() {
         this.rows = this.state.teachers_list || [];
         if (this.rows.length !== 0)
-            return (<div style={page_style}>
+            return (<div style={configurationStyles.Page}>
                 {this.error}
-                <div style={heading_style}><Typography style={teachersheading_style} variant="h6">
-                    Teachers
-                </Typography>
+                <div style={configurationStyles.GeneralHeading}>
+                    <Typography style={configurationStyles.SpecificHeading} variant="h6">
+                        Teachers
+                    </Typography>
                     <AddTeacher fetchList={this.fetchTeachersList}> </AddTeacher>
                     <TableContainer component={Paper}>
                         <Table className="table" aria-label="simple table">
@@ -78,8 +78,8 @@ class Teachers extends Component {
                                         </TableCell>
 
                                         <TableCell align="right">
-                                            <div style={buttons_container}>
-                                                <div style={edit_button}>
+                                            <div style={configurationStyles.ButtonsContainer}>
+                                                <div style={configurationStyles.EditButtonContainer}>
                                                     <EditTeacher id={row.idTeacher} surname={row.surname}
                                                                  name={row.name}
                                                                  middle_name={row['middle name']}
@@ -99,8 +99,8 @@ class Teachers extends Component {
                 </div>
             </div>)
         else return (<div>
-                <div style={heading_style}>
-                    <Typography style={teachersheading_style} variant="h6">
+                <div style={configurationStyles.GeneralHeading}>
+                    <Typography style={configurationStyles.SpecificHeading} variant="h6">
                         Teachers
                     </Typography>
                     <AddTeacher fetchList={this.fetchTeachersList}> </AddTeacher>
@@ -111,30 +111,4 @@ class Teachers extends Component {
     }
 }
 
-const
-    page_style = {
-        'display': 'flex',
-        'flex-direction': 'column',
-    };
-
-const
-    heading_style = {
-        'display': 'flex',
-        'flex-direction': 'row',
-        'flex-wrap': 'wrap',
-        'align-content': 'stretch'
-    };
-const
-    teachersheading_style = {
-        'margin-right': '20px'
-    }
-const
-    buttons_container = {
-        'display': 'flex',
-        justifyContent: 'flex-end'
-    }
-const
-    edit_button = {
-        paddingRight: '5px'
-    }
 export default Teachers;

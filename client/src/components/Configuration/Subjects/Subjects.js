@@ -13,6 +13,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import EmptyStub from "../EmptyStub";
 import SubjectServices from "../../../services/SubjectServices";
 import ErrorSnackbar from "../../ErrorSnackbar";
+import configurationStyles from "../configurationStyles";
 
 class Subjects extends Component {
     constructor(props) {
@@ -45,9 +46,9 @@ class Subjects extends Component {
     render() {
         this.rows = this.state.subjects_list || [];
         if (this.rows.length !== 0)
-            return (<div style={page_style}>
+            return (<div style={configurationStyles.Page}>
                 {this.error}
-                <div style={heading_style}><Typography style={subjectsheading_style} variant="h6">
+                <div style={configurationStyles.GeneralHeading}><Typography style={configurationStyles.SpecificHeading} variant="h6">
                     Subjects
                 </Typography>
                     <AddSubject fetchList={this.fetchSubjectList}> </AddSubject>
@@ -71,8 +72,8 @@ class Subjects extends Component {
                                         </TableCell>
 
                                         <TableCell align="right">
-                                            <div style={buttons_container}>
-                                                <div style={edit_button}>
+                                            <div style={configurationStyles.ButtonsContainer}>
+                                                <div style={configurationStyles.EditButtonContainer}>
                                                     <EditSubject id={row.idSubject} name={row.name}
                                                                  fetchList={this.fetchSubjectList}>
                                                     </EditSubject>
@@ -89,8 +90,8 @@ class Subjects extends Component {
                 </div>
             </div>)
         else return (<div>
-            <div style={heading_style}>
-                <Typography style={subjectsheading_style} variant="h6">
+            <div style={configurationStyles.GeneralHeading}>
+                <Typography style={configurationStyles.SpecificHeading} variant="h6">
                     Subjects
                 </Typography>
                 <AddSubject fetchList={this.fetchSubjectList}> </AddSubject>
@@ -101,24 +102,4 @@ class Subjects extends Component {
 
 }
 
-const page_style = {
-    'display': 'flex',
-    'flex-direction': 'column',
-};
-const buttons_container = {
-    'display': 'flex',
-    justifyContent: 'flex-end'
-}
-const edit_button = {
-    paddingRight: '5px'
-}
-const heading_style = {
-    'display': 'flex',
-    'flex-direction': 'row',
-    'flex-wrap': 'wrap',
-    'align-content': 'stretch'
-};
-const subjectsheading_style = {
-    'margin-right': '20px'
-}
 export default Subjects;

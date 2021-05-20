@@ -7,6 +7,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TeacherServices from "../../../services/TeacherServices";
 import ErrorSnackbar from "../../ErrorSnackbar";
+import configurationStyles from "../configurationStyles";
 
 class EditTeacher extends Component {
     constructor(props) {
@@ -44,7 +45,7 @@ class EditTeacher extends Component {
     render() {
         return (<div>
                 {this.error}
-                <Button style={edit_button} variant="outlined" color="primary" primary={true}
+                <Button style={configurationStyles.EditButton} variant="outlined" color="primary" primary={true}
                         onClick={() => this.handleClickOpen()}>
                     Edit
                 </Button>
@@ -91,12 +92,6 @@ class EditTeacher extends Component {
             </div>
         );
     }
-}
-
-const edit_button = {
-    float: 'left',
-    paddingTop: '2px',
-    paddingBottom: '2px',
 }
 
 export default EditTeacher;

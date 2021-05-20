@@ -13,7 +13,7 @@ import EditClassType from "./EditClassType";
 import EmptyStub from "../EmptyStub";
 import ClassTypeServices from "../../../services/ClassTypeServices";
 import ErrorSnackbar from "../../ErrorSnackbar";
-
+import configurationStyles from "../configurationStyles";
 class Classtypes extends Component {
     constructor(props) {
         super(props);
@@ -43,10 +43,10 @@ class Classtypes extends Component {
     render() {
         this.rows = this.state.classtypes_list || [];
         if (this.rows.length !== 0)
-            return (<div style={ClassTypesPage}>
+            return (<div style={configurationStyles.Page}>
                 {this.error}
-                <div style={GeneralHeading}>
-                    <Typography style={ClassTypesHeading} variant="h6">
+                <div style={configurationStyles.GeneralHeading}>
+                    <Typography style={configurationStyles.SpecificHeading} variant="h6">
                         Class types
                     </Typography>
                     <AddClassType fetchList={this.fetchClassTypesList}> </AddClassType>
@@ -72,8 +72,8 @@ class Classtypes extends Component {
                                         </TableCell>
 
                                         <TableCell align="right">
-                                            <div style={ButtonsContainer}>
-                                                <div style={EditButton}>
+                                            <div style={configurationStyles.ButtonsContainer}>
+                                                <div style={configurationStyles.EditButtonContainer}>
                                                     <EditClassType id={row.idClassType} type={row.typeName}
                                                                    fetchList={this.fetchClassTypesList}>
                                                     </EditClassType>
@@ -91,8 +91,8 @@ class Classtypes extends Component {
                 </div>
             </div>);
         else return (<div>
-            <div style={GeneralHeading}>
-                <Typography style={ClassTypesHeading} variant="h6">
+            <div style={configurationStyles.GeneralHeading}>
+                <Typography style={configurationStyles.SpecificHeading} variant="h6">
                     Class types
                 </Typography>
                 <AddClassType fetchList={this.fetchClassTypesList}> </AddClassType>
@@ -101,26 +101,5 @@ class Classtypes extends Component {
         </div>);
 
     }
-}
-
-const ClassTypesPage = {
-    'display': 'flex',
-    'flex-direction': 'column',
-};
-const GeneralHeading = {
-    'display': 'flex',
-    'flex-direction': 'row',
-    'flex-wrap': 'wrap',
-    'align-content': 'stretch'
-};
-const ClassTypesHeading = {
-    'margin-right': '20px'
-}
-const ButtonsContainer = {
-    'display': 'flex',
-    justifyContent: 'flex-end'
-}
-const EditButton = {
-    paddingRight: '5px'
 }
 export default Classtypes;
