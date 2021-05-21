@@ -55,6 +55,7 @@ class EditClassType extends Component {
                             label="Class type name"
                             defaultValue={this.props.type}
                             fullWidth
+                            inputProps={{maxLength: 45}}
                             onChange={(event) => this.setState({type: event.target.value})}
                         />
                     </DialogContent>

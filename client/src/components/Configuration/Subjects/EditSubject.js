@@ -58,6 +58,7 @@ class EditSubject extends Component {
                             id="name"
                             label="Subject name"
                             defaultValue={this.props.name}
+                            inputProps={{maxLength: 45}}
                             fullWidth
                             onChange={(event) => this.setState({new_name: event.target.value})}
                         />

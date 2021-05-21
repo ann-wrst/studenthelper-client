@@ -111,6 +111,7 @@ class EditDeadline extends Component {
                             fullWidth
                             required
                             multiline
+                            inputProps={{maxLength: 512}}
                             defaultValue={this.state.task}
                             onChange={(event) => this.setState({task: event.target.value})}
                         />

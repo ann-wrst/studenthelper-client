@@ -47,6 +47,7 @@ class AddClassType extends Component {
                     margin="dense"
                     label="Class type name"
                     fullWidth
+                    inputProps={{maxLength: 45}}
                     onChange={(event) => this.setState({type: event.target.value})}
                 />
             </DialogContent>

@@ -54,6 +54,7 @@ class AddTeacher extends Component {
                     id="name"
                     label="Teacher surname"
                     fullWidth
+                    inputProps={{maxLength: 45}}
                     onChange={(event) => this.setState({new_surname: event.target.value})}
                 />
                 <TextField
@@ -62,6 +63,7 @@ class AddTeacher extends Component {
                     id="name"
                     label="Teacher name"
                     fullWidth
+                    inputProps={{maxLength: 45}}
                     onChange={(event) => this.setState({new_name: event.target.value})}
                 />
                 <TextField
@@ -70,6 +72,7 @@ class AddTeacher extends Component {
                     id="name"
                     label="Teacher middle name"
                     fullWidth
+                    inputProps={{maxLength: 45}}
                     onChange={(event) => this.setState({new_middle_name: event.target.value})}
                 />
             </DialogContent>

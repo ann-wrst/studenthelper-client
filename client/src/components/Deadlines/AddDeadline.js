@@ -115,6 +115,7 @@ class AddDeadline extends Component {
                         label="Task/deadline"
                         fullWidth
                         multiline
+                        inputProps={{maxLength: 512}}
                         onChange={(event) => this.setState({task: event.target.value})}
                     />
 

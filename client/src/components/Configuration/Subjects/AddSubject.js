@@ -47,6 +47,7 @@ class AddSubject extends Component {
                     margin="dense"
                     id="name"
                     label="Subject name"
+                    inputProps={{maxLength: 45}}
                     fullWidth
                     onChange={(event) => this.setState({new_name: event.target.value})}
                 />

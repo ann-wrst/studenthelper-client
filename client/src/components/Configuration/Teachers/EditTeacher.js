@@ -60,6 +60,7 @@ class EditTeacher extends Component {
                             label="Teacher surname"
                             defaultValue={this.props.surname}
                             fullWidth
+                            inputProps={{maxLength: 45}}
                             onChange={(event) => this.setState({new_surname: event.target.value})}
                         />
                         <TextField
@@ -67,6 +68,7 @@ class EditTeacher extends Component {
                             id="name"
                             label="Teacher name"
                             fullWidth
+                            inputProps={{maxLength: 45}}
                             defaultValue={this.props.name}
                             onChange={(event) => this.setState({new_name: event.target.value})}
                         />
@@ -75,6 +77,7 @@ class EditTeacher extends Component {
                             id="name"
                             label="Teacher middle name"
                             fullWidth
+                            inputProps={{maxLength: 45}}
                             defaultValue={this.props.middle_name}
                             onChange={(event) => this.setState({new_middle_name: event.target.value})}
                         />
