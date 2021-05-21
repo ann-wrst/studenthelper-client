@@ -229,7 +229,7 @@ class AddSchedule extends Component {
 
                 <TextField style={dropdown_style}
                            id="time"
-                           label="Date from"
+                           label="Time from"
                            type="time"
                            defaultValue="08:40"
                            InputLabelProps={{
@@ -243,7 +243,7 @@ class AddSchedule extends Component {
                 <br/>
                 <TextField style={dropdown_style}
                            id="time"
-                           label="Date to"
+                           label="Time to"
                            type="time"
                            defaultValue="10:15"
                            InputLabelProps={{
