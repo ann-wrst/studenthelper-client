@@ -7,7 +7,8 @@ class configurationStyles {
         'display': 'flex',
         'flex-direction': 'row',
         'flex-wrap': 'wrap',
-        'align-content': 'stretch'
+        'align-content': 'stretch',
+        marginBottom: '10px'
     };
     static SpecificHeading = {
         'margin-right': '20px'
@@ -39,8 +40,8 @@ class configurationStyles {
     }
     static StubText = {
         color: "#A6A1A9",
-        fontWeight:'medium',
-        fontSize:'20px'
+        fontWeight: 'medium',
+        fontSize: '20px'
     }
 
 }

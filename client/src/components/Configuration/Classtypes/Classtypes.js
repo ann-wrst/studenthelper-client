@@ -14,6 +14,7 @@ import EmptyStub from "../EmptyStub";
 import ClassTypeServices from "../../../services/ClassTypeServices";
 import ErrorSnackbar from "../../ErrorSnackbar";
 import configurationStyles from "../configurationStyles";
+
 class Classtypes extends Component {
     constructor(props) {
         super(props);
@@ -40,57 +41,58 @@ class Classtypes extends Component {
     error;
     rows = [];
 
-    render() {
-        this.rows = this.state.classtypes_list || [];
-        if (this.rows.length !== 0)
-            return (<div style={configurationStyles.Page}>
-                {this.error}
-                <div style={configurationStyles.GeneralHeading}>
-                    <Typography style={configurationStyles.SpecificHeading} variant="h6">
-                        Class types
-                    </Typography>
-                    <AddClassType fetchList={this.fetchClassTypesList}> </AddClassType>
-                    <TableContainer component={Paper}>
+    renderClassTypes() {
+        return (<div style={configurationStyles.Page}>
+            {this.error}
+            <div style={configurationStyles.GeneralHeading}>
+                <Typography style={configurationStyles.SpecificHeading} variant="h6">
+                    Class types
+                </Typography>
+                <AddClassType fetchList={this.fetchClassTypesList}> </AddClassType>
+            </div>
+                <TableContainer component={Paper}>
 
-                        <Table className="table" aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell><b>Type</b></TableCell>
-                                    <TableCell align="right"> </TableCell>
-                                    <TableCell align="left"> </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {this.rows.map((row) => (
-                                    <TableRow key={row.idClassType}>
-                                        <TableCell component="th" scope="row">
-                                            {row.typeName}
-                                        </TableCell>
+                    <Table className="table" aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell><b>Type</b></TableCell>
+                                <TableCell align="right"> </TableCell>
+                                <TableCell align="left"> </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {this.rows.map((row) => (
+                                <TableRow key={row.idClassType}>
+                                    <TableCell component="th" scope="row">
+                                        {row.typeName}
+                                    </TableCell>
 
-                                        <TableCell align="left">
+                                    <TableCell align="left">
 
-                                        </TableCell>
+                                    </TableCell>
 
-                                        <TableCell align="right">
-                                            <div style={configurationStyles.ButtonsContainer}>
-                                                <div style={configurationStyles.EditButtonContainer}>
-                                                    <EditClassType id={row.idClassType} type={row.typeName}
-                                                                   fetchList={this.fetchClassTypesList}>
-                                                    </EditClassType>
-                                                </div>
-                                                <DeleteClassType id={row.idClassType}
-                                                                 fetchList={this.fetchClassTypesList}>
-                                                </DeleteClassType>
+                                    <TableCell align="right">
+                                        <div style={configurationStyles.ButtonsContainer}>
+                                            <div style={configurationStyles.EditButtonContainer}>
+                                                <EditClassType id={row.idClassType} type={row.typeName}
+                                                               fetchList={this.fetchClassTypesList}>
+                                                </EditClassType>
                                             </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </div>
-            </div>);
-        else return (<div>
+                                            <DeleteClassType id={row.idClassType}
+                                                             fetchList={this.fetchClassTypesList}>
+                                            </DeleteClassType>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+        </div>);
+    }
+
+    renderEmptyStub() {
+        return (<div>
             <div style={configurationStyles.GeneralHeading}>
                 <Typography style={configurationStyles.SpecificHeading} variant="h6">
                     Class types
@@ -99,7 +101,14 @@ class Classtypes extends Component {
             </div>
             <EmptyStub name={"class types"}/>
         </div>);
+    }
 
+    render() {
+        this.rows = this.state.classtypes_list || [];
+        if (this.rows.length !== 0)
+            return this.renderClassTypes()
+        else return this.renderEmptyStub()
     }
 }
+
 export default Classtypes;
