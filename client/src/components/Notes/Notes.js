@@ -83,7 +83,7 @@ const item_style = {
 
 const heading_style = {
     marginLeft: '20px',
-    'margin-top': '10px',
+    marginTop: '10px',
 }
 const subheading_style = {
     marginLeft: '20px',

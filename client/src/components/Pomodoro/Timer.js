@@ -1,7 +1,6 @@
 import React from 'react';
 import {Button} from "@material-ui/core";
-// import '../ComponentStyles/SessionActions.css';
-// import '../ComponentStyles/Timer.css';
+import pomodoroStyles from "./pomodoroStyles";
 
 class Timer extends React.Component {
     constructor() {
@@ -86,22 +85,22 @@ class Timer extends React.Component {
     render() {
         return (
             <section>
-                <section style={session_container}>
-                    <h4 style={session_header}>{this.state.isSessionInterval ? 'Session' : 'Break'}</h4>
-                    <span style={timer_style}
+                <section style={pomodoroStyles.SessionContainer}>
+                    <h4 style={pomodoroStyles.SessionHeader}>{this.state.isSessionInterval ? 'Session' : 'Break'}</h4>
+                    <span style={pomodoroStyles.Timer}
                     >
           {this.props.timerMinute}</span>
-                    <span style={colon_style}
+                    <span style={pomodoroStyles.Colon}
                           id="colon">:</span>
-                    <span style={timer_style}
+                    <span style={pomodoroStyles.Timer}
                     >{this.state.timerSeconds === 0 ? '00' : this.state.timerSeconds < 10 ? '0' + this.state.timerSeconds : this.state.timerSeconds}</span>
                 </section>
                 <section>
-                    <Button variant="contained" color="primary" size="large" style={buttons}
+                    <Button variant="contained" color="primary" size="large" style={pomodoroStyles.Buttons}
                             onClick={(event) => this.playStopTimer(event, "play")}>Start</Button>
-                    <Button variant="contained" color="primary" style={buttons} size="large"
+                    <Button variant="contained" color="primary" style={pomodoroStyles.Buttons} size="large"
                             onClick={(event) => this.playStopTimer(event, "stop")}>Stop</Button>
-                    <Button variant="outlined" style={buttons} color="primary" size="large"
+                    <Button variant="outlined" style={pomodoroStyles.Buttons} color="primary" size="large"
                             onClick={this.resetTimer}>Refresh</Button>
                 </section>
             </section>
@@ -111,38 +110,3 @@ class Timer extends React.Component {
 
 export default Timer;
 
-const session_header = {
-    color: '#3e3d46',
-    marginTop: '20px',
-    paddingTop:'20px',
-    fontFamily: "'Karla', sans-serif",
-    fontSize: '25px',
-    marginBottom: '75px'
-};
-const session_container = {
-    border: '5px solid #31369B',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.40)',
-    width: '400px',
-    height:'400px',
-    margin: '25px auto',
-    borderRadius: '100%',
-};
-const buttons = {
-    // display:'flex',
-    marginLeft: '25px'
-
-}
-const colon_style = {
-    fontSize: '6rem',
-    color: '#3e3d46',
-    fontWeight: '400',
-    position: 'relative',
-    bottom: '7px',
-    margin: '0 8px'
-}
-const timer_style = {
-    margin: '0 0 20px 0',
-    fontSize: '6rem',
-    color: '#3e3d46',
-    fontWeight: '400'
-}

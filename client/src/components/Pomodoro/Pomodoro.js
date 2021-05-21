@@ -1,9 +1,9 @@
 import React from 'react';
-// import '../ComponentStyles/App.css';
 import BreakInterval from './BreakInterval';
 import Timer from './Timer';
 import SessionInterval from "./SessionInterval";
 import SideNavigation from "../SideNavigation";
+import pomodoroStyles from "./pomodoroStyles";
 
 class Pomodoro extends React.Component {
     constructor() {
@@ -61,7 +61,7 @@ class Pomodoro extends React.Component {
             <main className="App">
                 <SideNavigation/>
                 <section>
-                    <h2 style={title}>Pomodoro Clock</h2>
+                    <h2 style={pomodoroStyles.Title}>Pomodoro Clock</h2>
 
                     <Timer
                         sessionInterval={this.state.sessionInterval}
@@ -71,7 +71,7 @@ class Pomodoro extends React.Component {
                         onPlayChange={this.onPlayChange}
                         resetTimer={this.onResetTimer}
                     />
-                    <section style={interval_container}>
+                    <section style={pomodoroStyles.IntervalContainer}>
                         <BreakInterval
                             onBreakIntervalChange={this.onBreakIntervalChange}
                             breakInterval={this.state.breakInterval}
@@ -90,16 +90,3 @@ class Pomodoro extends React.Component {
 }
 
 export default Pomodoro;
-
-const interval_container = {
-    marginTop: '25px'
-};
-
-const title = {
-    fontSize: '3rem',
-    fontWeight: '400',
-    letterSpacing: '2px',
-    color: '#263646',
-    marginBottom: 0,
-    fontFamily: "'Raleway', sans-serif"
-}

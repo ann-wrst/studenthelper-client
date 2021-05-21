@@ -125,7 +125,7 @@ class Schedule extends Component {
     renderSchedule(num, day, dayIdx) {
         if (!this.getScheduleByDayAndNumber(dayIdx, num)) {
             return (
-                <div style={table_item}>
+                <div>
                 </div>
             )
         }
@@ -136,7 +136,7 @@ class Schedule extends Component {
                     style={{cursor: 'context-menu',}}>
                     {
                         this.getScheduleByDayAndNumber(dayIdx, num)?.length > 0 ?
-                            <div style={table_item}>
+                            <div>
                                 <div style={class_info_container}>
                                     <div style={subject_style}>
                                         {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.subject?.name}
@@ -144,7 +144,7 @@ class Schedule extends Component {
                                     <div>
                                         {this.getScheduleByDayAndNumber(dayIdx, num)[0]?.classtype?.typeName}
                                     </div>
-                                    <div style={teacher_style}>
+                                    <div>
                                         {this.renderTeacher(this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.surname, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher?.name, this.getScheduleByDayAndNumber(dayIdx, num)[0]?.teacher['middle name'])}
                                     </div>
                                     <div>
@@ -282,8 +282,6 @@ class Schedule extends Component {
     }
 }
 
-const table_item = {}
-
 const num_style = {
     fontWeight: 'bold',
     fontSize: '17px'
@@ -312,5 +310,4 @@ const table_heading = {
 const subject_style = {
     fontWeight: '600'
 };
-const teacher_style = {};
 export default Schedule;

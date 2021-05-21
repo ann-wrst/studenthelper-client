@@ -211,6 +211,85 @@ class AddSchedule extends Component {
 
     error;
 
+    renderAddScheduleModal() {
+        return (<Dialog open={this.state.open} onClose={() => this.handleClose()}
+                        aria-labelledby="form-dialog-title">
+
+            <DialogTitle id="form-dialog-title">Add ({this.props.day})</DialogTitle>
+            <DialogContent>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="number"
+                    type="number"
+                    label="Class number"
+                    fullWidth
+                    onChange={(event) => this.setState({class_number: event.target.value})}
+                />
+
+                <TextField style={dropdown_style}
+                           id="time"
+                           label="Date from"
+                           type="time"
+                           defaultValue="08:40"
+                           InputLabelProps={{
+                               shrink: true,
+                           }}
+                           inputProps={{
+                               step: 300,
+                           }}
+                           onChange={(event) => this.setState({time_from: event.target.value})}
+                />
+                <br/>
+                <TextField style={dropdown_style}
+                           id="time"
+                           label="Date to"
+                           type="time"
+                           defaultValue="10:15"
+                           InputLabelProps={{
+                               shrink: true,
+                           }}
+                           inputProps={{
+                               step: 300,
+                           }}
+                           onChange={(event) => this.setState({time_to: event.target.value})}
+                />
+                <div>
+                    <div style={dropdown_style}>
+                        {this.showSubjectsDropdown()}
+                    </div>
+                    <div style={dropdown_style}>
+                        {this.showTeachersDropdown()}
+                    </div>
+                    <div style={dropdown_style}>
+                        {this.showClassTypesDropdown()}
+                    </div>
+                </div>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={this.state.parityDependent}
+                            onChange={this.handleParityDependent}
+                            name="parity"
+                            color="primary"
+                        />
+                    }
+                    label="Depends on parity"
+                />
+                {this.showParity()}
+            </DialogContent>
+
+            <DialogActions>
+                <Button onClick={() => this.handleClose()} color="primary">
+                    Cancel
+                </Button>
+                <Button onClick={() => this.addSchedule()} color="primary">
+                    Done
+                </Button>
+            </DialogActions>
+        </Dialog>)
+    }
+
     render() {
         this.subjects_list = this.state.subjects_list || [];
         this.teachers_list = this.state.teachers_list || [];
@@ -218,83 +297,10 @@ class AddSchedule extends Component {
         return (<span><IconButton size="small" onClick={() => this.handleClickOpen()}><AddIcon/>
                     </IconButton>
             {this.error}
-            <Dialog open={this.state.open} onClose={() => this.handleClose()}
-                    aria-labelledby="form-dialog-title">
-
-                    <DialogTitle id="form-dialog-title">Add ({this.props.day})</DialogTitle>
-                    <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="number"
-                        type="number"
-                        label="Class number"
-                        fullWidth
-                        onChange={(event) => this.setState({class_number: event.target.value})}
-                    />
-
-                    <TextField style={dropdown_style}
-                               id="time"
-                               label="Date from"
-                               type="time"
-                               defaultValue="08:40"
-                               InputLabelProps={{
-                                   shrink: true,
-                               }}
-                               inputProps={{
-                                   step: 300,
-                               }}
-                               onChange={(event) => this.setState({time_from: event.target.value})}
-                    />
-                    <br/>
-                        <TextField style={dropdown_style}
-                                   id="time"
-                                   label="Date to"
-                                   type="time"
-                                   defaultValue="10:15"
-                                   InputLabelProps={{
-                                       shrink: true,
-                                   }}
-                                   inputProps={{
-                                       step: 300,
-                                   }}
-                                   onChange={(event) => this.setState({time_to: event.target.value})}
-                        />
-                    <div>
-                    <div style={dropdown_style}>
-                {this.showSubjectsDropdown()}
-                    </div>
-                    <div style={dropdown_style}>
-                {this.showTeachersDropdown()}
-                    </div>
-                    <div style={dropdown_style}>
-                {this.showClassTypesDropdown()}
-                    </div>
-                    </div>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={this.state.parityDependent}
-                                onChange={this.handleParityDependent}
-                                name="parity"
-                                color="primary"
-                            />
-                        }
-                        label="Depends on parity"
-                    />
-                        {this.showParity()}
-                    </DialogContent>
-
-                    <DialogActions>
-                    <Button onClick={() => this.handleClose()} color="primary">
-                    Cancel
-                    </Button>
-                    <Button onClick={() => this.addSchedule()} color="primary">
-                    Done
-                    </Button>
-                    </DialogActions>
-                    </Dialog></span>);
+            {this.renderAddScheduleModal()}
+            </span>);
     }
+
 }
 
 const dropdown_style = {

@@ -38,40 +38,41 @@ class AddClassType extends Component {
         this.handleClose();
     }
 
+    renderAddClassTypeModal() {
+        return (<Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">Add</DialogTitle>
+            <DialogContent>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Class type name"
+                    fullWidth
+                    onChange={(event) => this.setState({type: event.target.value})}
+                />
+            </DialogContent>
+
+            <DialogActions>
+                <Button onClick={() => this.handleClose()} color="primary">
+                    Cancel
+                </Button>
+                <Button onClick={() => this.createClassType()} color="primary">
+                    Done
+                </Button>
+            </DialogActions>
+        </Dialog>)
+    }
+
     render() {
         return (<div>
                 <Button variant="outlined" color="primary" primary={true} startIcon={<AddIcon/>}
                         onClick={() => this.handleClickOpen()}>
                     Add
                 </Button>
-                <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Add</DialogTitle>
-                    <DialogContent>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="Class type name"
-                            fullWidth
-                            onChange={(event) => this.setState({type: event.target.value})}
-                        />
-                    </DialogContent>
-
-                    <DialogActions>
-                        <Button onClick={() => this.handleClose()} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={() => this.createClassType()} color="primary">
-                            Done
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                {this.renderAddClassTypeModal()}
                 {this?.error}
-
             </div>
         );
     }
-
 }
 
 export default AddClassType;

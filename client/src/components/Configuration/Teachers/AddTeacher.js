@@ -43,6 +43,48 @@ class AddTeacher extends Component {
 
     error;
 
+    renderAddTeacherModal() {
+        return (<Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
+
+            <DialogTitle id="form-dialog-title">Add</DialogTitle>
+            <DialogContent>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Teacher surname"
+                    fullWidth
+                    onChange={(event) => this.setState({new_surname: event.target.value})}
+                />
+                <TextField
+
+                    margin="dense"
+                    id="name"
+                    label="Teacher name"
+                    fullWidth
+                    onChange={(event) => this.setState({new_name: event.target.value})}
+                />
+                <TextField
+
+                    margin="dense"
+                    id="name"
+                    label="Teacher middle name"
+                    fullWidth
+                    onChange={(event) => this.setState({new_middle_name: event.target.value})}
+                />
+            </DialogContent>
+
+            <DialogActions>
+                <Button onClick={() => this.handleClose()} color="primary">
+                    Cancel
+                </Button>
+                <Button onClick={() => this.createTeacher()} color="primary">
+                    Done
+                </Button>
+            </DialogActions>
+        </Dialog>);
+    }
+
     render() {
         return (<div>
             {this.error}
@@ -50,45 +92,7 @@ class AddTeacher extends Component {
                     onClick={() => this.handleClickOpen()}>
                 Add
             </Button>
-            <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
-
-                <DialogTitle id="form-dialog-title">Add</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Teacher surname"
-                        fullWidth
-                        onChange={(event) => this.setState({new_surname: event.target.value})}
-                    />
-                    <TextField
-
-                        margin="dense"
-                        id="name"
-                        label="Teacher name"
-                        fullWidth
-                        onChange={(event) => this.setState({new_name: event.target.value})}
-                    />
-                    <TextField
-
-                        margin="dense"
-                        id="name"
-                        label="Teacher middle name"
-                        fullWidth
-                        onChange={(event) => this.setState({new_middle_name: event.target.value})}
-                    />
-                </DialogContent>
-
-                <DialogActions>
-                    <Button onClick={() => this.handleClose()} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={() => this.createTeacher()} color="primary">
-                        Done
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            {this.renderAddTeacherModal()}
         </div>);
     }
 }

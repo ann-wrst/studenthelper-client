@@ -101,54 +101,60 @@ class AddDeadline extends Component {
         return dropdown;
     }
 
+    renderAddDeadlineModal() {
+        return (
+            <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
+                {this.error}
+                <DialogTitle id="form-dialog-title">Add</DialogTitle>
+                <DialogContent style={{width: '400px', height: '350px'}}>
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="name"
+                        label="Task/deadline"
+                        fullWidth
+                        multiline
+                        onChange={(event) => this.setState({task: event.target.value})}
+                    />
+
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            disableToolbar
+                            disablePast
+                            required
+                            format="dd/MM/yyyy"
+                            margin="normal"
+                            id="date-picker-inline"
+                            label="Select date"
+                            value={this.state.date}
+                            size="small"
+                            onChange={(date) => this.handleDateChange(date)}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                            }}
+                        />
+                    </MuiPickersUtilsProvider>
+                    {this.showSubjectsDropdown()}
+                </DialogContent>
+
+                <DialogActions>
+                    <Button onClick={() => this.handleClose()} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={() => this.addTask()} color="primary">
+                        Done
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        )
+    }
+
     render() {
         return (<div><IconButton size="medium" aria-label="more"
                                  onClick={(event) => this.handleClickOpen(event)}><AddIcon/></IconButton>
             <div>
-                <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
-                    {this.error}
-                    <DialogTitle id="form-dialog-title">Add</DialogTitle>
-                    <DialogContent style={{width: '400px', height: '350px'}}>
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="name"
-                            label="Task/deadline"
-                            fullWidth
-                            multiline
-                            onChange={(event) => this.setState({task: event.target.value})}
-                        />
-
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDatePicker
-                                disableToolbar
-                                disablePast
-                                required
-                                format="dd/MM/yyyy"
-                                margin="normal"
-                                id="date-picker-inline"
-                                label="Select date"
-                                value={this.state.date}
-                                size="small"
-                                onChange={(date) => this.handleDateChange(date)}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
-                            />
-                        </MuiPickersUtilsProvider>
-                        {this.showSubjectsDropdown()}
-                    </DialogContent>
-
-                    <DialogActions>
-                        <Button onClick={() => this.handleClose()} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={() => this.addTask()} color="primary">
-                            Done
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                {this.renderAddDeadlineModal()}
             </div>
         </div>);
     }

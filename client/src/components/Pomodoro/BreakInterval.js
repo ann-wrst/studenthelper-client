@@ -2,6 +2,7 @@ import React from 'react';
 import {Button} from "@material-ui/core";
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
+import pomodoroStyles from "./pomodoroStyles";
 
 function BreakInterval(props) {
     function increaseCounter() {
@@ -19,15 +20,15 @@ function BreakInterval(props) {
     }
 
     return (
-        <section style={break_interval}>
-            <span style={text_style}>Break Length</span>
-            <section style={counter_style}>
+        <section style={pomodoroStyles.Interval}>
+            <span style={pomodoroStyles.IntervalText}>Break Length</span>
+            <section style={pomodoroStyles.Counter}>
                 <Button disabled={props.isPlay ? "disabled" : ""}
                         onClick={decreaseCounter}>
                     <RemoveIcon/>
                 </Button>
 
-                <p style={text_style}>{props.breakInterval}</p>
+                <p style={pomodoroStyles.IntervalText}>{props.breakInterval}</p>
                 <Button disabled={props.isPlay ? "disabled" : ""}
                         onClick={increaseCounter}>
                     <AddIcon/>
@@ -38,18 +39,3 @@ function BreakInterval(props) {
 }
 
 export default BreakInterval;
-
-const break_interval = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection:'column'
-
-};
-const counter_style = {
-    display:'flex'
-}
-const text_style = {
-    fontFamily: "'Open Sans', sans-serif",
-    fontWeight: '700'
-}

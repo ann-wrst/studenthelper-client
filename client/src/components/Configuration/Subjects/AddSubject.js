@@ -37,40 +37,44 @@ class AddSubject extends Component {
         this.setState({new_name: ''});
     }
 
+    renderAddSubjectModal() {
+        return (<Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
+
+            <DialogTitle id="form-dialog-title">Add</DialogTitle>
+            <DialogContent>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Subject name"
+                    fullWidth
+                    onChange={(event) => this.setState({new_name: event.target.value})}
+                />
+            </DialogContent>
+
+            <DialogActions>
+                <Button onClick={() => this.handleClose()} color="primary">
+                    Cancel
+                </Button>
+                <Button onClick={() => this.createSubject()} color="primary">
+                    Done
+                </Button>
+            </DialogActions>
+        </Dialog>)
+    }
+
     render() {
         return (<div>
-                {this.state.error}
                 <Button variant="outlined" color="primary" primary={true} startIcon={<AddIcon/>}
                         onClick={() => this.handleClickOpen()}>
                     Add
                 </Button>
-
-                <Dialog open={this.state.open} onClose={() => this.handleClose()} aria-labelledby="form-dialog-title">
-
-                    <DialogTitle id="form-dialog-title">Add</DialogTitle>
-                    <DialogContent>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="Subject name"
-                            fullWidth
-                            onChange={(event) => this.setState({new_name: event.target.value})}
-                        />
-                    </DialogContent>
-
-                    <DialogActions>
-                        <Button onClick={() => this.handleClose()} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={() => this.createSubject()} color="primary">
-                            Done
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                {this.renderAddSubjectModal()}
+                {this.state.error}
             </div>
         );
     }
+
 }
 
 export default AddSubject;

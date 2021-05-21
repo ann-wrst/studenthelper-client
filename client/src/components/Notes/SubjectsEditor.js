@@ -178,8 +178,8 @@ const button_style = {
 
 const heading_style = {
     marginLeft: '20px',
-    'margin-top': '10px',
-    'margin-bottom': '15px',
+    marginTop: '10px',
+    marginBottom: '15px',
     display: 'flex',
     alignItems: 'center'
 }

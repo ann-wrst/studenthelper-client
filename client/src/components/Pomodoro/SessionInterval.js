@@ -2,6 +2,7 @@ import React from 'react';
 import RemoveIcon from "@material-ui/icons/Remove";
 import {Button} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import pomodoroStyles from "./pomodoroStyles";
 
 // import '../ComponentStyles/SessionInterval.css';
 
@@ -27,15 +28,15 @@ function SessionInterval(props) {
     }
 
     return (
-        <section style={session_interval}>
-            <span style={text_style}>Session Length</span>
-            <section style={counter_style}>
+        <section style={pomodoroStyles.Interval}>
+            <span style={pomodoroStyles.IntervalText}>Session Length</span>
+            <section style={pomodoroStyles.Counter}>
                 <Button disabled={props.isPlay ? "disabled" : ""}
                         onClick={decreaseCounter}>
                     <RemoveIcon/>
                 </Button>
 
-                <p style={text_style}>{props.sessionInterval}</p>
+                <p style={pomodoroStyles.IntervalText}>{props.sessionInterval}</p>
                 <Button disabled={props.isPlay ? "disabled" : ""}
                         onClick={increaseCounter}>
                     <AddIcon/>
@@ -46,17 +47,3 @@ function SessionInterval(props) {
 }
 
 export default SessionInterval;
-
-const session_interval = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection:'column'
-};
-const counter_style = {
-    display:'flex'
-};
-const text_style = {
-    fontFamily: "'Open Sans', sans-serif",
-    fontWeight: '700'
-}
